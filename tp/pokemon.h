@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "coordenadas.h"
 #ifndef pokemon_h
-#define TAM_NOME 30
-#define TAM_TIPO 20
+#define TAM_NOME 12
+#define TAM_TIPO 10
 
 typedef struct {
     int indentificacao;
