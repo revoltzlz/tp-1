@@ -6,10 +6,10 @@
 
 #include <stdio.h>
 
-void InicializacaoTreinador(Treinador *t, int indentificador, char nome[], int qntdpokebolas, int cordX, int cordY)
+void InicializacaoTreinador(Treinador *t, int identificador, char nome[], int qntdpokebolas, int cordX, int cordY)
 {
     strcpy(t->Nome, nome);
-    t->identificador = indentificador;
+    t->identificador = identificador;
     t->qntdpokebolas = qntdpokebolas;
 
     t->loccoach.cordX = cordX;
@@ -19,7 +19,7 @@ void InicializacaoTreinador(Treinador *t, int indentificador, char nome[], int q
 void ImpressaoTreinador(Treinador *t)
 {
     printf("Treinador: %s\n", t->Nome);
-    printf("Indentificador: %d\n", p->indentificador);
+    printf("Indentificador: %d\n", t->identificador);
     printf("Numero na Pokebolas: %d\n", t->qntdpokebolas);
     printf("Localizacao: (%d , %d)", t->loccoach.cordX, t->loccoach.cordY);
 }

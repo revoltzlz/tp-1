@@ -10,7 +10,7 @@ typedef struct {
     int qntdpokebolas;
 } Treinador;
 
-void InicializacaoTreinador(Treinador *t, int indentificador, char nome[], int qntdpokebolas, int cordX, int cordY);
+void InicializacaoTreinador(Treinador *t, int identificador, char nome[], int qntdpokebolas, int cordX, int cordY);
 void MovimentacaoCoach(Treinador *t);
 void CapturadePokemon(Treinador *t);
 void RemoveListacoach(Treinador *t);
