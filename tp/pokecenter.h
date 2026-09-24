@@ -8,8 +8,8 @@ typedef struct {
     cord locPokeCenter;
 } PokeCenter;
 
-void InicializacaoCentropoke(PokeCenter *cp)
-void InsercaoPokemonFugido(PokeCenter *cp)
-void RemocaoPokemonFugido(PokeCenter *cp)
-void ImpressaoPokemonFugido(PokeCenter *cp)
-void RecebimentoPokemon(PokeCenter *cp)
+void InicializacaoCentropoke(PokeCenter *cp);
+void InsercaoPokemonFugido(PokeCenter *cp);
+void RemocaoPokemonFugido(PokeCenter *cp);
+void ImpressaoPokemonFugido(PokeCenter *cp);
+void RecebimentoPokemon(PokeCenter *cp);

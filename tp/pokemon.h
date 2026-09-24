@@ -11,6 +11,6 @@ typedef struct {
     cord localizacao;
 } Pokemon;
 
-void InicializarPokemon(Pokemon *p, int indentificacao, int Numpokedex, char nome[], int cordX, int cordY)
-void ImprimirPokemon(Pokemon *p)
+void InicializarPokemon(Pokemon *p, int indentificacao, int Numpokedex, char nome[], int cordX, int cordY);
+void ImprimirPokemon(Pokemon *p);
 #endif
