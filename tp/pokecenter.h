@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "pokelista.h"
+#include "coordenadas.h"
 
 typedef struct {
     Pokelista fugitivos;

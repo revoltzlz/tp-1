@@ -1,11 +1,16 @@
 #include <stdio.h>
+#include "coordenadas.h"
+#ifndef pokemon_h
+#define TAM_NOME 30
+#define TAM_TIPO 20
 
 typedef struct {
     int indentificacao;
     int Numpokedex;
-    char Nome[tamanho_nome_poke];
+    char Nome[TAM_NOME];
     cord localizacao;
 } Pokemon;
 
 void InicializarPokemon(Pokemon *p, int indentificacao, int Numpokedex, char nome[], int cordX, int cordY)
 void ImprimirPokemon(Pokemon *p)
+#endif

@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "pokecenter.h"
+#include "treinador.h"
 
 void InicializacaoMissao(PokeCenter *cp, Treinador *t)
 void Registros(PokeCenter *cp, Treinador *t)

@@ -1,8 +1,10 @@
 #include <stdio.h>
-
+#define TAM_NOME_COACH 30
+#include "coordenadas.h"
+#include "pokelista.h"
 typedef struct {
     int identificador; 
-    char Nome[tamanho_nome_coach];
+    char Nome[TAM_NOME_COACH];
     cord loccoach;
     Pokelista lista;
     int qntdpokebolas;

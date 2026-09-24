@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "conexao.h"
 typedef struct {
     conec *inicio
     int tamanho;
