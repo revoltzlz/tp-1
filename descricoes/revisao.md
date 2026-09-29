@@ -17,7 +17,7 @@ git log antes-da-revisao..HEAD --oneline # um commit por correção
 | 2. Simplicidade | feita |
 | 3. Pasta `descricoes/` | feita |
 | 4. Enxugar os comentários | feita |
-| 5. Revisão independente | parcial: o revisor de simplicidade entregou e foi aplicado; os de conformidade e de consistência pararam por limite de uso e foram refeitos |
+| 5. Revisão independente | feita: três revisores, os três aplicados |
 | 6. Slides, zip e fechamento | ver a seção "O que depende do Gabriel" |
 
 ---
@@ -365,6 +365,67 @@ defendem. A versão atual reaproveita `pokelistaRemover` para que exista um úni
 algoritmo de remoção no TAD; a do livro duplica o código mas é literalmente a
 figura da aula. Mantida a atual, com o comentário que explica a escolha.
 
+### O revisor de conformidade
+
+Conferiu o código, a saída e o relatório contra o PDF, sem o histórico desta
+sessão. **Nenhum problema grave ou médio.** Verificou os quatro TADs atributo
+por atributo e operação por operação, a lista encadeada obrigatória, cada
+funcionalidade do sistema de controle da missão, recalculou as dez distâncias na
+mão e comparou o relatório byte a byte com o exemplo.
+
+Sobre a única divergência de saída, ele chegou por conta própria à mesma
+conclusão: o bloco final é **erro do PDF**, porque o caractere invisível e a
+linha em branco extra aparecem só naquele bloco e quebram o padrão que o próprio
+PDF usa nos outros três. Reproduzir exigiria imprimir um caractere invisível de
+propósito.
+
+Dois achados menores, os dois aceitos: o literal `5` em `fscanf(...) != 5` não
+estava na lista de exceções de números literais do `requisitos.md` (entrou), e
+duas imprecisões numéricas na documentação (corrigidas, ver abaixo).
+
+### O revisor de consistência
+
+Conferiu as descrições contra o código: assinatura, comportamento, retorno,
+custo e "quem chama" de cada função, todos os campos de todas as structs, todas
+as constantes, os desenhos ASCII passo a passo contra a implementação, e todos
+os números citados.
+
+**Os desenhos, as structs e os custos passaram sem nenhuma correção.** Seguiu os
+quatro desenhos de `pokelista.md` contra o código e confirmou que a ordem das
+operações — copiar antes do `free`, desligar, checar `alvo == ultimo`, atualizar
+`ultimo`, só então `free` — é exatamente a do código em todos os casos.
+
+Quatro afirmações erradas, todas corrigidas:
+
+| Onde | O que dizia | O que é |
+|---|---|---|
+| `requisitos.md` D20 | que existe uma função `removeFimDeLinha` e que o caminho do arquivo é lido com `fgets` | nenhuma das duas existe: saíram quando o menu passou a usar `scanf`. Era a pior das quatro, porque afirmava no presente |
+| `requisitos.md` R39 | citava uma tabela no `GUIA_ENTREVISTA.md` | o arquivo virou `descricoes/entrevista.md` e não tem essa tabela |
+| `pokelista.md` | `pokelistaLiberar` tem dois chamadores | tem **três**: faltava `pokecenterInicializar`, no caminho de erro |
+| `pokelista.md` | `pokelistaVazia` tem dois chamadores | tem **três**: faltava `pokelistaImprimir` |
+
+E seis números, cada um reconferido antes de ser aceito:
+
+| Dizia | É |
+|---|---|
+| 31 constantes | **29**, sem contar os 7 include guards |
+| 17 casos inválidos | **16** — meu `grep` contava a definição da função junto |
+| 18 casos válidos | **19** |
+| `static` em 19 funções auxiliares | **16**: `missao.c` define 19, três públicas |
+| `main.c` de 56 para 20 linhas | **18** |
+| `sizeof(Pokemon)` de "uns 60 bytes" | **68**, medidos |
+
+`R55` também tinha um trecho **duplicado** dentro da própria célula, e a segunda
+metade afirmava algo que deixou de valer quando a mensagem do relatório foi
+removida.
+
+### Terceira rodada, por conta própria
+
+Depois de aplicar os três revisores, uma conferência por script comparou **todo
+número citado nas descrições** com o valor medido no projeto. Achou as duas
+últimas divergências da tabela acima (`static` em 19 e 18 casos válidos). Uma
+quarta passagem não achou mais nada.
+
 ### Para a entrevista
 
 O revisor destacou onde o trabalho está seguro, e vale saber conduzir a conversa
@@ -445,6 +506,31 @@ apenas `gcc` com opções padrão de C99, e a escolha do comando de limpeza trat
 Linux explicitamente, mas isso é análise, não teste. **Fica como pendência.**
 
 ---
+
+## Resumo das mudanças
+
+`git diff antes-da-revisao --stat` no fim da revisão:
+
+```
+ 34 arquivos alterados, 4514 inserções, 1583 remoções
+```
+
+A maior parte das inserções é a pasta `descricoes/`, que não existia: 14
+arquivos, cerca de 3.900 linhas. No código:
+
+| Arquivo | Mudança |
+|---|---|
+| `main.c` | 56 linhas → 18 |
+| `src/missao.c` | reescrito em boa parte: leitura do menu, liberação nos caminhos de erro, e os comentários |
+| `include/*.h` | comentários enxutos, uma linha por protótipo |
+| `Makefile` | regras explícitas no lugar da regra de padrão; `clean` sem condicional |
+| `testes/rodar_testes.sh` | refeito: alimenta o menu pela entrada padrão e monta as cópias temporárias |
+| `testes/conta_memoria.h` | removido: o script agora gera esse cabeçalho na cópia temporária |
+
+**Nenhum bug de comportamento foi encontrado nesta revisão.** A saída, o
+relatório, as distâncias, a ordem das entregas e a memória já estavam corretos
+quando ela começou. O que mudou foi simplicidade, documentação, uma mensagem a
+mais na saída e um punhado de afirmações erradas na documentação.
 
 ## O que depende do Gabriel
 
