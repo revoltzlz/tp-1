@@ -1,0 +1,12 @@
+# Fontes e documentacao sempre em LF no repositorio, em qualquer sistema.
+*.c      text eol=lf
+*.h      text eol=lf
+*.md     text eol=lf
+Makefile text eol=lf
+
+# Arquivos de teste e de referencia: guardados byte a byte como estao.
+# Os dois arquivos oficiais do Moodle vem em CRLF e precisam continuar assim,
+# porque sao justamente o caso de teste de fim de linha do Windows.
+testes/** -text
+
+*.pdf binary

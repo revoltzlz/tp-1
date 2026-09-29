@@ -1,0 +1,12 @@
+# Executavel e arquivos-objeto gerados pela compilacao
+tp1
+tp1.exe
+*.exe
+*.o
+
+# Relatorio gerado pelo programa
+relatorio.txt
+
+# Pacote de entrega
+*.zip
+*.tar.gz
