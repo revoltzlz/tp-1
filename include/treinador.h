@@ -58,7 +58,8 @@ int treinadorGetPokebolas(const Treinador *t);
 /* Devolve quantos Pokemon o treinador esta carregando. */
 int treinadorGetQtdPokemon(const Treinador *t);
 
-/* Move o treinador para a coordenada indicada e imprime o deslocamento. */
+/* Move o treinador para a coordenada indicada. Nao imprime nada: a mensagem
+   do deslocamento pertence a quem narra a missao. */
 void treinadorMovimentar(Treinador *t, int cordX, int cordY);
 
 /* Captura o Pokemon: gasta uma Pokebola e guarda uma copia do Pokemon na

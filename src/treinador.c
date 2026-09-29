@@ -68,8 +68,10 @@ int treinadorGetQtdPokemon(const Treinador *t)
 
 void treinadorMovimentar(Treinador *t, int cordX, int cordY)
 {
+    /* A movimentacao nao imprime nada: quem narra a missao e o modulo da
+       missao, que usa esta mesma operacao tanto para ir ate o Pokemon como
+       para voltar ao Centro, dois momentos com mensagens diferentes. */
     treinadorSetLocalizacao(t, cordX, cordY);
-    printf("Treinador(a) %s se movimentou para (%d,%d).\n", t->nome, cordX, cordY);
 }
 
 int treinadorCapturar(Treinador *t, const Pokemon *p)
