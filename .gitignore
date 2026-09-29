@@ -10,3 +10,14 @@ relatorio.txt
 # Pacote de entrega
 *.zip
 *.tar.gz
+
+# Arquivos gerados por testes/rodar_testes.sh
+testes/saida_obtida.txt
+testes/saida_obtida_lf.txt
+testes/saida_obtida_corte.txt
+testes/saida_regras.txt
+testes/diff_exemplo.txt
+testes/diff_relatorio.txt
+testes/valgrind.txt
+tp1_fixo_ok
+verifica.exe
