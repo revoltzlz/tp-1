@@ -30,10 +30,6 @@
 /* Largura das molduras de "=" e das linhas de "-" da saida no terminal. */
 #define LARGURA_MOLDURA 40
 
-/* Tamanho do vetor que monta o titulo de uma moldura, contando o '\0'. Cabe o
-   maior titulo do programa, que inclui o nome de um treinador. */
-#define TAM_TITULO 80
-
 /* Espacos antes do titulo de cada moldura.
 
    Os tres primeiros foram medidos linha por linha no exemplo de saida da

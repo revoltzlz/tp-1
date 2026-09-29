@@ -1,8 +1,12 @@
-# REQUISITOS — TP1 AEDS I (CCF211 / 2026-2)
+# Requisitos da especificação, um por um
 
 Cada exigência do PDF `TP1CCF211-2026_2.pdf` virou um item numerado (R01, R02...).
 A coluna **Pág./Lin.** aponta a linha do texto extraído do PDF (`pdftotext -layout`),
 que é a referência usada nesta sessão.
+
+> **Conferido de novo na revisão final.** Todas as evidências abaixo foram
+> refeitas a partir do PDF e da execução do programa, não das marcações
+> anteriores. O que a revisão mudou está em [revisao.md](revisao.md).
 
 Status: `pendente` | `feito` | `verificado`
 (`verificado` = conferido contra o PDF com evidência anotada na coluna Evidência)
@@ -83,7 +87,7 @@ Status: `pendente` | `feito` | `verificado`
 
 | # | Exigência | Lin. | Trecho / regra | Status | Evidência |
 |---|---|---|---|---|---|
-| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | verificado | Tabela função × uso no `GUIA_ENTREVISTA.md`. As 52 funcoes declaradas nos `.h` tem chamada real; conferido na Fase 6. Tabela funcao x uso no `GUIA_ENTREVISTA.md`. |
+| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | verificado | Tabela função × uso no `GUIA_ENTREVISTA.md`. As 52 funções declaradas nos `.h` têm chamada real. A conferência é automática: um script compara os nomes declarados nos `.h` com os usados nos `.c`. Quem chama cada uma está na descrição do TAD correspondente. |
 | R40 | Inicialização: cria 1 Centro de Pesquisa e **2** Treinadores | 112-114 | — | verificado | `missao.c:executa` cria 1 `PokeCenter` e 2 `Treinador`. |
 | R41 | Registro: lê o arquivo de entrada, registra os fugitivos na PokeLista do Centro e inicializa os dois treinadores | 116-119 | — | verificado | `missao.c:leTreinador` e `missao.c:leFugitivos`. |
 | R42 | Missão de captura: para cada Pokémon registrado, atribui ao treinador de **menor distância euclidiana naquele momento** | 121-125 | — | verificado | `missao.c:resgataPokemon` recalcula as duas distancias a cada alvo, da posicao atual de cada treinador. Teste: as 10 distancias do exemplo conferidas uma a uma. |
@@ -94,14 +98,14 @@ Status: `pendente` | `feito` | `verificado`
 | R47 | Retorno (caso 2): logo após uma captura, se o treinador ficou sem Pokébolas → retorna, devolve o que capturou e **solicita novo carregamento** | 142-145 | — | verificado | `missao.c:retornaAoCentro`, chamado quando as Pokebolas chegam a zero. Teste: `testes/uma_pokebola.txt` recarrega a cada captura. |
 | R48 | Relatório final em arquivo **`.txt`** com os Pokémon recuperados | 147-150 | "emitir um relatório no formato de arquivo .txt" | verificado | `pokecenter.c:pokecenterGerarRelatorio` com `pokelista.c:pokelistaEscreverRelatorio`. |
 | R49 | Conteúdo do relatório: **"o ID e o Nome"** (texto) — mas o exemplo mostra o **número da Pokédex** | 149-150 / 288-293 | — | verificado | **Errata E01.** Seguimos o exemplo: numero da Pokedex mais nome. O `diff` do relatorio passa. **Errata E01. Consequência concreta, que precisa ser dita na entrevista: em `teste2.txt` o relatório sai com quatro linhas idênticas `025 Pikachu`, indistinguíveis entre si — exatamente o problema que o Id único existe para resolver. Imprimir o Id resolveria, mas afastaria o relatório do exemplo do PDF.** |
-| R50 | Modo de utilização **por arquivo** | 153 | "Para o modo de utilização por arquivo" | verificado | `missao.c:missaoExecutarPorArquivo`. Teste: menu executa a missao pela opcao de arquivo. |
+| R50 | Modo de utilização **por arquivo** | 153 | "Para o modo de utilização por arquivo" | verificado | `missao.c:missaoExecutarPorArquivo`, alcançada pela opção 1 do menu. O atalho por linha de comando que existia foi removido na revisão: a especificação pede menu. |
 | R51 | Modo de utilização **interativo** | 170-171 | "criar seus próprios casos de teste, tanto interativos quanto por arquivo" | verificado | `missao.c:missaoExecutarInterativo`. Teste: modo interativo executa a missao e gera o relatorio. |
 | R52 | Formato do arquivo de entrada conforme lin. 156-166 | 152-166 | Ver seção G | verificado | `testes/entrada_exemplo.txt` `testes/entrada_exemplo.txt`, identico ao oficial `testes/oficiais/teste1.txt`. |
 | R53 | Informações do Pokémon na entrada: Número na Pokédex, nome, tipo, coordenadas X e Y | 165-166 | — | verificado | `missao.c:leFugitivos`, com um unico `fscanf` de 5 campos. |
-| R54 | A dupla deve criar seus próprios casos de teste, interativos e por arquivo | 169-172 | — | verificado | pasta `testes/` 32 arquivos de entrada em `testes/`, mais os 2 oficiais e 4 arquivos-oraculo, rodados por `testes/rodar_testes.sh`: 20 casos validos e 17 invalidos. |
-| R55 | Saída no terminal deve **detalhar a execução das funcionalidades** | 174-175 | — | verificado | Saida do exemplo identica a do PDF, conferida por `diff`. O `diff` compara o trecho que o exemplo cobre, ou seja, ate a ultima linha de `=`: depois dela o programa ainda imprime duas linhas dizendo onde o relatorio foi gravado, que o exemplo nao mostra porque termina ali. O `diff` compara o trecho que o exemplo cobre, ou seja, ate a ultima linha de `=`: depois dela o programa ainda imprime duas linhas dizendo onde o relatorio foi gravado, que o exemplo nao mostra porque termina ali. |
-| R56 | A aleatoriedade da recarga permite resultados diferentes a cada execução; o **fluxo** é que precisa estar correto | 175-178 | "o fator de aleatoriedade [...] possibilitará diferentes resultados a cada execução, entretanto, o fluxo das operações deve ser corretamente detalhado" | verificado | A saída de exemplo é "uma possível solução". A recarga e sorteada no programa entregue; o build de teste usa `-DRECARGA_FIXA=2` somente para permitir o `diff` exato. |
-| R57 | Saída de exemplo do terminal (lin. 179-285) | 179-285 | — | verificado | `testes/saida_exemplo_pdf.txt` (transcrição validada por `diff`) `diff` contra `testes/saida_exemplo_esperada.txt` passa. Unica diferenca contra a transcricao fiel do PDF: errata E05. |
+| R54 | A dupla deve criar seus próprios casos de teste, interativos e por arquivo | 169-172 | — | verificado | pasta `testes/` 32 arquivos de entrada em `testes/`, mais os 2 oficiais e 4 arquivos-oráculo, rodados por `testes/rodar_testes.sh`: 19 casos válidos e 16 inválidos, além do menu, do modo interativo e da memória. 72 verificações no total. Ver [testes.md](testes.md). |
+| R55 | Saída no terminal deve **detalhar a execução das funcionalidades** | 174-175 | — | verificado | Saída do exemplo idêntica à do PDF, conferida por `diff`. O `diff` compara o trecho que o exemplo cobre: fora dele ficam só as molduras do menu, que o exemplo naturalmente não mostra. O `diff` compara o trecho que o exemplo cobre, ou seja, ate a ultima linha de `=`: depois dela o programa ainda imprime duas linhas dizendo onde o relatorio foi gravado, que o exemplo nao mostra porque termina ali. |
+| R56 | A aleatoriedade da recarga permite resultados diferentes a cada execução; o **fluxo** é que precisa estar correto | 175-178 | "o fator de aleatoriedade [...] possibilitará diferentes resultados a cada execução, entretanto, o fluxo das operações deve ser corretamente detalhado" | verificado | A saída de exemplo é "uma possível solução". A recarga e sorteada no programa entregue, que **nao tem nenhum modo de teste dentro dele**. Para o `diff` exato, o `testes/rodar_testes.sh` copia o projeto para uma pasta temporaria e troca a linha do sorteio so na copia. |
+| R57 | Saída de exemplo do terminal (lin. 179-285) | 179-285 | — | verificado | `testes/saida_exemplo_pdf.txt` (transcrição validada por `diff`) `diff` contra `testes/saida_exemplo_esperada.txt` passa. A única diferença contra a transcrição fiel do PDF é a errata E05. A mensagem extra que o programa imprimia depois da moldura final foi removida na revisão, então o `diff` não precisa mais ignorar nada além do menu. |
 | R58 | Saída de exemplo do relatório (lin. 288-293) | 287-293 | — | verificado | `testes/relatorio_exemplo_pdf.txt` (idem) `diff` contra `testes/relatorio_exemplo_esperado.txt` passa. Unica diferenca contra o PDF: errata E07. |
 
 ## E. Informações Importantes (lin. 295-307)
@@ -122,14 +126,14 @@ disciplina. Registrados aqui para não se perderem.
 
 | # | Item | Status | Evidência |
 |---|---|---|---|
-| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | verificado | Teste: build normal, como na entrega, com zero avisos. |
-| R66 | Toda a memória alocada é liberada (inclusive a célula cabeça de cada lista) | verificado | O PDF só diz "limpem a memória" (lin. 35-36), na narrativa. Teste: contagem de malloc e free igual em 7 casos. Em `teste2.txt`, 64 e 64, que e 4 celulas cabeca mais 20 registros, 20 capturas e 20 entregas; em `quinhentos_pokemon.txt`, 1504 e 1504, que e 4 + 3x500. **Ressalva de metodo: contar malloc e free prova que nada vazou, mas nao detecta ponteiro pendurado, uso depois do free nem escrita fora de um vetor. Para isso seria preciso o valgrind, que nao existe nesta maquina** (ver a secao J). |
+| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | verificado | Teste: build normal, como na entrega, com zero avisos. Conferido também acrescentando `-pedantic`. |
+| R66 | Toda a memória alocada é liberada (inclusive a célula cabeça de cada lista) | verificado | O PDF só diz "limpem a memória" (lin. 35-36), na narrativa. Teste: contagem de `malloc` e `free` igual em 7 casos, incluindo os de erro. Em `teste2.txt`, 64 e 64, que é 4 células cabeça mais 3 por Pokémon; em `quinhentos_pokemon.txt`, 1504 e 1504. **Ressalva de método: contar `malloc` e `free` prova que nada vazou, mas não detecta apontador pendurado, uso depois do `free` nem escrita fora de vetor. Para isso seria preciso o `valgrind`, que não existe nesta máquina** — ver a seção J. |
 | R67 | Todo `malloc` testado contra `NULL` | verificado | `pokelista.c`, nos dois unicos `malloc` do projeto. |
 | R68 | Include guards em todo `.h`, únicos no projeto | verificado | 7 `.h` com 7 guards distintos, conferido compilando um `.c` que inclui todos duas vezes, em ordem inversa. **O rascunho tinha um `#ifndef` sem `#define` e 6 arquivos sem guard.** |
 | R69 | Sem ciclo de inclusão: `centro.h → treinador.h → pokelista.h → pokemon.h` | verificado | `coordenadas.h` para `pokemon.h` para `conexao.h` para `pokelista.h` para `treinador.h` para `pokecenter.h` para `missao.h`. Cada `.c` inclui somente o seu `.h`. |
 | R70 | Prefixo do TAD em todas as funções (`pokemonGetId`, `treinadorGetId`...) | verificado | C não tem sobrecarga. As 52 funcoes publicas usam o prefixo do TAD. |
 | R71 | Comentário acima de cada protótipo nos `.h` | verificado | Conferido na Fase 6, prototipo por prototipo. |
-| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | verificado | Decorre de R39. Conferido na Fase 6: `pokemonGetTipo` ganhou uso real e `treinadorGetQtdPokemon` foi removida. |
+| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | verificado | Decorre de R39. Nenhuma das 52 funções declaradas fica sem chamada. Há dois *ramos* de código que o fluxo normal não alcança, mantidos de propósito como checagem defensiva e registrados em [revisao.md](revisao.md). |
 | R73 | Entradas inválidas não travam o programa (arquivo inexistente, campos faltando, etc.) | verificado | Entrevista usa arquivos novos. 17 casos invalidos no `rodar_testes.sh`, todos recusados com `Erro:` e codigo de saida 1: arquivo inexistente, vazio, so com espacos, incompleto, campos faltando, quantidade maior que as linhas, texto no lugar de numero em tres campos, valores negativos em tres campos, numero grande demais para caber em `int` em dois campos, coordenada fora do mapa e nome maior que o vetor. |
 | R74 | `srand(time(NULL))` chamado **uma única vez**, no `main` | verificado | `main.c`, uma unica chamada de `srand`. |
 | R75 | `.gitignore` com `*.exe`, `*.o`, `*.zip` e o relatório gerado | verificado | `.gitignore`. |
@@ -227,7 +231,7 @@ Características dos dois arquivos que impõem requisitos de robustez:
 
 ## H. Erratas e ambiguidades do PDF
 
-Amparadas por R08 ("erros [...] podem e devem ser reportados"). Vão para os slides.
+Amparadas por R08 ("erros [...] podem e devem ser reportados"). Vão para os slides. A conta de cada uma está em [exemplo.md](exemplo.md).
 
 | # | Onde | O que o PDF diz | Problema | Como foi tratado |
 |---|---|---|---|---|
@@ -247,7 +251,7 @@ Amparadas por R08 ("erros [...] podem e devem ser reportados"). Vão para os sli
 
 ## I. Decisões de projeto
 
-Amparadas por R09. Vão para os slides e para o `GUIA_ENTREVISTA.md`.
+Amparadas por R09. Vão para os slides e para o [entrevista.md](entrevista.md).
 
 | # | Decisão | Por quê |
 |---|---|---|
@@ -272,7 +276,7 @@ Amparadas por R09. Vão para os slides e para o `GUIA_ENTREVISTA.md`.
 | D19 | `TAM_NOME` de 12 para **30**; `TAM_TIPO` **20** | `Jigglypuff` e `Charmander` tem 10 caracteres e ja ocupam 11 dos 12 bytes. Os tipos acentuados (`Eletrico`, `Psiquico`) gastam 9 bytes em UTF-8. A entrevista usa arquivos novos (R73), entao a folga e barata. |
 | D20 | O `\r` do CRLF **nao precisa de tratamento** na leitura dos dados | O `%s` do `fscanf` para em qualquer espaco em branco, e o `\r` conta como espaco em branco. Por isso nome e tipo nunca recebem o `\r` dos arquivos gerados no Windows. Existe uma funcao que remove `\n` e `\r` (`removeFimDeLinha`), mas ela serve so ao **caminho de arquivo digitado no menu**, que e lido com `fgets` - e o `fgets`, ao contrario do `fscanf`, guarda a quebra de linha. |
 | D21 | **Coordenadas limitadas a mais ou menos 1.000.000** (`COORD_MAX`), recusadas na leitura se sairem disso | Nao e so validacao de dados: e o que garante que o calculo da distancia nao estoure. Sem o limite, dois pontos nos extremos de `int` dao uma soma de quadrados de 3,2x10^19, que **estoura ate o `long long`** - a soma fica negativa, `sqrt` devolve `nan` e a missao vai para o treinador mais distante. Com o limite, a soma maxima e 8x10^12, que cabe com folga de seis ordens de grandeza. |
-| D22 | O build de teste fixa a **semente** do sorteio (`-DSEMENTE_FIXA=1`), e nao a quantidade sorteada | Permite comparar a saida com o exemplo caractere por caractere sem que nenhum TAD saiba que existe um modo de teste: a macro e lida so pelo `main.c`. O sorteio exigido por R38 continua acontecendo, muda apenas de onde vem a semente. A semente 1 produz 2 na primeira recarga, que e o valor do exemplo. |
+| D22 | O programa entregue **não tem nenhum modo de teste dentro dele**. A comparação exata com o exemplo é feita numa cópia temporária do projeto, onde o script de teste troca a linha do sorteio | Um `#ifdef` de teste dentro de um TAD, desligando o sorteio que a especificação exige, é difícil de defender numa entrevista. A cópia temporária resolve sem tocar no código entregue. Houve duas versões anteriores com macro (`RECARGA_FIXA` no TAD Centro e `SEMENTE_FIXA` no `main`), as duas removidas na revisão final. |
 | D23 | Teto de sanidade de 1.000.000 (`MAX_QUANTIDADE`) para Pokebolas, quantidade de fugitivos e numero da Pokedex | O `%d` do `scanf`, diante de um numero grande demais para caber em `int`, guarda um valor truncado sem avisar: `99999999999999999999` vira `1661992959`. Sem um teto, esse lixo entraria como dado valido. |
 | D25 | `treinadorImprimir` imprime **nome, posicao e Pokebolas**, e nao o identificador nem a PokeLista | O exemplo da especificacao define o formato dessa linha: `Treinador(a) Rosa: posicao (0,0) | Pokebolas: 2`. Acrescentar campos afastaria a saida do exemplo. Os Pokemon que o treinador carrega aparecem no relatorio final, depois da entrega, e o TAD PokeLista tem a sua propria operacao de impressao, usada pelo Centro de Pesquisa. |
 | D26 | Dois trechos defensivos que o fluxo normal nunca alcanca: a captura que falha por falta de Pokebola (`resgataPokemon`) e o aviso de Pokemon nao recuperado (`encerraMissao`) | Ficam porque uma operacao de TAD nao deve confiar em quem a chama. Nao ha teste que os exercite justamente porque o fluxo os torna inalcancaveis: para chegar la seria preciso um `malloc` falhando. Estao anotados como defensivos no proprio codigo. |
