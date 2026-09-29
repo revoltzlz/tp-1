@@ -87,7 +87,7 @@ Status: `pendente` | `feito` | `verificado`
 
 | # | Exigência | Lin. | Trecho / regra | Status | Evidência |
 |---|---|---|---|---|---|
-| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | verificado | Tabela função × uso no `GUIA_ENTREVISTA.md`. As 52 funções declaradas nos `.h` têm chamada real. A conferência é automática: um script compara os nomes declarados nos `.h` com os usados nos `.c`. Quem chama cada uma está na descrição do TAD correspondente. |
+| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | verificado | Tabela função × uso no `GUIA_ENTREVISTA.md`. As 51 funções declaradas nos `.h` têm chamada real. A conferência é automática: um script compara os nomes declarados nos `.h` com os usados nos `.c`. Quem chama cada uma está na descrição do TAD correspondente. |
 | R40 | Inicialização: cria 1 Centro de Pesquisa e **2** Treinadores | 112-114 | — | verificado | `missao.c:executa` cria 1 `PokeCenter` e 2 `Treinador`. |
 | R41 | Registro: lê o arquivo de entrada, registra os fugitivos na PokeLista do Centro e inicializa os dois treinadores | 116-119 | — | verificado | `missao.c:leTreinador` e `missao.c:leFugitivos`. |
 | R42 | Missão de captura: para cada Pokémon registrado, atribui ao treinador de **menor distância euclidiana naquele momento** | 121-125 | — | verificado | `missao.c:resgataPokemon` recalcula as duas distancias a cada alvo, da posicao atual de cada treinador. Teste: as 10 distancias do exemplo conferidas uma a uma. |
@@ -131,9 +131,9 @@ disciplina. Registrados aqui para não se perderem.
 | R67 | Todo `malloc` testado contra `NULL` | verificado | `pokelista.c`, nos dois unicos `malloc` do projeto. |
 | R68 | Include guards em todo `.h`, únicos no projeto | verificado | 7 `.h` com 7 guards distintos, conferido compilando um `.c` que inclui todos duas vezes, em ordem inversa. **O rascunho tinha um `#ifndef` sem `#define` e 6 arquivos sem guard.** |
 | R69 | Sem ciclo de inclusão: `centro.h → treinador.h → pokelista.h → pokemon.h` | verificado | `coordenadas.h` para `pokemon.h` para `conexao.h` para `pokelista.h` para `treinador.h` para `pokecenter.h` para `missao.h`. Cada `.c` inclui somente o seu `.h`. |
-| R70 | Prefixo do TAD em todas as funções (`pokemonGetId`, `treinadorGetId`...) | verificado | C não tem sobrecarga. As 52 funcoes publicas usam o prefixo do TAD. |
+| R70 | Prefixo do TAD em todas as funções (`pokemonGetId`, `treinadorGetId`...) | verificado | C não tem sobrecarga. As 51 funcoes publicas usam o prefixo do TAD. |
 | R71 | Comentário acima de cada protótipo nos `.h` | verificado | Conferido na Fase 6, prototipo por prototipo. |
-| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | verificado | Decorre de R39. Nenhuma das 52 funções declaradas fica sem chamada. Há dois *ramos* de código que o fluxo normal não alcança, mantidos de propósito como checagem defensiva e registrados em [revisao.md](revisao.md). |
+| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | verificado | Decorre de R39. Nenhuma das 51 funções declaradas fica sem chamada, conferido por script nos dois sentidos. Há quatro *ramos* de código que o fluxo normal não alcança, todos caminhos de falha de `malloc`, registrados um a um em [revisao.md](revisao.md). |
 | R73 | Entradas inválidas não travam o programa (arquivo inexistente, campos faltando, etc.) | verificado | Entrevista usa arquivos novos. 17 casos invalidos no `rodar_testes.sh`, todos recusados com `Erro:` e codigo de saida 1: arquivo inexistente, vazio, so com espacos, incompleto, campos faltando, quantidade maior que as linhas, texto no lugar de numero em tres campos, valores negativos em tres campos, numero grande demais para caber em `int` em dois campos, coordenada fora do mapa e nome maior que o vetor. |
 | R74 | `srand(time(NULL))` chamado **uma única vez**, no `main` | verificado | `main.c`, uma unica chamada de `srand`. |
 | R75 | `.gitignore` com `*.exe`, `*.o`, `*.zip` e o relatório gerado | verificado | `.gitignore`. |
