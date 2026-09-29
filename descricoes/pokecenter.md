@@ -159,21 +159,25 @@ Quem chama, em dois momentos:
 O segundo caso não acontece no fluxo normal. Fica como rede de segurança: se um
 dia uma captura falhar, a saída diz exatamente quem não voltou.
 
-### `pokecenterTemFugitivos`, `pokecenterGetQtdFugitivos`, `pokecenterGetQtdRecuperados`
+### `pokecenterTemFugitivos` e `pokecenterGetQtdFugitivos`
 
 ```c
 int pokecenterTemFugitivos(const PokeCenter *cp);       /* !pokelistaVazia(&cp->fugitivos) */
 int pokecenterGetQtdFugitivos(const PokeCenter *cp);    /* pokelistaGetTamanho(&cp->fugitivos) */
-int pokecenterGetQtdRecuperados(const PokeCenter *cp);  /* pokelistaGetTamanho(&cp->recuperados) */
 ```
 
-Todas **O(1)**.
+As duas **O(1)**.
+
+Houve uma terceira, `pokecenterGetQtdRecuperados`, que foi removida na revisão
+final: ela era chamada por uma mensagem que o programa imprimia no fim
+("Relatório gravado em ...: N Pokémon") e que saiu por não estar no exemplo da
+especificação. Sem essa mensagem, a função ficou declarada e nunca chamada.
 
 `pokecenterTemFugitivos` é a função que decide o fim da missão: é ela que
 responde "acabaram os fugitivos?" no primeiro dos dois testes que vêm depois de
 cada captura — ver [missao.md](missao.md).
 
-Quem chama: `executaMissao` e `encerraMissao` usam as duas primeiras;
+Quem chama: `executaMissao` e `encerraMissao` usam as duas;
 `pokecenterGetQtdFugitivos` também aparece na linha "Pokémons fugitivos a serem
 resgatados: 5".
 
@@ -268,10 +272,12 @@ mesma semente e sorteariam a mesma quantidade — ver [main.md](main.md).
 **A checagem de posição.** As Pokébolas ficam no Centro, então só quem está no
 Centro pode ser recarregado. No fluxo normal da missão o treinador sempre se
 movimenta para cá antes de pedir a recarga, então essa checagem nunca dispara;
-ela existe para que uma chamada fora de hora não crie Pokébolas do nada. É
-também o que dá uso ao parâmetro `cp`: sem ela, a operação de recarga não
-usaria o Centro para nada, e um TAD cuja operação não recebe a própria
-instância fica estranho.
+ela existe para que uma chamada fora de hora não crie Pokébolas do nada.
+
+Há um segundo motivo, verificável: é ela que **usa o parâmetro `cp`**. Sem a
+checagem, o `cp` fica sem nenhum uso na função, e compilar com `-Wextra` emite
+`unused parameter 'cp'` — o que quebraria o critério de zero avisos do
+projeto. Conferido compilando uma versão sem ela.
 
 A recarga **atribui**, não soma, porque é o verbo que a especificação usa.
 

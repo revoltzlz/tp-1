@@ -196,12 +196,13 @@ para a direita e é o meu código que chama `sqrt`. Cada regra lista os
 cabeçalhos de que o objeto depende, então mudar um `.h` recompila só o que
 precisa. Mais detalhes em [makefile.md](makefile.md).
 
-**Por que o `make clean` tem aquele `ifeq` aninhado?**
-Porque o comando de apagar depende do shell, não só do sistema. No Windows o
-make pode rodar sob o `cmd`, onde existe `del`, ou sob o `sh` do Git Bash, onde
-existe `rm`. A variável `OS` diz se é Windows e a `MSYSTEM` diz se é o Git Bash.
-Escolher errado é pior que falhar: o comando não existe, o `-` da regra faz o
-make seguir em frente, e os arquivos ficam onde estavam.
+**Por que o `make clean` tem dois comandos de apagar?**
+Porque o comando depende do shell, não só do sistema. No Windows o make pode
+rodar sob o `cmd`, onde existe `del`, ou sob o `sh` do Git Bash, onde existe
+`rm`. Tento os dois, e o `-` na frente de cada linha manda o make seguir em
+frente com o que não existir ali. Já tentei escolher um só, por uma variável de
+ambiente, e o resultado foi pior: quando a escolha errava, o comando falhava, o
+`-` engolia o erro e os arquivos ficavam onde estavam, sem aviso nenhum.
 
 **Tem trechos do seu código que nunca executam. Por quê?**
 Dois, e são de propósito: a captura que falha por falta de Pokébola, e o aviso

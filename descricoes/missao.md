@@ -25,7 +25,6 @@ int missaoExecutarInterativo(void);
 ### As constantes
 
 ```c
-#define NUM_TREINADORES 2
 #define ID_TREINADOR_1 1
 #define ID_TREINADOR_2 2
 #define ARQ_RELATORIO "relatorio.txt"
@@ -45,7 +44,6 @@ int missaoExecutarInterativo(void);
 
 | Constante | Para que serve |
 |---|---|
-| `NUM_TREINADORES` | a dupla que a especificação fixa |
 | `ID_TREINADOR_1`, `ID_TREINADOR_2` | os identificadores, atribuídos na ordem de leitura. O primeiro treinador do arquivo recebe o menor, porque é ele que ganha o desempate |
 | `ARQ_RELATORIO` | o nome do arquivo `.txt` do relatório. A especificação não define o nome |
 | `TAM_CAMINHO` e `FMT_CAMINHO` | o vetor do caminho digitado no menu e a largura de leitura correspondente |
@@ -55,11 +53,17 @@ int missaoExecutarInterativo(void);
 | os três `OPCAO_*` | as opções do menu |
 
 **Sobre `MAX_QUANTIDADE`.** Não vem da especificação. Existe porque o `%d` do
-`scanf`, diante de um número grande demais para caber num `int`, guarda um
-valor truncado **sem avisar**: um arquivo com `Rosa 99999999999999999999`
-entrava no programa como 1.661.992.959 Pokébolas, e a checagem de "não pode ser
-negativo" não pegava. O teto de um milhão recusa esse lixo. Os testes
-`erro_pokebolas_gigante.txt` e `erro_pokedex_gigante.txt` cobrem isso.
+`scanf`, diante de um número que não cabe num `int`, **não garante o que
+grava**: o padrão da linguagem diz que o comportamento é indefinido. Na
+prática, um arquivo com `Rosa 99999999999999999999` entrou neste compilador
+como 1.661.992.959 Pokébolas — um valor positivo, que a checagem de "não pode
+ser negativo" não pegava. Como não dá para confiar no que o `scanf` deixou na
+variável, o teto recusa o valor. Os testes `erro_pokebolas_gigante.txt` e
+`erro_pokedex_gigante.txt` cobrem isso.
+
+Repare na diferença entre dizer "trunca" e "não garante o que grava": o número
+1.661.992.959 é específico deste compilador, e outro poderia parar em
+`INT_MAX`. A afirmação correta é a segunda.
 
 **Sobre os `INDENT_*`.** Os três primeiros (18, 12 e 7) foram medidos linha por
 linha no exemplo da especificação. Os outros dois não vieram de lá:
@@ -342,28 +346,36 @@ aberto no modo por arquivo e o `stdin` no modo interativo; o parâmetro
 A parte mais delicada é a liberação nos caminhos de erro:
 
 ```c
-if (leTreinador(entrada, interativo, &treinador1, ID_TREINADOR_1)) {
-    treinadoresProntos++;
-    if (leTreinador(entrada, interativo, &treinador2, ID_TREINADOR_2)) {
-        treinadoresProntos++;
-    }
+if (!leTreinador(entrada, interativo, &treinador1, ID_TREINADOR_1)) {
+    pokecenterLiberar(&centro);
+    return 0;
 }
 
-ok = (treinadoresProntos == NUM_TREINADORES) &&
-     leFugitivos(entrada, interativo, &centro, &qtdFugitivos);
+if (!leTreinador(entrada, interativo, &treinador2, ID_TREINADOR_2)) {
+    treinadorLiberar(&treinador1);
+    pokecenterLiberar(&centro);
+    return 0;
+}
 
-if (!ok) {
-    if (treinadoresProntos >= 1)                { treinadorLiberar(&treinador1); }
-    if (treinadoresProntos >= NUM_TREINADORES)  { treinadorLiberar(&treinador2); }
+if (!leFugitivos(entrada, interativo, &centro, &qtdFugitivos)) {
+    treinadorLiberar(&treinador1);
+    treinadorLiberar(&treinador2);
     pokecenterLiberar(&centro);
     return 0;
 }
 ```
 
-O contador `treinadoresProntos` registra quantos treinadores chegaram a ser
-inicializados. Sem ele, o caminho de erro liberaria uma PokeLista que nunca foi
-inicializada, lendo apontadores com lixo. Com ele, cada lista é liberada se e
-somente se existir.
+São três saídas de erro, e cada uma libera **por extenso** o que chegou a ser
+criado até ali. Liberar uma PokeLista que nunca foi inicializada leria
+apontadores com lixo, então a ordem importa: se o primeiro treinador falhou,
+não há nada dele para liberar; se o segundo falhou, libera-se o primeiro; e
+assim por diante.
+
+Uma versão anterior fazia isso com um contador `treinadoresProntos` e um `&&`
+de curto-circuito, que ocupava menos linhas mas escondia o fluxo: era preciso
+saber que o `&&` não avalia o lado direito quando o esquerdo é falso para
+entender por que `leFugitivos` não era chamada. Três `if` explícitos custam
+seis linhas a mais e não escondem nada.
 
 No fim, no caminho normal, os três `liberar` recuperam tudo: as duas listas do
 Centro e a lista de cada treinador, com as quatro células cabeça.

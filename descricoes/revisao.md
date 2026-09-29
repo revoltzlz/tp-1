@@ -17,7 +17,7 @@ git log antes-da-revisao..HEAD --oneline # um commit por correção
 | 2. Simplicidade | feita |
 | 3. Pasta `descricoes/` | feita |
 | 4. Enxugar os comentários | feita |
-| 5. Revisão independente | feita |
+| 5. Revisão independente | parcial: o revisor de simplicidade entregou e foi aplicado; os de conformidade e de consistência pararam por limite de uso e foram refeitos |
 | 6. Slides, zip e fechamento | ver a seção "O que depende do Gabriel" |
 
 ---
@@ -193,10 +193,16 @@ seguinte.
 
 ### `MAX_QUANTIDADE`, o teto das quantidades
 
-O `%d` do `scanf` trunca silenciosamente um número que não cabe num `int`:
-`99999999999999999999` entrava como 1.661.992.959. Sem o teto, esse valor
-passaria pela checagem de "não pode ser negativo" e entraria no programa como
-dado válido.
+O `%d` do `scanf`, diante de um número que não cabe num `int`, **não garante o
+que grava** — o padrão da linguagem diz que o comportamento é indefinido. Neste
+compilador, `99999999999999999999` entrou como 1.661.992.959, um valor positivo
+que passaria pela checagem de "não pode ser negativo". Como não dá para confiar
+no valor, o teto o recusa.
+
+A primeira versão desta seção dizia que o `%d` "trunca". Está errado, e o
+revisor independente pegou: 1.661.992.959 é específico deste compilador, e
+outro poderia parar em `INT_MAX`. Dizer "trunca" numa entrevista seria um ponto
+perdido de graça.
 
 ### `pulaMarcaUtf8`
 
@@ -208,24 +214,50 @@ tratamento ficou. São oito linhas com `fgetc` e `rewind`, ambas de `stdio.h`.
 ### A checagem de posição na recarga
 
 `pokecenterRecarregarPokebolas` recusa recarregar um treinador que não está no
-Centro. É o que dá uso ao parâmetro `cp` — sem ela, a operação de recarga não
-usaria o Centro para nada, e um TAD cuja operação não recebe a própria
-instância fica estranho. No fluxo normal nunca dispara.
+Centro. No fluxo normal nunca dispara.
+
+O motivo de ficar é **verificável**: é ela que usa o parâmetro `cp`. Compilando
+uma versão sem a checagem, o gcc emite
+`warning: unused parameter 'cp' [-Wunused-parameter]`, o que quebraria o
+critério de zero avisos do projeto. A primeira versão desta seção dava um
+argumento estético ("um TAD fica estranho"); o revisor independente apontou o
+argumento concreto, que é este.
 
 ### A escolha entre `del` e `rm` no `clean`
 
-Duas variáveis de ambiente em `ifeq` aninhado. Ficou porque a versão
-simplificada, que olhava só o sistema operacional, fazia o `make clean` **não
-apagar nada em silêncio** quando rodado pelo Git Bash. Ver
-[makefile.md](makefile.md).
+**Esta ficou pela metade e a revisão independente corrigiu.** O `clean` tinha 13
+linhas de `ifeq` aninhado escolhendo o comando por duas variáveis de ambiente.
+O diagnóstico estava certo — olhar só `OS` fazia o `clean` não apagar nada em
+silêncio no Git Bash — mas a conclusão, não: a correção para "escolheu o comando
+errado" é **tirar** o condicional, não somar outro.
 
-### Dois trechos que o fluxo normal nunca alcança
+Agora são duas linhas que tentam os dois comandos, cada uma com `-` na frente.
+Testado nos dois shells. Ver [makefile.md](makefile.md).
 
-A captura que falha por falta de Pokébola (`resgataPokemon`) e o aviso de
-Pokémon não recuperado (`encerraMissao`). Ficam porque uma operação de TAD não
-deve confiar em quem a chama: se alguém chamar `treinadorCapturar` fora de hora,
-a quantidade de Pokébolas não pode ficar negativa. Para alcançá-los de verdade
-seria preciso um `malloc` falhando.
+### Trechos que o fluxo normal nunca alcança
+
+São quatro, e o motivo de cada um é diferente. A primeira versão desta seção
+dava um argumento só, e errado — dizia que eram "um TAD não confiando em quem o
+chama", mas isso descreve a checagem **dentro** de `treinadorCapturar`, que é
+outra coisa. O revisor independente apontou a confusão. Os motivos certos:
+
+| Onde | Por que nunca roda | Por que fica |
+|---|---|---|
+| `resgataPokemon`: a captura que falha | o fluxo garante que o escolhido tem Pokébola | é o **tratamento de falha do `malloc`**: `treinadorCapturar` devolve 0 também quando `pokelistaInserir` não consegue memória. Testar o retorno de `malloc` é exigência da disciplina |
+| `resgataPokemon`: `if (escolhido == NULL) continue;` | idem | **não é defesa, é necessidade estrutural**: sem ele, a linha seguinte desreferenciaria `NULL` |
+| `encerraMissao`: o aviso de Pokémon não recuperado | todos são resgatados | mesma categoria: só é alcançável se um `malloc` falhar |
+| `pokecenterReceberPokemon`: o aviso de memória insuficiente | idem | idem |
+
+Há ainda um quinto caso que merece nota, porque a resposta é diferente: o
+`continue` de `if (!pokecenterBuscarFugitivo(cp, id, &alvo))`, em
+`executaMissao`. O `continue` nunca executa — os ids 1..n foram todos
+registrados e cada um é visitado uma vez. **Mas a chamada é obrigatória**,
+porque é ela que preenche `alvo`. A resposta certa na entrevista é: "o
+`continue` nunca roda, mas a busca sim, porque é ela que me dá o Pokémon".
+
+E vale saber defender a escolha de percorrer os ids de 1 a n em vez de iterar a
+lista de fugitivos enquanto se remove dela: **iterar uma lista encadeada
+enquanto se remove dela é onde os bugs moram.**
 
 ### O relatório imprime o número da Pokédex, não o Id
 
@@ -233,6 +265,88 @@ O texto da especificação pede "o ID e o Nome", e o exemplo mostra `610 Axew`,
 que é o número da Pokédex. O programa segue o exemplo. A consequência é que no
 `teste2.txt` o relatório sai com quatro linhas idênticas `025 Pikachu`. Está na
 lista de pendências, porque depende de confirmação com os monitores.
+
+---
+
+## A revisão independente
+
+Três revisores sem o histórico desta sessão foram encarregados de conformidade
+com o PDF, simplicidade e consistência da documentação. **O de simplicidade
+entregou; os outros dois pararam por limite de uso da ferramenta e serão
+refeitos.**
+
+O revisor de simplicidade rodou primeiro um varredor bruto dos itens proibidos
+sobre `main.c`, `include/` e `src/` — `static`, `inline`, `extern`, `goto`,
+`enum`, `union`, ternário, `void *`, `size_t`, `unsigned`, `qsort`, `memcpy`,
+`memset`, `assert`, `errno`, `perror`, `stdbool`, `strdup`, `strtok`, `strtol`,
+`snprintf`, `fgets`, `sscanf`, `getline`, `#pragma`, `#ifdef`, `_WIN32` — e não
+achou **nenhuma ocorrência**. Também confirmou que não há recursão, operação de
+bits, aritmética de ponteiro nem `**`.
+
+### O que foi aceito e corrigido
+
+| Achado | O que foi feito |
+|---|---|
+| `pokecenterGetQtdRecuperados` era API morta | removida. Ela era chamada pela mensagem "Relatório gravado em ...: N Pokémon", que saiu por não estar no exemplo, e ficou órfã |
+| o `ifeq` aninhado do `clean` | trocado por duas linhas de comando, sem condicional |
+| o comentário do `MAX_QUANTIDADE` dizia "trunca" | corrigido para "não garante o que grava": é comportamento indefinido |
+| `treinadoresProntos` e o `&&` de curto-circuito | trocados por três `if` explícitos. `NUM_TREINADORES` ficou sem uso e saiu |
+| a variável `ok` com dois significados | a segunda virou `relatorioGravado` |
+| a guarda de `pulaMarcaUtf8` estava invertida | reescrita na forma positiva |
+| `for (;;)` | virou `while (1)` |
+| cores ANSI no script de teste | removidas |
+| o argumento da checagem de posição era estético | trocado pelo concreto: sem ela o `-Wextra` acusa `unused parameter` |
+| o argumento dos trechos inalcançáveis não correspondia ao código citado | reescrito, com um motivo por trecho |
+
+### O que foi analisado e recusado, com o motivo
+
+**Baixar `COORD_MAX` de 10⁶ para 10⁴ e eliminar o `long long`.** Esta é a
+proposta mais forte do revisor, e a conta dele está certa: com `COORD_MAX` de
+10.000, a soma dos quadrados chega a 8×10⁸ e cabe num `int`, o que apagaria o
+`long long`, dois casts e o parágrafo de aritmética de estouro.
+
+Não foi adotada porque a instrução desta revisão é explícita no ponto: *"`dx*dx
++ dy*dy` cabe em `int` com coordenadas até cerca de ±16000. **Se o PDF não
+limitar as coordenadas, faça essa conta em `long long`**"*. O PDF não limita as
+coordenadas em lugar nenhum. O revisor não tinha essa instrução. Fica
+registrado como alternativa válida: se em algum momento se preferir aceitar um
+mapa menor em troca de `int`, a mudança é `COORD_MAX 10000`, trocar `long long`
+por `int` em `distanciaQuadrado` e em `escolheTreinador`, e reescrever
+`testes/coordenadas_no_limite.txt`.
+
+**Simplificar `testes/rodar_testes.sh`.** O revisor tem razão que as 543 linhas
+dele estão muito acima do nível: cores de terminal (removidas), macro com
+parâmetro no cabeçalho de contagem de memória, `2>&1 > /dev/null`, substituição
+de processo, `${par%%:*}`. Mas o script **é ferramenta de verificação, não
+material de entrega**: ele não entra no `.zip`, e a versão de cinco linhas que
+o revisor propõe perderia o `diff` contra o exemplo, as invariantes, a contagem
+de memória e o desvio do Smart App Control — que é justamente o que esta
+revisão precisava medir.
+
+A recomendação dele para a entrevista é boa e vale seguir: **dizer antes de ser
+perguntado** que o script é ferramenta de conferência, montada com ajuda, e que
+o que foi escrito e se sabe explicar é o programa em C. O mesmo vale para o
+`gerar_zip.sh`.
+
+**Escrever `"%d %29s %19s %d %d"` direto, em vez de concatenar `FMT_NOME`.** O
+revisor está certo que a macro não protege nada — o 29 é escrito à mão e não
+acompanha o `TAM_NOME`. Mas a especificação exige que números fixos sejam
+constantes, e escrever as larguras direto no formato as devolve ao código como
+números soltos. Fica como está.
+
+**Trocar `pokelistaRemoverPrimeiro` pela remoção direta do Ziviani.** As duas se
+defendem. A versão atual reaproveita `pokelistaRemover` para que exista um único
+algoritmo de remoção no TAD; a do livro duplica o código mas é literalmente a
+figura da aula. Mantida a atual, com o comentário que explica a escolha.
+
+### Para a entrevista
+
+O revisor destacou onde o trabalho está seguro, e vale saber conduzir a conversa
+por aí: `main.c` inteiro (18 linhas), `conexao.h`, **`pokelista.c` inteiro** —
+que é o Ziviani capítulo 2 bem feito, com a correção do `ultimo` na remoção do
+último, que é o ponto que separa quem entendeu de quem copiou —, `pokemon.c`,
+`treinador.c`, `pokecenter.c` exceto o sorteio, `escolheTreinador`, o `switch`
+do menu, e o Makefile.
 
 ---
 

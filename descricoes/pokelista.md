@@ -467,8 +467,7 @@ o contador, que é mantido pela inserção e pela remoção — contar percorren
 seria O(n).
 
 Quem chama: `pokelistaRemoverPrimeiro` e `pokecenterTemFugitivos` usam a
-primeira; `pokecenterGetQtdFugitivos` e `pokecenterGetQtdRecuperados` usam a
-segunda.
+primeira; `pokecenterGetQtdFugitivos` usa a segunda.
 
 ### `pokelistaLiberar`
 

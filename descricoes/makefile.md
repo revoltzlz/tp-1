@@ -115,49 +115,36 @@ a tarefa já está feita e não faria nada.
 ## A limpeza
 
 ```make
-ifeq ($(OS),Windows_NT)
-    ifeq ($(MSYSTEM),)
-        LIMPAR = del /Q /F $(ALVO).exe *.o
-    else
-        LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
-    endif
-else
-    LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
-endif
-
 clean:
-	-$(LIMPAR)
+	-rm -f $(ALVO) $(ALVO).exe *.o
+	-del /Q /F $(ALVO).exe *.o
 ```
 
 O comando de apagar depende de **em qual shell o make está rodando**, e não só
 do sistema operacional. No Windows o make pode rodar sob o `cmd` ou o
 PowerShell, onde existe `del` e não existe `rm`, ou sob o `sh` do Git Bash, onde
-é o contrário. Duas variáveis de ambiente respondem isso:
+é o contrário.
 
-| Variável | Vale |
+A solução é tentar os dois. O `-` no começo de cada linha manda o make **seguir
+em frente** se o comando falhar, então em cada ambiente um dos dois apaga os
+arquivos e o outro reclama que não existe:
+
+| Ambiente | o que acontece |
 |---|---|
-| `OS` | `Windows_NT` no Windows; vazia no Linux |
-| `MSYSTEM` | `MINGW64` dentro do Git Bash; vazia nos outros shells |
+| Linux ou Git Bash | `rm` apaga; `del` não existe e é ignorado |
+| Windows, cmd ou PowerShell | `rm` não existe e é ignorado; `del` apaga |
 
-Combinando as duas:
+Testado nos dois shells: em ambos não sobra nenhum `.o` nem o executável. O
+custo é uma mensagem de "comando não encontrado" na tela, que é ruído, mas
+honesto.
 
-| Ambiente | `OS` | `MSYSTEM` | Comando |
-|---|---|---|---|
-| Linux | vazia | vazia | `rm` |
-| Windows, Git Bash | `Windows_NT` | `MINGW64` | `rm` |
-| Windows, cmd ou PowerShell | `Windows_NT` | vazia | `del` |
-
-**Por que isso não foi simplificado.** A versão anterior olhava só a variável
-`OS` e escolhia `del` sempre que estava no Windows. Rodando
-`mingw32-make clean` de dentro do Git Bash, o `del` não existia, o comando
-falhava, o `-` do começo da linha fazia o make seguir em frente, e **os
-arquivos ficavam onde estavam** — uma falha silenciosa, que é pior do que
-falhar. Um `ifeq` aninhado é mais código do que se gostaria, mas a explicação é
-de uma frase e o resultado é correto nos três ambientes, o que foi testado.
-
-O `-` antes do comando manda o make ignorar o erro. Serve para
-`make clean` funcionar quando não há nada para apagar, em vez de reclamar que
-não encontrou os arquivos.
+**Como isso já esteve errado.** Uma versão anterior escolhia o comando por um
+`ifeq` que olhava só a variável `OS`. Como `OS` vale `Windows_NT` mesmo dentro
+do Git Bash, ela escolhia `del`, que não existe ali: o comando falhava, o `-`
+engolia o erro, e **os arquivos ficavam onde estavam** — falha silenciosa, que
+é pior que falhar. A correção seguinte somou um segundo `ifeq` para distinguir
+o Git Bash, o que resolvia mas custava 13 linhas. A versão atual não tem
+condicional nenhum: são duas linhas de comando.
 
 ## Como usar
 

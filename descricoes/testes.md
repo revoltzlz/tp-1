@@ -145,9 +145,10 @@ como o programa as imprime:
 Três desses merecem explicação:
 
 **`erro_pokebolas_gigante.txt`** tem `Rosa 99999999999999999999`. Esse número
-não cabe num `int`, e o `%d` do `scanf` guarda um valor truncado sem avisar:
-1.661.992.959. A checagem de "não pode ser negativo" não pegaria, porque o valor
-truncado é positivo. É o teto `MAX_QUANTIDADE` que o recusa.
+não cabe num `int`, e nesse caso o `%d` do `scanf` **não garante o que grava** —
+o padrão da linguagem diz que o comportamento é indefinido. Neste compilador a
+variável ficou com 1.661.992.959, um valor positivo, que a checagem de "não pode
+ser negativo" não pegaria. É o teto `MAX_QUANTIDADE` que o recusa.
 
 **`erro_coordenada_fora_do_mapa.txt`** tem coordenadas de 2 bilhões. É o teste
 que guarda a correção do estouro da distância: o programa tem de **recusar** o
