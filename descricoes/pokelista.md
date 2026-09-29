@@ -55,8 +55,9 @@ pendurado**, apontando para memória devolvida ao sistema, e liberar as duas
 daria **`free` duplo**. Os dois são erros difíceis de achar, porque o programa
 muitas vezes continua funcionando por acidente.
 
-O custo dessa escolha é que cada cópia move a struct inteira (uns 60 bytes, com
-os dois vetores de caracteres). Para o tamanho deste problema isso é
+O custo dessa escolha é que cada cópia move a struct inteira — 68 bytes neste
+compilador, medidos com `sizeof(Pokemon)`, dos quais 50 são os dois vetores de
+caracteres. Para o tamanho deste problema isso é
 irrelevante, e a segurança compensa.
 
 ---
@@ -466,8 +467,9 @@ Ambas **O(1)**. A primeira usa a invariante da célula cabeça. A segunda devolv
 o contador, que é mantido pela inserção e pela remoção — contar percorrendo
 seria O(n).
 
-Quem chama: `pokelistaRemoverPrimeiro` e `pokecenterTemFugitivos` usam a
-primeira; `pokecenterGetQtdFugitivos` usa a segunda.
+Quem chama a primeira: `pokelistaRemoverPrimeiro`, `pokelistaImprimir` (para
+decidir se imprime a mensagem de lista vazia) e `pokecenterTemFugitivos`. Quem
+chama a segunda: `pokecenterGetQtdFugitivos`.
 
 ### `pokelistaLiberar`
 
@@ -507,7 +509,9 @@ Três detalhes, todos importantes:
 É um laço, e não recursão: cada célula é visitada uma vez, e um laço não gasta
 pilha.
 
-Quem chama: `treinadorLiberar` e `pokecenterLiberar`.
+Quem chama: `treinadorLiberar`, `pokecenterLiberar` e tambem
+`pokecenterInicializar`, no caminho de erro em que a primeira lista do Centro
+foi criada e a segunda falhou.
 
 ---
 

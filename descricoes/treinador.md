@@ -133,7 +133,9 @@ treinador volta ao Centro, e o identificador para desempatar.
 
 Quem chama: `src/missao.c` usa os quatro, e `treinadorGetNome` é a função mais
 chamada do projeto, porque quase toda linha da saída traz o nome de um
-treinador. `pokecenterRecarregarPokebolas` usa o `treinadorGetLocalizacao`.
+treinador. `pokecenterRecarregarPokebolas` usa o `treinadorGetLocalizacao`. E
+`treinadorImprimir`, neste mesmo arquivo, chama `treinadorGetNome`,
+`treinadorGetLocalizacao` e `treinadorGetPokebolas`.
 
 Não existe um `get` para a PokeLista do treinador. Ela é acessada pelas
 operações de domínio (capturar e retirar), que é o que a especificação pede —

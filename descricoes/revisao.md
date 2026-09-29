@@ -169,7 +169,7 @@ correta.
 | `EXIT_SUCCESS` e `EXIT_FAILURE` | — | `return 0` |
 | o cast em `srand((unsigned int) time(NULL))` | não é necessário: não gera aviso nem com `-pedantic` | `srand(time(NULL))` |
 
-O arquivo saiu de 56 linhas para 20.
+O arquivo saiu de 56 linhas para 18.
 
 ### `src/missao.c`
 

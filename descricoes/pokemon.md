@@ -129,7 +129,9 @@ Quem chama: `src/missao.c` usa `pokemonGetId`, `pokemonGetNome` e
 `pokemonGetLocalizacao` no laço da missão; `src/pokelista.c` usa
 `pokemonGetId` na busca e na remoção, e `pokemonGetNumPokedex` e
 `pokemonGetNome` para escrever o relatório; `src/pokecenter.c` usa
-`pokemonGetNome` na mensagem de erro do recebimento.
+`pokemonGetNome` na mensagem de erro do recebimento. E `pokemonImprimir`, neste
+mesmo arquivo, chama **os cinco** — é por isso que `pokemonGetTipo`, que
+nenhum outro módulo usa, não fica sem chamador.
 
 ### Impressão
 
