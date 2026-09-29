@@ -29,8 +29,8 @@ PASTA=tmp_testes
 PASSOU=0
 FALHOU=0
 
-verde()    { printf '  \033[32mPASSOU\033[0m  %s\n' "$1"; PASSOU=$((PASSOU + 1)); }
-vermelho() { printf '  \033[31mFALHOU\033[0m  %s\n' "$1"; FALHOU=$((FALHOU + 1)); }
+verde()    { echo "  PASSOU  $1"; PASSOU=$((PASSOU + 1)); }
+vermelho() { echo "  FALHOU  $1"; FALHOU=$((FALHOU + 1)); }
 
 # Opcoes de otimizacao que o script vai tentando ate o sistema aceitar executar
 # o binario. Elas nao mudam o comportamento do programa, apenas o codigo de

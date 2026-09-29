@@ -6,12 +6,10 @@
 
 #include "pokecenter.h"
 
-/* Quantidade de treinadores do esquadrao, fixada pela especificacao. */
-#define NUM_TREINADORES 2
-
-/* Identificadores, atribuidos na ordem de leitura. Sao eles que desempatam
-   quando os dois estao a mesma distancia, entao o primeiro treinador do
-   arquivo precisa receber o menor. */
+/* Os dois treinadores do esquadrao, que a especificacao fixa em dois. Os
+   identificadores sao atribuidos na ordem de leitura, e sao eles que
+   desempatam quando os dois estao a mesma distancia do alvo: por isso o
+   primeiro treinador do arquivo precisa receber o menor. */
 #define ID_TREINADOR_1 1
 #define ID_TREINADOR_2 2
 
@@ -23,8 +21,9 @@
 #define FMT_CAMINHO "%255s"
 
 /* Teto das quantidades lidas. Existe porque o %d do scanf, diante de um numero
-   grande demais para caber em um int, guarda um valor truncado sem avisar, e
-   esse lixo entraria como dado valido. */
+   que nao cabe em um int, nao garante o que grava: o padrao da linguagem diz
+   que o comportamento e indefinido. Sem o teto, esse valor entraria no
+   programa como se fosse um dado valido. */
 #define MAX_QUANTIDADE 1000000
 
 /* Largura das linhas de "=" e de "-" da saida. */

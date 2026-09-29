@@ -88,11 +88,9 @@ void pulaMarcaUtf8(FILE *entrada)
     b = fgetc(entrada);
     c = fgetc(entrada);
 
-    if (a == 0xEF && b == 0xBB && c == 0xBF) {
-        return;
+    if (a != 0xEF || b != 0xBB || c != 0xBF) {
+        rewind(entrada);
     }
-
-    rewind(entrada);
 }
 
 /* Le nome e Pokebolas de um treinador e o inicializa. Devolve 0 se os dados
@@ -118,8 +116,7 @@ int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
         printf("Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
         return 0;
     }
-    /* O teto recusa numero que nao cabe em int, que o %d truncaria em
-       silencio. */
+    /* Numero que nao cabe em int: o %d nao garante o que grava. */
     if (pokebolas < 0 || pokebolas > MAX_QUANTIDADE) {
         printf("Erro: quantidade de Pokebolas invalida para %s (%d). "
                "O valor precisa estar entre 0 e %d.\n",
@@ -390,34 +387,29 @@ int executa(FILE *entrada, int interativo)
     Treinador treinador1;
     Treinador treinador2;
     int qtdFugitivos = 0;
-    int treinadoresProntos = 0;
-    int ok;
+    int relatorioGravado;
 
     if (!pokecenterInicializar(&centro)) {
         printf("Erro: memoria insuficiente para criar o Centro de Pesquisa.\n");
         return 0;
     }
 
-    /* O contador diz quantos treinadores chegaram a ser inicializados. Se a
-       leitura parar no meio, e ele que diz quais PokeLista precisam ser
-       liberadas: liberar uma que nunca foi inicializada leria lixo. */
-    if (leTreinador(entrada, interativo, &treinador1, ID_TREINADOR_1)) {
-        treinadoresProntos++;
-        if (leTreinador(entrada, interativo, &treinador2, ID_TREINADOR_2)) {
-            treinadoresProntos++;
-        }
+    /* Cada saida de erro libera exatamente o que chegou a ser criado ate ali:
+       liberar uma PokeLista que nunca foi inicializada leria lixo. */
+    if (!leTreinador(entrada, interativo, &treinador1, ID_TREINADOR_1)) {
+        pokecenterLiberar(&centro);
+        return 0;
     }
 
-    ok = (treinadoresProntos == NUM_TREINADORES) &&
-         leFugitivos(entrada, interativo, &centro, &qtdFugitivos);
+    if (!leTreinador(entrada, interativo, &treinador2, ID_TREINADOR_2)) {
+        treinadorLiberar(&treinador1);
+        pokecenterLiberar(&centro);
+        return 0;
+    }
 
-    if (!ok) {
-        if (treinadoresProntos >= 1) {
-            treinadorLiberar(&treinador1);
-        }
-        if (treinadoresProntos >= NUM_TREINADORES) {
-            treinadorLiberar(&treinador2);
-        }
+    if (!leFugitivos(entrada, interativo, &centro, &qtdFugitivos)) {
+        treinadorLiberar(&treinador1);
+        treinadorLiberar(&treinador2);
         pokecenterLiberar(&centro);
         return 0;
     }
@@ -433,8 +425,8 @@ int executa(FILE *entrada, int interativo)
 
     /* Emitir o relatorio e uma operacao que a especificacao exige: nao
        conseguir grava-lo e falha da execucao. */
-    ok = pokecenterGerarRelatorio(&centro, ARQ_RELATORIO);
-    if (!ok) {
+    relatorioGravado = pokecenterGerarRelatorio(&centro, ARQ_RELATORIO);
+    if (!relatorioGravado) {
         printf("\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
     }
 
@@ -444,7 +436,7 @@ int executa(FILE *entrada, int interativo)
     treinadorLiberar(&treinador2);
     pokecenterLiberar(&centro);
 
-    return ok;
+    return relatorioGravado;
 }
 
 int missaoExecutarPorArquivo(const char *nomeArquivo)
@@ -478,7 +470,7 @@ void missaoMenu(void)
     char caminho[TAM_CAMINHO];
     int opcao;
 
-    for (;;) {
+    while (1) {
         imprimeMoldura("TP1 - RESGATE DE POKÉMON", INDENT_MENU);
         printf("\n%d - Executar a missão a partir de um arquivo\n", OPCAO_ARQUIVO);
         printf("%d - Executar a missão no modo interativo\n", OPCAO_INTERATIVO);

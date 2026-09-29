@@ -34,20 +34,6 @@ LDLIBS = -lm
 ALVO = tp1
 OBJS = main.o pokemon.o pokelista.o treinador.o pokecenter.o missao.o
 
-# Qual comando de apagar usar no clean. Nao basta olhar o sistema: no Windows o
-# make pode rodar sob o cmd e o PowerShell, onde existe "del", ou sob o sh do
-# Git Bash, onde existe "rm". A variavel OS so vem preenchida no Windows, e a
-# variavel MSYSTEM so vem preenchida dentro do Git Bash.
-ifeq ($(OS),Windows_NT)
-    ifeq ($(MSYSTEM),)
-        LIMPAR = del /Q /F $(ALVO).exe *.o
-    else
-        LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
-    endif
-else
-    LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
-endif
-
 # all e clean sao nomes de tarefa, e nao de arquivo.
 .PHONY: all clean
 
@@ -83,5 +69,9 @@ missao.o: src/missao.c include/missao.h include/pokecenter.h include/treinador.h
           include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
 	$(CC) $(CFLAGS) -c src/missao.c -o missao.o
 
+# O comando de apagar depende do shell: no Linux e no Git Bash existe "rm", no
+# cmd e no PowerShell existe "del". Os dois sao tentados, e o "-" na frente
+# manda o make seguir em frente com o que nao existir neste sistema.
 clean:
-	-$(LIMPAR)
+	-rm -f $(ALVO) $(ALVO).exe *.o
+	-del /Q /F $(ALVO).exe *.o

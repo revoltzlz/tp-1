@@ -46,9 +46,6 @@ int pokecenterTemFugitivos(const PokeCenter *cp);
 /* Devolve quantos Pokemon ainda estao fugidos. */
 int pokecenterGetQtdFugitivos(const PokeCenter *cp);
 
-/* Devolve quantos Pokemon ja foram recuperados. */
-int pokecenterGetQtdRecuperados(const PokeCenter *cp);
-
 /* Devolve uma copia da localizacao do Centro. */
 cord pokecenterGetLocalizacao(const PokeCenter *cp);
 

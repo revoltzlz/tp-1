@@ -53,11 +53,6 @@ int pokecenterGetQtdFugitivos(const PokeCenter *cp)
     return pokelistaGetTamanho(&cp->fugitivos);
 }
 
-int pokecenterGetQtdRecuperados(const PokeCenter *cp)
-{
-    return pokelistaGetTamanho(&cp->recuperados);
-}
-
 cord pokecenterGetLocalizacao(const PokeCenter *cp)
 {
     return cp->locPokeCenter;
@@ -93,7 +88,9 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
     int quantidade;
 
     /* As Pokebolas ficam no Centro: uma chamada fora de hora nao pode criar
-       Pokebolas do nada. No fluxo normal esta checagem nunca dispara. */
+       Pokebolas do nada. No fluxo normal esta checagem nunca dispara, mas e
+       ela que usa o parametro cp - sem ela o compilador avisa que ele nao
+       serve para nada. */
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
     if (posicaoTreinador.cordX != posicaoCentro.cordX ||
