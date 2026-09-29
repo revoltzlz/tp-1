@@ -21,3 +21,6 @@ testes/diff_relatorio.txt
 testes/valgrind.txt
 tp1_fixo_ok
 verifica.exe
+
+# Pasta temporaria do gerar_zip.sh
+teste_do_zip/
