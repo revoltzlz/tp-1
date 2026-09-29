@@ -1,17 +1,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "missao.h"
 
-/* ------------------------------------------------------------------------- *
- * Funcoes auxiliares de impressao
- * ------------------------------------------------------------------------- */
-
 /* Imprime o caractere indicado o numero de vezes pedido. Serve para as linhas
    de "=" e de "-" e para os espacos de indentacao dos titulos. */
-static void imprimeRepetido(char caractere, int vezes)
+void imprimeRepetido(char caractere, int vezes)
 {
     int i;
 
@@ -21,27 +16,35 @@ static void imprimeRepetido(char caractere, int vezes)
 }
 
 /* Imprime a linha de "-" que separa o resgate de um Pokemon do seguinte. */
-static void imprimeSeparador(void)
+void imprimeSeparador(void)
 {
     imprimeRepetido('-', LARGURA_MOLDURA);
-    putchar('\n');
+    printf("\n");
 }
 
 /* Imprime uma moldura de destaque: uma linha de "=", o titulo recuado, uma
    linha em branco e outra linha de "=". */
-static void imprimeMoldura(const char *titulo, int indentacao)
+void imprimeMoldura(const char *titulo, int indentacao)
 {
     imprimeRepetido('=', LARGURA_MOLDURA);
-    putchar('\n');
+    printf("\n");
     imprimeRepetido(' ', indentacao);
     printf("%s\n\n", titulo);
     imprimeRepetido('=', LARGURA_MOLDURA);
-    putchar('\n');
+    printf("\n");
 }
 
-/* ------------------------------------------------------------------------- *
- * Funcoes auxiliares de calculo
- * ------------------------------------------------------------------------- */
+/* Imprime a moldura que anuncia um treinador sem Pokebolas. O titulo inclui o
+   nome do treinador, entao e impresso direto, sem passar por imprimeMoldura. */
+void imprimeMolduraSemPokebolas(const Treinador *t)
+{
+    imprimeRepetido('=', LARGURA_MOLDURA);
+    printf("\n");
+    imprimeRepetido(' ', INDENT_SEM_POKEBOLAS);
+    printf("Treinador(a) %s SEM POKÉBOLAS\n\n", treinadorGetNome(t));
+    imprimeRepetido('=', LARGURA_MOLDURA);
+    printf("\n\n");
+}
 
 /* Devolve o QUADRADO da distancia euclidiana entre duas coordenadas.
 
@@ -52,12 +55,9 @@ static void imprimeMoldura(const char *titulo, int indentacao)
    ordem entre as duas distancias e a mesma dos seus quadrados.
 
    A conta e feita em long long porque o resultado nao cabe em int: com as
-   coordenadas no limite do mapa, a soma chega a 8 x 10^12, e o maior int vale
-   cerca de 2,1 x 10^9. O long long guarda ate cerca de 9,2 x 10^18, entao a
-   folga e grande - mas ela so existe porque a leitura recusa coordenadas fora
-   de [COORD_MIN, COORD_MAX]. A justificativa completa esta em
-   include/coordenadas.h. */
-static long long distanciaQuadrado(cord a, cord b)
+   coordenadas no limite do mapa a soma chega a 8 x 10^12, e o maior int vale
+   cerca de 2,1 x 10^9. A explicacao completa esta em include/coordenadas.h. */
+long long distanciaQuadrado(cord a, cord b)
 {
     long long dx = (long long) a.cordX - b.cordX;
     long long dy = (long long) a.cordY - b.cordY;
@@ -67,8 +67,8 @@ static long long distanciaQuadrado(cord a, cord b)
 
 /* Escolhe o treinador que fara a captura: o mais proximo do alvo e, em caso de
    empate, o de menor identificador. */
-static Treinador *escolheTreinador(Treinador *t1, Treinador *t2,
-                                   long long distancia1, long long distancia2)
+Treinador *escolheTreinador(Treinador *t1, Treinador *t2,
+                            long long distancia1, long long distancia2)
 {
     if (distancia1 < distancia2) {
         return t1;
@@ -78,87 +78,39 @@ static Treinador *escolheTreinador(Treinador *t1, Treinador *t2,
     }
 
     /* Empate: a missao vai para o treinador de menor identificador. */
-    return (treinadorGetId(t1) <= treinadorGetId(t2)) ? t1 : t2;
-}
-
-/* ------------------------------------------------------------------------- *
- * Leitura dos dados
- * ------------------------------------------------------------------------- */
-
-/* Remove do fim do texto a quebra de linha e o retorno de carro deixados pelo
-   fgets, inclusive no caso de um arquivo com fim de linha do Windows. */
-static void removeFimDeLinha(char *texto)
-{
-    size_t tamanho = strlen(texto);
-
-    while (tamanho > 0 && (texto[tamanho - 1] == '\n' || texto[tamanho - 1] == '\r')) {
-        texto[tamanho - 1] = '\0';
-        tamanho--;
+    if (treinadorGetId(t1) <= treinadorGetId(t2)) {
+        return t1;
     }
+    return t2;
 }
 
-/* Pula a marca de ordem de bytes (BOM) no comeco de um arquivo UTF-8. Sao
-   tres bytes invisiveis, EF BB BF, que o Bloco de Notas e outros editores do
-   Windows escrevem por padrao. Sem pular, eles entrariam colados no nome do
-   primeiro treinador, que apareceria com lixo na frente.
+/* Pula a marca de ordem de bytes no comeco de um arquivo UTF-8: tres bytes
+   invisiveis (EF BB BF) que o Bloco de Notas do Windows escreve por padrao.
+   Sem pular, eles entrariam colados no nome do primeiro treinador.
 
-   Se os tres primeiros bytes nao forem a marca, o rewind devolve a leitura ao
-   comeco do arquivo. Por isso esta funcao so e usada no modo por arquivo: em
-   uma entrada vinda do teclado nao ha como voltar atras. */
-static void pulaMarcaUtf8(FILE *entrada)
+   Se os tres primeiros bytes nao forem a marca, rewind devolve a leitura ao
+   comeco do arquivo. So serve para o modo por arquivo: em uma entrada vinda do
+   teclado nao ha como voltar atras. */
+void pulaMarcaUtf8(FILE *entrada)
 {
-    unsigned char marca[3];
+    int a, b, c;
 
-    if (fread(marca, 1, sizeof marca, entrada) == sizeof marca &&
-        marca[0] == 0xEF && marca[1] == 0xBB && marca[2] == 0xBF) {
+    a = fgetc(entrada);
+    b = fgetc(entrada);
+    c = fgetc(entrada);
+
+    if (a == 0xEF && b == 0xBB && c == 0xBF) {
         return;
     }
 
     rewind(entrada);
 }
 
-/* Descarta o que sobrou da linha atual da entrada, inclusive a quebra de
-   linha. Usada depois do modo interativo: o fscanf para antes da quebra de
-   linha do ultimo dado, e sem isso o fgets do menu leria essa sobra como se
-   fosse a opcao digitada, reclamando de uma opcao invalida que ninguem
-   digitou. */
-static void descartaRestoDaLinha(FILE *entrada)
-{
-    int caractere;
-
-    do {
-        caractere = fgetc(entrada);
-    } while (caractere != '\n' && caractere != EOF);
-}
-
-/* Le uma linha do teclado para dentro de destino, com no maximo tamanho - 1
-   caracteres, e tira a quebra de linha do fim. Se a linha digitada for maior
-   que isso, o que sobrou dela e descartado, para que nao seja lido depois como
-   se fosse a proxima resposta do usuario.
-
-   Devolve 1 se leu alguma coisa e 0 se a entrada acabou. */
-static int leLinha(char *destino, size_t tamanho)
-{
-    if (fgets(destino, (int) tamanho, stdin) == NULL) {
-        return 0;
-    }
-
-    /* Se nao ha quebra de linha no que foi lido, a linha era maior que o vetor
-       e o resto dela ainda esta na entrada. */
-    if (strchr(destino, '\n') == NULL) {
-        descartaRestoDaLinha(stdin);
-    } else {
-        removeFimDeLinha(destino);
-    }
-
-    return 1;
-}
-
 /* Le o nome e a quantidade inicial de Pokebolas de um treinador e o
    inicializa com o identificador recebido. No modo interativo, pede cada dado
    antes de ler. Devolve 1 em caso de sucesso e 0 se os dados forem invalidos
    ou a PokeLista do treinador nao puder ser criada. */
-static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
+int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
 {
     char nome[TAM_NOME_COACH];
     int pokebolas;
@@ -169,7 +121,7 @@ static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
     /* A largura do FMT_NOME_COACH impede que um nome maior que o vetor escreva
        fora dele. */
     if (fscanf(entrada, FMT_NOME_COACH, nome) != 1) {
-        fprintf(stderr, "Erro: nao foi possivel ler o nome do treinador %d.\n", id);
+        printf("Erro: nao foi possivel ler o nome do treinador %d.\n", id);
         return 0;
     }
 
@@ -177,24 +129,21 @@ static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
         printf("Pokebolas iniciais de %s: ", nome);
     }
     if (fscanf(entrada, "%d", &pokebolas) != 1) {
-        fprintf(stderr,
-                "Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
+        printf("Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
         return 0;
     }
-    /* O teto existe para recusar lixo: um numero grande demais para caber em
-       um int e lido pelo %d com o valor truncado, e sem esta checagem entraria
-       no programa como se fosse valido. */
+    /* O teto recusa lixo: um numero grande demais para caber em um int e lido
+       pelo %d com o valor truncado, e sem esta checagem entraria no programa
+       como se fosse valido. */
     if (pokebolas < 0 || pokebolas > MAX_QUANTIDADE) {
-        fprintf(stderr,
-                "Erro: quantidade de Pokebolas invalida para %s (%d). "
-                "O valor precisa estar entre 0 e %d.\n",
-                nome, pokebolas, MAX_QUANTIDADE);
+        printf("Erro: quantidade de Pokebolas invalida para %s (%d). "
+               "O valor precisa estar entre 0 e %d.\n",
+               nome, pokebolas, MAX_QUANTIDADE);
         return 0;
     }
 
     if (!treinadorInicializar(t, id, nome, pokebolas)) {
-        fprintf(stderr,
-                "Erro: memoria insuficiente para criar o treinador %s.\n", nome);
+        printf("Erro: memoria insuficiente para criar o treinador %s.\n", nome);
         return 0;
     }
 
@@ -204,7 +153,7 @@ static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
 /* Le a quantidade de Pokemon fugitivos e os dados de cada um, registrando-os
    no Centro de Pesquisa. Devolve 1 em caso de sucesso e 0 se os dados forem
    invalidos ou faltarem linhas. A quantidade lida sai em *quantidade. */
-static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quantidade)
+int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quantidade)
 {
     char nome[TAM_NOME];
     char tipo[TAM_TIPO];
@@ -219,15 +168,13 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
         printf("Quantidade de Pokemon fugitivos: ");
     }
     if (fscanf(entrada, "%d", &total) != 1) {
-        fprintf(stderr,
-                "Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
+        printf("Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
         return 0;
     }
     if (total < 0 || total > MAX_QUANTIDADE) {
-        fprintf(stderr,
-                "Erro: quantidade de Pokemon fugitivos invalida (%d). "
-                "O valor precisa estar entre 0 e %d.\n",
-                total, MAX_QUANTIDADE);
+        printf("Erro: quantidade de Pokemon fugitivos invalida (%d). "
+               "O valor precisa estar entre 0 e %d.\n",
+               total, MAX_QUANTIDADE);
         return 0;
     }
 
@@ -242,39 +189,36 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
            tipo nunca recebem o '\r' dos arquivos gerados no Windows. */
         if (fscanf(entrada, "%d " FMT_NOME " " FMT_TIPO " %d %d",
                    &numPokedex, nome, tipo, &cordX, &cordY) != 5) {
-            fprintf(stderr, "Erro: dados incompletos do Pokemon %d de %d. "
-                            "Cada linha precisa ter numero na Pokedex, nome, tipo, X e Y.\n",
-                    i + 1, total);
+            printf("Erro: dados incompletos do Pokemon %d de %d. "
+                   "Cada linha precisa ter numero na Pokedex, nome, tipo, X e Y.\n",
+                   i + 1, total);
             return 0;
         }
 
         if (numPokedex < 0 || numPokedex > MAX_QUANTIDADE) {
-            fprintf(stderr,
-                    "Erro: numero na Pokedex invalido para o Pokemon %s (%d).\n",
-                    nome, numPokedex);
+            printf("Erro: numero na Pokedex invalido para o Pokemon %s (%d).\n",
+                   nome, numPokedex);
             return 0;
         }
 
-        /* As coordenadas precisam caber no mapa. Alem de ser uma validacao de
-           dados, e o que garante que o calculo da distancia nao estoure: ver
-           a explicacao em include/coordenadas.h. */
+        /* As coordenadas precisam caber no mapa. Alem de validar o dado, e o
+           que garante que o calculo da distancia nao estoure: ver a explicacao
+           em include/coordenadas.h. */
         if (cordX < COORD_MIN || cordX > COORD_MAX ||
             cordY < COORD_MIN || cordY > COORD_MAX) {
-            fprintf(stderr,
-                    "Erro: o Pokemon %s esta em (%d,%d), fora do mapa, "
-                    "que vai de %d a %d nos dois eixos.\n",
-                    nome, cordX, cordY, COORD_MIN, COORD_MAX);
+            printf("Erro: o Pokemon %s esta em (%d,%d), fora do mapa, "
+                   "que vai de %d a %d nos dois eixos.\n",
+                   nome, cordX, cordY, COORD_MIN, COORD_MAX);
             return 0;
         }
 
         /* O Id e a ordem de leitura, comecando em 1. A especificacao exige que
-           ele seja unico, e o numero da Pokedex nao serve: o proprio arquivo de
-           teste oficial traz quatro Pikachus com o numero 25. */
+           ele seja unico, e o numero da Pokedex nao serve: o arquivo de teste
+           oficial traz quatro Pikachus com o numero 25. */
         pokemonInicializar(&p, i + 1, numPokedex, nome, tipo, cordX, cordY);
 
         if (!pokecenterRegistrarFugitivo(cp, &p)) {
-            fprintf(stderr,
-                    "Erro: memoria insuficiente para registrar o Pokemon %s.\n", nome);
+            printf("Erro: memoria insuficiente para registrar o Pokemon %s.\n", nome);
             return 0;
         }
     }
@@ -284,36 +228,23 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
     return 1;
 }
 
-/* ------------------------------------------------------------------------- *
- * Execucao da missao
- * ------------------------------------------------------------------------- */
-
-/* Imprime a moldura de destaque que anuncia um treinador sem Pokebolas. O
-   titulo e montado em um vetor porque inclui o nome do treinador. */
-static void imprimeMolduraSemPokebolas(const Treinador *t)
-{
-    char titulo[TAM_TITULO];
-
-    snprintf(titulo, sizeof titulo, "Treinador(a) %s SEM POKÉBOLAS",
-             treinadorGetNome(t));
-    imprimeMoldura(titulo, INDENT_SEM_POKEBOLAS);
-    putchar('\n');
-}
-
 /* Pede ao Centro um novo carregamento de Pokebolas para o treinador e anuncia
    quantas ele recebeu. */
-static void recarregaNoCentro(PokeCenter *cp, Treinador *t)
+void recarregaNoCentro(PokeCenter *cp, Treinador *t)
 {
-    int recebidas = pokecenterRecarregarPokebolas(cp, t);
+    int recebidas;
 
+    recebidas = pokecenterRecarregarPokebolas(cp, t);
     printf("Treinador(a) %s recebeu %d Pokébolas.\n\n", treinadorGetNome(t), recebidas);
 }
 
 /* Leva o treinador de volta ao Centro, entrega tudo o que ele capturou e pede
    um novo carregamento de Pokebolas. */
-static void retornaAoCentro(PokeCenter *cp, Treinador *t)
+void retornaAoCentro(PokeCenter *cp, Treinador *t)
 {
-    cord posicaoCentro = pokecenterGetLocalizacao(cp);
+    cord posicaoCentro;
+
+    posicaoCentro = pokecenterGetLocalizacao(cp);
 
     imprimeMolduraSemPokebolas(t);
 
@@ -327,10 +258,10 @@ static void retornaAoCentro(PokeCenter *cp, Treinador *t)
 }
 
 /* Trata o treinador que comecou a missao sem nenhuma Pokebola. Como ninguem
-   parte para uma captura sem Pokebola e os dois treinadores comecam no Centro,
-   ele e recarregado antes do primeiro resgate. Nao precisa entregar nada nem
-   se movimentar: ele ainda nao capturou nada e ja esta no Centro. */
-static void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
+   parte para uma captura sem Pokebola e os dois comecam no Centro, ele e
+   recarregado antes do primeiro resgate: nao precisa entregar nada nem se
+   movimentar. */
+void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
 {
     if (treinadorGetPokebolas(t) > 0) {
         return;
@@ -343,13 +274,15 @@ static void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
 /* Faz o resgate de um Pokemon: calcula a distancia de cada treinador ate ele,
    envia o mais proximo, movimenta, captura e avisa o Centro de Pesquisa.
    Devolve o treinador que fez a captura, ou NULL se a captura falhou. */
-static Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
-                                 const Pokemon *alvo)
+Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
+                          const Pokemon *alvo)
 {
-    cord posicaoAlvo = pokemonGetLocalizacao(alvo);
+    cord posicaoAlvo;
     long long distancia1;
     long long distancia2;
     Treinador *escolhido;
+
+    posicaoAlvo = pokemonGetLocalizacao(alvo);
 
     imprimeSeparador();
     printf("Pokémon alvo: %s\n", pokemonGetNome(alvo));
@@ -393,10 +326,11 @@ static Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
 
 /* Fecha a missao: os dois treinadores voltam ao Centro e devolvem tudo o que
    ainda estao carregando, na ordem do identificador. */
-static void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
+void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 {
-    cord posicaoCentro = pokecenterGetLocalizacao(cp);
-    const char *titulo;
+    cord posicaoCentro;
+
+    posicaoCentro = pokecenterGetLocalizacao(cp);
 
     /* Caso anomalo: se alguma captura falhou, mostra quem ficou para tras em
        vez de anunciar que todos foram resgatados. */
@@ -404,14 +338,12 @@ static void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
         printf("Atenção: ainda há %d Pokémon na lista de fugitivos:\n",
                pokecenterGetQtdFugitivos(cp));
         pokecenterImprimirFugitivos(cp);
-        putchar('\n');
-        titulo = "Fim da missão de resgate";
+        printf("\n");
+        imprimeMoldura("Fim da missão de resgate", INDENT_RESGATADOS);
     } else {
-        titulo = "Todos Pokemons foram resgatados";
+        imprimeMoldura("Todos Pokemons foram resgatados", INDENT_RESGATADOS);
     }
-
-    imprimeMoldura(titulo, INDENT_RESGATADOS);
-    putchar('\n');
+    printf("\n");
 
     printf("Ambos treinadores retornam ao Centro de Pesquisa.\n\n");
     treinadorMovimentar(t1, posicaoCentro.cordX, posicaoCentro.cordY);
@@ -430,14 +362,14 @@ static void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 
 /* Roda a missao completa sobre dados ja registrados: estado inicial, resgate
    de cada fugitivo na ordem do arquivo, retornos ao Centro e encerramento. */
-static void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivos)
+void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivos)
 {
     Pokemon alvo;
     Treinador *escolhido;
     int id;
 
     imprimeMoldura("INÍCIO DA MISSÃO", INDENT_INICIO);
-    putchar('\n');
+    printf("\n");
 
     treinadorImprimir(t1);
     treinadorImprimir(t2);
@@ -465,7 +397,7 @@ static void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdF
 
         /* A ordem destes dois testes importa. Se o Pokemon capturado era o
            ultimo, a missao termina e nao ha recarga, mesmo que o treinador
-           tenha ficado sem Pokebolas: e o que acontece com o ultimo resgate do
+           tenha ficado sem Pokebolas: e o que acontece no ultimo resgate do
            exemplo da especificacao. */
         if (!pokecenterTemFugitivos(cp)) {
             break;
@@ -482,7 +414,7 @@ static void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdF
 /* Le os dados da entrada, roda a missao, emite o relatorio e libera toda a
    memoria. E o caminho comum dos dois modos de uso: o parametro interativo
    apenas liga as mensagens que pedem cada dado. */
-static int executa(FILE *entrada, int interativo)
+int executa(FILE *entrada, int interativo)
 {
     PokeCenter centro;
     Treinador treinador1;
@@ -492,8 +424,7 @@ static int executa(FILE *entrada, int interativo)
     int ok;
 
     if (!pokecenterInicializar(&centro)) {
-        fprintf(stderr,
-                "Erro: memoria insuficiente para criar o Centro de Pesquisa.\n");
+        printf("Erro: memoria insuficiente para criar o Centro de Pesquisa.\n");
         return 0;
     }
 
@@ -530,23 +461,17 @@ static int executa(FILE *entrada, int interativo)
            conferir o que digitou antes de a missao comecar. */
         printf("\nPokémon fugitivos registrados no Centro de Pesquisa:\n");
         pokecenterImprimirFugitivos(&centro);
-        putchar('\n');
+        printf("\n");
     }
 
     executaMissao(&centro, &treinador1, &treinador2, qtdFugitivos);
 
+    /* Emitir o relatorio e uma das operacoes que a especificacao exige, entao
+       nao conseguir grava-lo e uma falha da execucao. O valor de ok desce ate
+       o codigo de saida do programa. */
     ok = pokecenterGerarRelatorio(&centro, ARQ_RELATORIO);
-    if (ok) {
-        /* A frase e montada assim para ficar correta com qualquer quantidade,
-           inclusive 1 e 0. */
-        printf("\nRelatório gravado em %s: %d Pokémon.\n",
-               ARQ_RELATORIO, pokecenterGetQtdRecuperados(&centro));
-    } else {
-        /* Emitir o relatorio e uma das operacoes que a especificacao exige,
-           entao nao conseguir grava-lo e uma falha da execucao, e nao um
-           aviso: o valor de ok desce ate o codigo de saida do programa. */
-        fprintf(stderr,
-                "\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
+    if (!ok) {
+        printf("\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
     }
 
     /* Toda a memoria alocada volta para o sistema: as celulas das duas listas
@@ -559,10 +484,6 @@ static int executa(FILE *entrada, int interativo)
     return ok;
 }
 
-/* ------------------------------------------------------------------------- *
- * Interface publica
- * ------------------------------------------------------------------------- */
-
 int missaoExecutarPorArquivo(const char *nomeArquivo)
 {
     FILE *entrada;
@@ -570,8 +491,7 @@ int missaoExecutarPorArquivo(const char *nomeArquivo)
 
     entrada = fopen(nomeArquivo, "r");
     if (entrada == NULL) {
-        fprintf(stderr,
-                "Erro: nao foi possivel abrir o arquivo \"%s\".\n", nomeArquivo);
+        printf("Erro: nao foi possivel abrir o arquivo \"%s\".\n", nomeArquivo);
         return 0;
     }
 
@@ -593,7 +513,7 @@ int missaoExecutarInterativo(void)
 
 void missaoMenu(void)
 {
-    char linha[TAM_CAMINHO];
+    char caminho[TAM_CAMINHO];
     int opcao;
 
     for (;;) {
@@ -603,43 +523,39 @@ void missaoMenu(void)
         printf("%d - Sair\n\n", OPCAO_SAIR);
         printf("Opção: ");
 
-        /* A opcao e lida como linha inteira e so depois convertida, para que
-           uma letra digitada por engano nao deixe caractere preso na entrada e
-           faca o menu girar sozinho. */
-        if (!leLinha(linha, sizeof linha)) {
-            putchar('\n');
+        /* Se a leitura falhar, a entrada acabou ou o usuario digitou algo que
+           nao e numero. Nos dois casos o programa encerra, em vez de insistir
+           com um caractere preso na entrada e girar sozinho. */
+        if (scanf("%d", &opcao) != 1) {
+            printf("\nEntrada encerrada.\n");
             return;
         }
-        if (sscanf(linha, "%d", &opcao) != 1) {
-            printf("\nOpção inválida.\n\n");
-            continue;
-        }
 
-        if (opcao == OPCAO_SAIR) {
+        switch (opcao) {
+        case OPCAO_SAIR:
             printf("\nAté a próxima!\n");
             return;
-        }
 
-        if (opcao == OPCAO_ARQUIVO) {
+        case OPCAO_ARQUIVO:
             printf("Caminho do arquivo de entrada: ");
-            /* Ler a linha inteira, e nao com scanf, permite caminhos com
-               espaco, como "arquivos de teste/teste1.txt". */
-            if (!leLinha(linha, sizeof linha)) {
-                putchar('\n');
+            if (scanf(FMT_CAMINHO, caminho) != 1) {
+                printf("\nErro: nao foi possivel ler o caminho do arquivo.\n");
                 return;
             }
-            putchar('\n');
-            missaoExecutarPorArquivo(linha);
-            putchar('\n');
-        } else if (opcao == OPCAO_INTERATIVO) {
-            putchar('\n');
+            printf("\n");
+            missaoExecutarPorArquivo(caminho);
+            printf("\n");
+            break;
+
+        case OPCAO_INTERATIVO:
+            printf("\n");
             missaoExecutarInterativo();
-            /* A leitura do modo interativo usa fscanf, que deixa a quebra de
-               linha do ultimo dado na entrada. */
-            descartaRestoDaLinha(stdin);
-            putchar('\n');
-        } else {
+            printf("\n");
+            break;
+
+        default:
             printf("\nOpção inválida.\n\n");
+            break;
         }
     }
 }

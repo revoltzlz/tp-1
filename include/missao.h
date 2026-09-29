@@ -18,6 +18,7 @@
 /* Tamanho do vetor que guarda o caminho do arquivo de entrada digitado pelo
    usuario, contando o '\0'. */
 #define TAM_CAMINHO 256
+#define FMT_CAMINHO "%255s"
 
 /* Teto de sanidade para as quantidades lidas da entrada: Pokebolas, Pokemon
    fugitivos e numero na Pokedex. Nao vem da especificacao; existe porque o %d
