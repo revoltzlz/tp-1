@@ -24,6 +24,15 @@ int main(int argc, char *argv[])
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
+    /* Desliga o buffer das duas saidas. Sem isso, cada uma acumula o seu texto
+       e escreve quando o buffer enche ou quando o programa termina, e as
+       mensagens de erro, que saem pelo stderr, aparecem fora de ordem em
+       relacao ao resto quando a saida e redirecionada para um arquivo. O
+       stderr entra aqui tambem porque, no Windows, ele e bufferizado, ao
+       contrario do que o padrao da linguagem descreve. */
+    setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
+
     /* srand e chamado UMA unica vez, aqui, antes de qualquer sorteio. Se ele
        ficasse dentro da recarga de Pokebolas, duas recargas no mesmo segundo
        receberiam a mesma semente e sorteariam a mesma quantidade. */

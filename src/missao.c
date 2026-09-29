@@ -92,6 +92,20 @@ static void removeFimDeLinha(char *texto)
     }
 }
 
+/* Descarta o que sobrou da linha atual da entrada, inclusive a quebra de
+   linha. Usada depois do modo interativo: o fscanf para antes da quebra de
+   linha do ultimo dado, e sem isso o fgets do menu leria essa sobra como se
+   fosse a opcao digitada, reclamando de uma opcao invalida que ninguem
+   digitou. */
+static void descartaRestoDaLinha(FILE *entrada)
+{
+    int caractere;
+
+    do {
+        caractere = fgetc(entrada);
+    } while (caractere != '\n' && caractere != EOF);
+}
+
 /* Le o nome e a quantidade inicial de Pokebolas de um treinador e o
    inicializa com o identificador recebido. No modo interativo, pede cada dado
    antes de ler. Devolve 1 em caso de sucesso e 0 se os dados forem invalidos
@@ -457,8 +471,10 @@ static int executa(FILE *entrada, int interativo)
     executaMissao(&centro, &treinador1, &treinador2, qtdFugitivos);
 
     if (pokecenterGerarRelatorio(&centro, ARQ_RELATORIO)) {
-        printf("\nRelatório dos %d Pokémon recuperados gravado em %s\n",
-               pokecenterGetQtdRecuperados(&centro), ARQ_RELATORIO);
+        /* A frase e montada assim para ficar correta com qualquer quantidade,
+           inclusive 1 e 0. */
+        printf("\nRelatório gravado em %s: %d Pokémon.\n",
+               ARQ_RELATORIO, pokecenterGetQtdRecuperados(&centro));
     } else {
         fprintf(stderr,
                 "\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
@@ -548,6 +564,9 @@ void missaoMenu(void)
         } else if (opcao == OPCAO_INTERATIVO) {
             putchar('\n');
             missaoExecutarInterativo();
+            /* A leitura do modo interativo usa fscanf, que deixa a quebra de
+               linha do ultimo dado na entrada. */
+            descartaRestoDaLinha(stdin);
             putchar('\n');
         } else {
             printf("\nOpção inválida.\n\n");
