@@ -58,8 +58,10 @@ cord pokecenterGetLocalizacao(const PokeCenter *cp);
 int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t);
 
 /* Entrega ao treinador uma quantidade aleatoria de Pokebolas no intervalo
-   [MIN_RECARGA, MAX_RECARGA] e devolve essa quantidade. Depende de srand ter
-   sido chamado uma vez pelo programa principal. */
+   [MIN_RECARGA, MAX_RECARGA] e devolve essa quantidade. As Pokebolas ficam no
+   Centro, entao devolve 0, sem recarregar, se o treinador nao estiver na
+   posicao do Centro. Depende de srand ter sido chamado uma vez pelo programa
+   principal. */
 int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t);
 
 /* Emite o relatorio final em arquivo .txt com os Pokemon recuperados. Devolve

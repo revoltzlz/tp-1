@@ -127,7 +127,7 @@ void pokelistaImprimir(const Pokelista *pl)
     conec *atual;
 
     if (pokelistaVazia(pl)) {
-        printf("(nenhum Pokemon na lista)\n");
+        printf("(nenhum Pokémon na lista)\n");
         return;
     }
 

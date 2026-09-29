@@ -76,7 +76,7 @@ void pokemonImprimir(const Pokemon *p)
     /* O %03d imprime o numero da Pokedex com pelo menos tres digitos, para que
        um numero como 025, que foi lido do arquivo como o inteiro 25, saia
        escrito do mesmo jeito que estava na entrada. */
-    printf("Id %d | Pokedex %03d | %s | Tipo: %s | Localizacao: (%d,%d)\n",
+    printf("Id %d | Pokédex %03d | %s | Tipo: %s | Localização: (%d,%d)\n",
            p->identificacao, p->numPokedex, p->nome, p->tipo,
            p->localizacao.cordX, p->localizacao.cordY);
 }
