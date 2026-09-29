@@ -175,7 +175,7 @@ O arquivo saiu de 56 linhas para 18.
 
 | Saiu | Por quê | O que ficou no lugar |
 |---|---|---|
-| `static` nas 19 funções auxiliares | está na lista do que trocar | as funções sem `static` |
+| `static` nas 16 funções auxiliares | está na lista do que trocar | as funções sem `static` |
 | `snprintf` e a constante `TAM_TITULO` | montar o título num vetor para depois imprimi-lo | a moldura do treinador sem Pokébolas imprime direto |
 | `fgets` com `sscanf`, `strchr`, `strlen`, `size_t` e três funções auxiliares de leitura de linha | seis coisas para ler um número e um caminho | `scanf("%d")` e `scanf(FMT_CAMINHO)` |
 | `fprintf(stderr, ...)` nas 13 mensagens de erro | duas streams com buffers separados | `printf` |
