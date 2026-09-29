@@ -51,7 +51,12 @@ static void imprimeMoldura(const char *titulo, int indentacao)
    comparar numeros de ponto flutuante com ==; e a raiz e crescente, entao a
    ordem entre as duas distancias e a mesma dos seus quadrados.
 
-   O tipo long long evita que o quadrado de uma diferenca grande estoure. */
+   A conta e feita em long long porque o resultado nao cabe em int: com as
+   coordenadas no limite do mapa, a soma chega a 8 x 10^12, e o maior int vale
+   cerca de 2,1 x 10^9. O long long guarda ate cerca de 9,2 x 10^18, entao a
+   folga e grande - mas ela so existe porque a leitura recusa coordenadas fora
+   de [COORD_MIN, COORD_MAX]. A justificativa completa esta em
+   include/coordenadas.h. */
 static long long distanciaQuadrado(cord a, cord b)
 {
     long long dx = (long long) a.cordX - b.cordX;
@@ -90,6 +95,26 @@ static void removeFimDeLinha(char *texto)
         texto[tamanho - 1] = '\0';
         tamanho--;
     }
+}
+
+/* Pula a marca de ordem de bytes (BOM) no comeco de um arquivo UTF-8. Sao
+   tres bytes invisiveis, EF BB BF, que o Bloco de Notas e outros editores do
+   Windows escrevem por padrao. Sem pular, eles entrariam colados no nome do
+   primeiro treinador, que apareceria com lixo na frente.
+
+   Se os tres primeiros bytes nao forem a marca, o rewind devolve a leitura ao
+   comeco do arquivo. Por isso esta funcao so e usada no modo por arquivo: em
+   uma entrada vinda do teclado nao ha como voltar atras. */
+static void pulaMarcaUtf8(FILE *entrada)
+{
+    unsigned char marca[3];
+
+    if (fread(marca, 1, sizeof marca, entrada) == sizeof marca &&
+        marca[0] == 0xEF && marca[1] == 0xBB && marca[2] == 0xBF) {
+        return;
+    }
+
+    rewind(entrada);
 }
 
 /* Descarta o que sobrou da linha atual da entrada, inclusive a quebra de
@@ -133,10 +158,14 @@ static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
                 "Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
         return 0;
     }
-    if (pokebolas < 0) {
+    /* O teto existe para recusar lixo: um numero grande demais para caber em
+       um int e lido pelo %d com o valor truncado, e sem esta checagem entraria
+       no programa como se fosse valido. */
+    if (pokebolas < 0 || pokebolas > MAX_QUANTIDADE) {
         fprintf(stderr,
-                "Erro: a quantidade de Pokebolas de %s nao pode ser negativa (%d).\n",
-                nome, pokebolas);
+                "Erro: quantidade de Pokebolas invalida para %s (%d). "
+                "O valor precisa estar entre 0 e %d.\n",
+                nome, pokebolas, MAX_QUANTIDADE);
         return 0;
     }
 
@@ -171,10 +200,11 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
                 "Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
         return 0;
     }
-    if (total < 0) {
+    if (total < 0 || total > MAX_QUANTIDADE) {
         fprintf(stderr,
-                "Erro: a quantidade de Pokemon fugitivos nao pode ser negativa (%d).\n",
-                total);
+                "Erro: quantidade de Pokemon fugitivos invalida (%d). "
+                "O valor precisa estar entre 0 e %d.\n",
+                total, MAX_QUANTIDADE);
         return 0;
     }
 
@@ -195,10 +225,22 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
             return 0;
         }
 
-        if (numPokedex < 0) {
+        if (numPokedex < 0 || numPokedex > MAX_QUANTIDADE) {
             fprintf(stderr,
-                    "Erro: o numero na Pokedex do Pokemon %s nao pode ser negativo (%d).\n",
+                    "Erro: numero na Pokedex invalido para o Pokemon %s (%d).\n",
                     nome, numPokedex);
+            return 0;
+        }
+
+        /* As coordenadas precisam caber no mapa. Alem de ser uma validacao de
+           dados, e o que garante que o calculo da distancia nao estoure: ver
+           a explicacao em include/coordenadas.h. */
+        if (cordX < COORD_MIN || cordX > COORD_MAX ||
+            cordY < COORD_MIN || cordY > COORD_MAX) {
+            fprintf(stderr,
+                    "Erro: o Pokemon %s esta em (%d,%d), fora do mapa, "
+                    "que vai de %d a %d nos dois eixos.\n",
+                    nome, cordX, cordY, COORD_MIN, COORD_MAX);
             return 0;
         }
 
@@ -470,12 +512,16 @@ static int executa(FILE *entrada, int interativo)
 
     executaMissao(&centro, &treinador1, &treinador2, qtdFugitivos);
 
-    if (pokecenterGerarRelatorio(&centro, ARQ_RELATORIO)) {
+    ok = pokecenterGerarRelatorio(&centro, ARQ_RELATORIO);
+    if (ok) {
         /* A frase e montada assim para ficar correta com qualquer quantidade,
            inclusive 1 e 0. */
         printf("\nRelatório gravado em %s: %d Pokémon.\n",
                ARQ_RELATORIO, pokecenterGetQtdRecuperados(&centro));
     } else {
+        /* Emitir o relatorio e uma das operacoes que a especificacao exige,
+           entao nao conseguir grava-lo e uma falha da execucao, e nao um
+           aviso: o valor de ok desce ate o codigo de saida do programa. */
         fprintf(stderr,
                 "\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
     }
@@ -487,7 +533,7 @@ static int executa(FILE *entrada, int interativo)
     treinadorLiberar(&treinador2);
     pokecenterLiberar(&centro);
 
-    return 1;
+    return ok;
 }
 
 /* ------------------------------------------------------------------------- *
@@ -505,6 +551,8 @@ int missaoExecutarPorArquivo(const char *nomeArquivo)
                 "Erro: nao foi possivel abrir o arquivo \"%s\".\n", nomeArquivo);
         return 0;
     }
+
+    pulaMarcaUtf8(entrada);
 
     resultado = executa(entrada, 0);
 

@@ -1,6 +1,5 @@
 Rosa 3
 Nate 3
-3
+2
 001 Bulbasaur Folha 2000000000 2000000000
 004 Charmander Fogo -2000000000 -2000000000
-007 Squirtle Água 0 0

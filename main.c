@@ -35,8 +35,19 @@ int main(int argc, char *argv[])
 
     /* srand e chamado UMA unica vez, aqui, antes de qualquer sorteio. Se ele
        ficasse dentro da recarga de Pokebolas, duas recargas no mesmo segundo
-       receberiam a mesma semente e sorteariam a mesma quantidade. */
+       receberiam a mesma semente e sorteariam a mesma quantidade.
+
+       Compilar com -DSEMENTE_FIXA=N troca o relogio por uma semente fixa, e
+       com isso a sequencia de sorteios se repete a cada execucao. Serve para
+       a bateria de testes poder comparar a saida com o exemplo da
+       especificacao caractere por caractere. Repare que o sorteio continua
+       acontecendo: o que muda e so de onde vem a semente. O Makefile nao
+       define esta macro, entao o programa entregue sorteia pelo relogio. */
+#ifdef SEMENTE_FIXA
+    srand(SEMENTE_FIXA);
+#else
     srand((unsigned int) time(NULL));
+#endif
 
     /* Atalho para os testes: um caminho passado na linha de comando executa a
        missao direto naquele arquivo, sem passar pelo menu. Sem argumento, o

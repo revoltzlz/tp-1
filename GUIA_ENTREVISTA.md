@@ -256,7 +256,9 @@ Teste que pega esse bug: remover o último e inserir em seguida.
 | **Id do Pokémon = ordem de leitura** (1, 2, 3...) | O enunciado exige Id único, e a entrada não traz Id. O número da Pokédex **não serve**: o `teste2.txt` da professora tem **quatro Pikachus com Pokédex 025**. Com a Pokédex como Id, a busca acharia sempre o mesmo Pikachu e a remoção tiraria o errado. |
 | **Identificador do treinador = ordem de leitura** (1 e 2) | A entrada não traz identificador, e o desempate precisa de um. |
 | **Pokémon guardado por valor** na célula, não por ponteiro | Passar de uma lista para outra é *remover* (copia para fora) e *inserir* (copia para dentro). Nenhuma memória é compartilhada entre as listas: nunca há ponteiro pendurado nem `free` duplo. |
-| **Distância comparada pelo quadrado**, em `long long` | `dx*dx + dy*dy` é inteiro e exato, então o empate é detectado com segurança — comparar `double` com `==` é arriscado. A raiz é crescente, então a ordem não muda. `long long` porque o quadrado de uma diferença grande não cabe em `int`. `sqrt` só na impressão. |
+| **Distância comparada pelo quadrado**, em `long long` | `dx*dx + dy*dy` é inteiro e exato, então o empate é detectado com segurança — comparar `double` com `==` é arriscado. A raiz é crescente, então a ordem não muda. `long long` porque 8×10¹² não cabe em `int`. `sqrt` só na impressão. |
+| **Coordenadas limitadas a ±1.000.000**, recusadas na leitura | É o que garante que a conta acima não estoure. Sem o limite, dois pontos nos extremos de `int` dão 3,2×10¹⁹, que estoura o `long long`, e a missão vai para o treinador errado. |
+| O build de teste fixa a **semente** do sorteio, não a quantidade sorteada | Assim nenhum TAD sabe que existe um modo de teste: a macro é lida só pelo `main.c`, e o sorteio de 1 a 20 que o enunciado pede continua acontecendo. |
 | **Ordem dos testes após a captura**: 1º "acabaram os fugitivos?", 2º "ficou sem Pokébolas?" | É o que o exemplo do PDF mostra: o último resgate (Umbreon) zera as Pokébolas da Rosa e **não** aparece recarga. Trocando a ordem, apareceria uma recarga a mais no fim. |
 | **Entrega na ordem de captura**; o treinador tira sempre o primeiro, o Centro insere no fim | É o que reproduz a ordem `610, 657, 387, 197, 715` do relatório do PDF. |
 | **Rosa (id 1) entrega antes de Nate (id 2)** no retorno final | Também vem do relatório: `387, 197` (Rosa) antes de `715` (Nate). |
@@ -369,9 +371,21 @@ no total: as duas do Centro e a de cada treinador. Medi com um contador de
 cabeça + 20 registros de fuga + 20 capturas + 20 entregas.
 
 **Por que o `long long` na distância?**
-Porque `dx*dx` com `dx` grande não cabe em `int`. Com coordenadas de 2 bilhões,
-o quadrado passa de 4×10¹⁸, que precisa de 64 bits. Tem um teste para isso:
-`testes/coordenadas_grandes.txt`.
+Porque o resultado não cabe em `int`. As coordenadas vão até ±1.000.000, então
+a maior diferença é 2.000.000, o quadrado dela é 4×10¹² e a soma dos dois
+quadrados chega a 8×10¹². Um `int` guarda só até cerca de 2,1×10⁹. O
+`long long` guarda até 9,2×10¹⁸, então sobra folga de seis ordens de grandeza.
+Teste: `testes/coordenadas_no_limite.txt`.
+
+**E se as coordenadas fossem maiores que isso?**
+Aí nem o `long long` bastaria, e é por isso que o programa **recusa**
+coordenadas fora do mapa. Dois pontos nos extremos de um `int` (±2 bilhões)
+dariam uma soma de 3,2×10¹⁹, acima do limite do `long long`: a soma daria a
+volta e ficaria **negativa**, `sqrt` de um número negativo devolve `nan`, e a
+comparação `distancia1 < distancia2` mandaria o treinador **mais distante**.
+Esse bug existiu no meio do desenvolvimento e o teste
+`testes/erro_coordenada_fora_do_mapa.txt` é o que o guarda. É a razão de o
+limite `COORD_MAX` existir, e está explicado em `include/coordenadas.h`.
 
 **Por que a busca por Id tem uso, se a lista já está na ordem do arquivo?**
 Porque a lista de fugitivos vai perdendo elementos. Meu laço percorre os Ids de

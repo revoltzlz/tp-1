@@ -19,6 +19,13 @@
    usuario, contando o '\0'. */
 #define TAM_CAMINHO 256
 
+/* Teto de sanidade para as quantidades lidas da entrada: Pokebolas, Pokemon
+   fugitivos e numero na Pokedex. Nao vem da especificacao; existe porque o %d
+   do scanf, diante de um numero grande demais para caber em um int, guarda um
+   valor truncado sem avisar. Sem um teto, esse lixo entraria no programa como
+   se fosse um dado valido. */
+#define MAX_QUANTIDADE 1000000
+
 /* Largura das molduras de "=" e das linhas de "-" da saida no terminal. */
 #define LARGURA_MOLDURA 40
 
@@ -26,8 +33,13 @@
    maior titulo do programa, que inclui o nome de um treinador. */
 #define TAM_TITULO 80
 
-/* Espacos antes do titulo de cada moldura. Os valores sao os do exemplo de
-   saida da especificacao, medidos linha por linha. */
+/* Espacos antes do titulo de cada moldura.
+
+   Os tres primeiros foram medidos linha por linha no exemplo de saida da
+   especificacao. Os dois ultimos nao vieram de la: INDENT_MENU e do menu, que
+   o exemplo nao mostra, e INDENT_CONCLUIDA centraliza o titulo em
+   LARGURA_MOLDURA, porque no exemplo essa linha vem com um caractere
+   invisivel no lugar da indentacao (ver a errata E05 no REQUISITOS.md). */
 #define INDENT_MENU 8
 #define INDENT_INICIO 18
 #define INDENT_SEM_POKEBOLAS 12

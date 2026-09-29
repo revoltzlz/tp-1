@@ -98,8 +98,13 @@ int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado)
 
 void treinadorImprimir(const Treinador *t)
 {
+    cord posicao = treinadorGetLocalizacao(t);
+
+    /* Le os atributos pelos proprios get, e nao direto da struct, como faz a
+       impressao do Pokemon. O formato e o do exemplo da especificacao. */
     printf("Treinador(a) %s: posição (%d,%d) | Pokébolas: %d\n",
-           t->nome, t->loccoach.cordX, t->loccoach.cordY, t->qntdpokebolas);
+           treinadorGetNome(t), posicao.cordX, posicao.cordY,
+           treinadorGetPokebolas(t));
 }
 
 void treinadorLiberar(Treinador *t)

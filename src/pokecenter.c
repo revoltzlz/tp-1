@@ -110,13 +110,6 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
         return 0;
     }
 
-#ifdef RECARGA_FIXA
-    /* Build de teste apenas: compilar com -DRECARGA_FIXA=N troca o sorteio por
-       um valor fixo, para que a saida possa ser comparada caractere por
-       caractere com o exemplo da especificacao. O Makefile nao define esta
-       macro, entao o programa entregue sorteia normalmente. */
-    quantidade = RECARGA_FIXA;
-#else
     /* Sorteia um valor no intervalo fechado [MIN_RECARGA, MAX_RECARGA]. O resto
        da divisao por (MAX - MIN + 1) da um numero de 0 ate MAX - MIN, e somar
        MIN desloca o intervalo para o lugar certo.
@@ -125,7 +118,6 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
        aqui, duas recargas no mesmo segundo receberiam a mesma semente e
        sorteariam o mesmo numero. */
     quantidade = MIN_RECARGA + rand() % (MAX_RECARGA - MIN_RECARGA + 1);
-#endif
 
     treinadorSetPokebolas(t, quantidade);
 
