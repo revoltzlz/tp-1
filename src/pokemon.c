@@ -25,9 +25,8 @@ void pokemonSetNumPokedex(Pokemon *p, int numPokedex)
 
 void pokemonSetNome(Pokemon *p, const char *nome)
 {
-    /* strncpy copia no maximo TAM_NOME - 1 caracteres, deixando a ultima
-       posicao do vetor livre para o '\0' escrito na linha seguinte. Se o nome
-       de origem for mais curto, o strncpy ja preenche o resto com '\0'. */
+    /* O '\0' explicito e necessario: o strncpy nao termina a string quando o
+       texto de origem enche o limite. */
     strncpy(p->nome, nome, TAM_NOME - 1);
     p->nome[TAM_NOME - 1] = '\0';
 }
@@ -75,13 +74,8 @@ void pokemonImprimir(const Pokemon *p)
 {
     cord posicao = pokemonGetLocalizacao(p);
 
-    /* A impressao le os atributos pelos proprios get, e nao direto da struct.
-       Assim, se um dia a forma de guardar algum campo mudar, so o get precisa
-       mudar de lugar.
-
-       O %03d imprime o numero da Pokedex com pelo menos tres digitos, para que
-       um numero como 025, que foi lido do arquivo como o inteiro 25, saia
-       escrito do mesmo jeito que estava na entrada. */
+    /* O %03d devolve o numero da Pokedex com tres digitos: 025 e lido como 25
+       e precisa sair escrito como estava na entrada. */
     printf("Id %d | Pokédex %03d | %s | Tipo: %s | Localização: (%d,%d)\n",
            pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
            pokemonGetTipo(p), posicao.cordX, posicao.cordY);

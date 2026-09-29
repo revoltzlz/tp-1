@@ -5,10 +5,9 @@
 
 int pokelistaInicializar(Pokelista *pl)
 {
-    /* A celula cabeca e uma celula sem Pokemon, alocada uma unica vez. Ela
-       existe para que o primeiro Pokemon da lista tambem tenha um antecessor,
-       o que faz a remocao nao precisar de um caso especial para o primeiro
-       elemento. */
+    /* A celula cabeca nao guarda Pokemon: ela existe para que o primeiro
+       elemento tambem tenha um antecessor, e a remocao nao precise de um caso
+       especial. */
     pl->primeiro = (conec *) malloc(sizeof(conec));
     if (pl->primeiro == NULL) {
         pl->ultimo = NULL;
@@ -34,13 +33,11 @@ int pokelistaInserir(Pokelista *pl, const Pokemon *p)
         return 0;
     }
 
-    /* Copia do Pokemon para dentro da celula. A celula guarda o Pokemon por
-       valor, e nao um apontador para ele, entao a lista fica dona da sua
-       propria copia e nenhuma memoria e compartilhada com quem chamou. */
+    /* Copia a struct inteira: a lista fica dona da sua propria copia. */
     nova->pokemon = *p;
     nova->prox = NULL;
 
-    /* Insercao no fim em O(1): o apontador ultimo evita percorrer a lista. */
+    /* O apontador ultimo faz isto custar O(1), sem percorrer a lista. */
     pl->ultimo->prox = nova;
     pl->ultimo = nova;
     pl->tamanho++;
@@ -53,16 +50,14 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     conec *anterior;
     conec *alvo;
 
-    /* Percorre com um apontador para a celula ANTERIOR ao alvo, porque em uma
-       lista encadeada simples nao se volta: para desligar uma celula e preciso
-       ter em maos quem aponta para ela. Comeca na celula cabeca, que e a
-       anterior ao primeiro Pokemon de verdade. */
+    /* Anda com um apontador para a celula ANTERIOR ao alvo: para desligar uma
+       celula e preciso ter quem aponta para ela. Comeca na cabeca. */
     anterior = pl->primeiro;
     while (anterior->prox != NULL && pokemonGetId(&anterior->prox->pokemon) != id) {
         anterior = anterior->prox;
     }
 
-    /* Chegou ao fim sem achar: nao existe Pokemon com esse id na lista. */
+    /* Chegou ao fim sem achar. */
     if (anterior->prox == NULL) {
         return 0;
     }
@@ -76,9 +71,8 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     /* Desliga o alvo da corrente. */
     anterior->prox = alvo->prox;
 
-    /* Se o alvo era a ultima celula, o apontador ultimo passa a ser o
-       anterior. Sem esta linha, ultimo ficaria apontando para memoria
-       liberada e a proxima insercao escreveria nela. */
+    /* Sem esta correcao, ultimo ficaria apontando para memoria liberada e a
+       proxima insercao escreveria nela. */
     if (alvo == pl->ultimo) {
         pl->ultimo = anterior;
     }
@@ -95,9 +89,8 @@ int pokelistaRemoverPrimeiro(Pokelista *pl, Pokemon *removido)
         return 0;
     }
 
-    /* Reaproveita a remocao por id, para que exista um unico algoritmo de
-       remocao no TAD: pega o id do primeiro Pokemon de verdade, que fica na
-       celula seguinte a cabeca, e remove por ele. */
+    /* Reaproveita a remocao por id, para haver um unico algoritmo de remocao.
+       O primeiro Pokemon de verdade fica na celula seguinte a cabeca. */
     return pokelistaRemover(pl, pokemonGetId(&pl->primeiro->prox->pokemon), removido);
 }
 
@@ -105,9 +98,7 @@ int pokelistaBuscar(const Pokelista *pl, int id, Pokemon *encontrado)
 {
     conec *atual;
 
-    /* Comeca no primeiro Pokemon de verdade, que e o seguinte a celula cabeca.
-       O custo e O(n) porque a unica forma de andar na lista encadeada e seguir
-       os apontadores prox, um por um. */
+    /* O custo e O(n): a unica forma de andar na lista e seguir os prox. */
     atual = pl->primeiro->prox;
     while (atual != NULL) {
         if (pokemonGetId(&atual->pokemon) == id) {
@@ -152,8 +143,7 @@ void pokelistaEscreverRelatorio(const Pokelista *pl, FILE *saida)
 
 int pokelistaVazia(const Pokelista *pl)
 {
-    /* A lista esta vazia quando a unica celula e a cabeca, ou seja, quando
-       primeiro e ultimo apontam para o mesmo lugar. */
+    /* Vazia quando a unica celula e a cabeca. */
     return pl->primeiro == pl->ultimo;
 }
 
@@ -167,9 +157,8 @@ void pokelistaLiberar(Pokelista *pl)
     conec *atual;
     conec *seguinte;
 
-    /* Comeca na celula cabeca, para que ela tambem seja liberada. Guarda o
-       endereco da celula seguinte ANTES do free, senao o apontador prox seria
-       lido de memoria que acabou de ser devolvida. */
+    /* Comeca na cabeca, que tambem foi alocada. O prox e guardado ANTES do
+       free, senao seria lido de memoria ja devolvida. */
     atual = pl->primeiro;
     while (atual != NULL) {
         seguinte = atual->prox;
@@ -177,8 +166,7 @@ void pokelistaLiberar(Pokelista *pl)
         atual = seguinte;
     }
 
-    /* Anula os apontadores para que um uso acidental da lista depois desta
-       chamada falhe de imediato, em vez de mexer em memoria liberada. */
+    /* Anula os apontadores: um uso acidental depois disto falha de imediato. */
     pl->primeiro = NULL;
     pl->ultimo = NULL;
     pl->tamanho = 0;

@@ -5,7 +5,7 @@
 
 int pokecenterInicializar(PokeCenter *cp)
 {
-    /* A especificacao fixa o Centro de Pesquisa nas coordenadas (0,0). */
+    /* A especificacao fixa o Centro em (0,0). */
     cp->locPokeCenter.cordX = CENTRO_X;
     cp->locPokeCenter.cordY = CENTRO_Y;
 
@@ -14,8 +14,7 @@ int pokecenterInicializar(PokeCenter *cp)
     }
 
     if (!pokelistaInicializar(&cp->recuperados)) {
-        /* A primeira lista deu certo e a segunda nao. Libera a que ja existe
-           para nao deixar a celula cabeca dela perdida na memoria. */
+        /* A primeira deu certo e a segunda nao: libera a que ja existe. */
         pokelistaLiberar(&cp->fugitivos);
         return 0;
     }
@@ -25,8 +24,7 @@ int pokecenterInicializar(PokeCenter *cp)
 
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p)
 {
-    /* Insere no fim, entao a lista de fugitivos guarda os Pokemon na mesma
-       ordem em que apareceram no arquivo de entrada. */
+    /* Insere no fim: a lista fica na ordem do arquivo de entrada. */
     return pokelistaInserir(&cp->fugitivos, p);
 }
 
@@ -70,21 +68,16 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     Pokemon entregue;
     int recebidos = 0;
 
-    /* Esvazia a PokeLista do treinador um Pokemon por vez. Como o treinador
-       entrega sempre o primeiro da lista dele e o Centro insere no fim da lista
-       de recuperados, a ordem de captura e preservada.
-
-       O Pokemon viaja dentro da variavel local entregue: sai copiado da celula
-       do treinador, que e liberada, e entra copiado na celula nova do Centro.
-       Nenhuma memoria e compartilhada entre as duas listas. */
+    /* O Pokemon viaja dentro da variavel local: sai copiado da celula do
+       treinador, que e liberada, e entra copiado numa celula nova do Centro.
+       Como o treinador entrega o primeiro e o Centro insere no fim, a ordem de
+       captura e preservada. */
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
-            /* O Pokemon ja saiu da lista do treinador e nao ha memoria para a
-               celula nova. Avisa em vez de perde-lo em silencio, e para a
-               entrega: sem memoria, insistir nao ajudaria. */
-            fprintf(stderr,
-                    "Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
-                    pokemonGetNome(&entregue));
+            /* O Pokemon ja saiu da lista do treinador: avisa em vez de
+               perde-lo em silencio. */
+            printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
+                   pokemonGetNome(&entregue));
             return recebidos;
         }
         recebidos++;
@@ -99,10 +92,8 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
     cord posicaoTreinador;
     int quantidade;
 
-    /* As Pokebolas ficam no Centro, entao so quem esta no Centro pode ser
-       recarregado. No fluxo normal da missao o treinador sempre se movimenta
-       para ca antes de pedir a recarga; esta checagem garante que uma chamada
-       fora de hora nao crie Pokebolas do nada. */
+    /* As Pokebolas ficam no Centro: uma chamada fora de hora nao pode criar
+       Pokebolas do nada. No fluxo normal esta checagem nunca dispara. */
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
     if (posicaoTreinador.cordX != posicaoCentro.cordX ||
@@ -110,13 +101,8 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
         return 0;
     }
 
-    /* Sorteia um valor no intervalo fechado [MIN_RECARGA, MAX_RECARGA]. O resto
-       da divisao por (MAX - MIN + 1) da um numero de 0 ate MAX - MIN, e somar
-       MIN desloca o intervalo para o lugar certo.
-
-       O srand e chamado uma unica vez, no programa principal. Se ele estivesse
-       aqui, duas recargas no mesmo segundo receberiam a mesma semente e
-       sorteariam o mesmo numero. */
+    /* O resto da divisao por (MAX - MIN + 1) da de 0 a MAX - MIN, e somar MIN
+       desloca para o intervalo fechado [MIN, MAX]. O srand fica no main. */
     quantidade = MIN_RECARGA + rand() % (MAX_RECARGA - MIN_RECARGA + 1);
 
     treinadorSetPokebolas(t, quantidade);
@@ -135,8 +121,7 @@ int pokecenterGerarRelatorio(const PokeCenter *cp, const char *nomeArquivo)
 
     fprintf(saida, "Pokemon recuperados:\n");
 
-    /* Quem percorre a lista e a propria lista: o Centro so abre o arquivo,
-       escreve o cabecalho e fecha. */
+    /* Quem percorre a lista e a lista. */
     pokelistaEscreverRelatorio(&cp->recuperados, saida);
 
     fclose(saida);

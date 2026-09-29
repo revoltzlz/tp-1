@@ -10,12 +10,11 @@ int treinadorInicializar(Treinador *t, int identificador, const char *nome,
     treinadorSetNome(t, nome);
     treinadorSetPokebolas(t, qntdpokebolas);
 
-    /* A especificacao fixa a posicao inicial do treinador em (0,0), que e
-       tambem a posicao do Centro de Pesquisa. */
+    /* A especificacao fixa a posicao inicial em (0,0). */
     treinadorSetLocalizacao(t, TREINADOR_X_INICIAL, TREINADOR_Y_INICIAL);
 
-    /* A PokeLista do treinador comeca vazia. Se a celula cabeca dela nao puder
-       ser alocada, o treinador nao esta utilizavel e a falha sobe. */
+    /* Se a celula cabeca da lista nao puder ser alocada, o treinador nao esta
+       utilizavel e a falha sobe. */
     return pokelistaInicializar(&t->lista);
 }
 
@@ -63,23 +62,21 @@ int treinadorGetPokebolas(const Treinador *t)
 
 void treinadorMovimentar(Treinador *t, int cordX, int cordY)
 {
-    /* A movimentacao nao imprime nada: quem narra a missao e o modulo da
-       missao, que usa esta mesma operacao tanto para ir ate o Pokemon como
-       para voltar ao Centro, dois momentos com mensagens diferentes. */
+    /* Nao imprime nada: o modulo da missao usa esta operacao para ir ate o
+       Pokemon e para voltar ao Centro, com mensagens diferentes. */
     treinadorSetLocalizacao(t, cordX, cordY);
 }
 
 int treinadorCapturar(Treinador *t, const Pokemon *p)
 {
-    /* Sem Pokebola nao ha captura. A checagem fica aqui, dentro do TAD, para
-       que a quantidade de Pokebolas nunca possa ficar negativa, mesmo que o
-       programa principal chame a captura fora de hora. */
+    /* A checagem fica no TAD para a quantidade nunca ficar negativa, mesmo se
+       a captura for chamada fora de hora. */
     if (t->qntdpokebolas <= 0) {
         return 0;
     }
 
-    /* A lista guarda uma copia do Pokemon, entao a captura nao pode falhar
-       pela metade: so gasta a Pokebola se a insercao deu certo. */
+    /* So gasta a Pokebola se a insercao deu certo, para o estado nao ficar
+       inconsistente. */
     if (!pokelistaInserir(&t->lista, p)) {
         return 0;
     }
@@ -91,8 +88,7 @@ int treinadorCapturar(Treinador *t, const Pokemon *p)
 
 int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado)
 {
-    /* Retira sempre o primeiro da lista, de modo que os Pokemon saiam na mesma
-       ordem em que foram capturados. */
+    /* O primeiro da lista e o mais antigo: a entrega sai na ordem de captura. */
     return pokelistaRemoverPrimeiro(&t->lista, retirado);
 }
 
@@ -100,8 +96,7 @@ void treinadorImprimir(const Treinador *t)
 {
     cord posicao = treinadorGetLocalizacao(t);
 
-    /* Le os atributos pelos proprios get, e nao direto da struct, como faz a
-       impressao do Pokemon. O formato e o do exemplo da especificacao. */
+    /* O formato e o do exemplo da especificacao. */
     printf("Treinador(a) %s: posição (%d,%d) | Pokébolas: %d\n",
            treinadorGetNome(t), posicao.cordX, posicao.cordY,
            treinadorGetPokebolas(t));

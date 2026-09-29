@@ -1,5 +1,4 @@
-/* Programa principal do TP1 de Algoritmos e Estruturas de Dados I.
-   Prepara o sorteio das Pokebolas e passa o controle para o menu da missao. */
+/* Programa principal do TP1 de AEDS I. Prepara o sorteio e chama o menu. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,9 +8,8 @@
 
 int main(void)
 {
-    /* srand e chamado uma unica vez, aqui, antes de qualquer sorteio. Se ele
-       ficasse dentro da recarga de Pokebolas, duas recargas no mesmo segundo
-       receberiam a mesma semente e sorteariam a mesma quantidade. */
+    /* Uma unica vez, antes de qualquer sorteio: duas chamadas no mesmo segundo
+       receberiam a mesma semente e sorteariam o mesmo numero. */
     srand(time(NULL));
 
     missaoMenu();
