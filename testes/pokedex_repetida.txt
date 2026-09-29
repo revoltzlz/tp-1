@@ -1,0 +1,7 @@
+Rosa 4
+Nate 4
+4
+025 Pikachu Elétrico 1 1
+025 Pikachu Elétrico -1 -1
+025 Pikachu Elétrico 5 5
+025 Pikachu Elétrico -5 -5

@@ -1,0 +1,6 @@
+Rosa 5
+Nate 5
+3
+001 Bulbasaur Folha 3 4
+004 Charmander Fogo -3 -4
+007 Squirtle Água 0 5

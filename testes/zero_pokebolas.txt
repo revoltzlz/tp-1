@@ -1,0 +1,6 @@
+Rosa 0
+Nate 2
+3
+025 Pikachu Elétrico 1 1
+094 Gengar Fantasma -8 -8
+133 Eevee Normal 2 2

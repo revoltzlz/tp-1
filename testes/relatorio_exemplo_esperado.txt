@@ -1,0 +1,6 @@
+Pokemon recuperados:
+610 Axew
+657 Frogadier
+387 Turtwig
+197 Umbreon
+715 Noivern
