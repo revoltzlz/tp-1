@@ -80,6 +80,7 @@ todos os estados.
 |---|---|
 | build do zero com as opções do Makefile | zero avisos |
 | o mesmo acrescentando `-pedantic` | zero avisos |
+| o mesmo acrescentando mais 20 flags de análise | 17 avisos, os dois de baixo |
 | `fflush(stdin)`, `gets`, `void main`, `system`, `conio.h`, `pow` | nenhum |
 | variáveis globais | nenhuma |
 | recursão | nenhuma |
@@ -93,6 +94,31 @@ todos os estados.
 | `make clean` no Git Bash e no PowerShell | apaga em ambos |
 | bateria de testes | 72 de 72 |
 | `malloc` igual a `free` | em sete arquivos, incluindo os de erro |
+
+### O custo das duas simplificações, medido
+
+Com as opções do Makefile, e também acrescentando `-pedantic`, o projeto
+compila com **zero avisos**. Ligando mais vinte flags de análise, aparecem 17,
+todos consequência direta de duas simplificações desta revisão. Nenhum é erro,
+mas vale saber que existem:
+
+**16 avisos de `-Wmissing-prototypes` em `src/missao.c`.** Vêm da remoção do
+`static` das funções auxiliares. Uma função sem `static` e sem protótipo num
+`.h` tem ligação externa mas nenhuma declaração prévia, e essa flag cobra a
+declaração. O `static` era tecnicamente melhor: ele diz "esta função só é usada
+dentro deste arquivo", o que é verdade para as dezesseis. Foi removido porque a
+instrução desta revisão lista `static` entre o que trocar por algo mais simples.
+
+Consequência prática: se um dia outro arquivo do projeto definisse uma função
+com um desses nomes — `imprimeMoldura`, por exemplo — o ligador acusaria
+`multiple definition`. Hoje não há conflito, e as flags da disciplina não
+incluem essa verificação.
+
+**1 aviso de `-Wsign-conversion` em `main.c`**, na linha `srand(time(NULL))`.
+`time` devolve `time_t` e `srand` recebe `unsigned int`; a conversão é
+implícita e pode mudar o sinal. O cast `(unsigned int)` que existia antes
+silenciava o aviso, e foi removido por ser mais uma coisa a explicar.
+`srand(time(NULL))` é a forma que o material da disciplina mostra.
 
 ---
 
