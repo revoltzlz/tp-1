@@ -131,6 +131,29 @@ static void descartaRestoDaLinha(FILE *entrada)
     } while (caractere != '\n' && caractere != EOF);
 }
 
+/* Le uma linha do teclado para dentro de destino, com no maximo tamanho - 1
+   caracteres, e tira a quebra de linha do fim. Se a linha digitada for maior
+   que isso, o que sobrou dela e descartado, para que nao seja lido depois como
+   se fosse a proxima resposta do usuario.
+
+   Devolve 1 se leu alguma coisa e 0 se a entrada acabou. */
+static int leLinha(char *destino, size_t tamanho)
+{
+    if (fgets(destino, (int) tamanho, stdin) == NULL) {
+        return 0;
+    }
+
+    /* Se nao ha quebra de linha no que foi lido, a linha era maior que o vetor
+       e o resto dela ainda esta na entrada. */
+    if (strchr(destino, '\n') == NULL) {
+        descartaRestoDaLinha(stdin);
+    } else {
+        removeFimDeLinha(destino);
+    }
+
+    return 1;
+}
+
 /* Le o nome e a quantidade inicial de Pokebolas de um treinador e o
    inicializa com o identificador recebido. No modo interativo, pede cada dado
    antes de ler. Devolve 1 em caso de sucesso e 0 se os dados forem invalidos
@@ -580,10 +603,10 @@ void missaoMenu(void)
         printf("%d - Sair\n\n", OPCAO_SAIR);
         printf("Opção: ");
 
-        /* A opcao e lida como linha e depois convertida, para que uma letra
-           digitada por engano nao deixe caractere preso na entrada e faca o
-           menu girar sozinho. */
-        if (fgets(linha, sizeof linha, stdin) == NULL) {
+        /* A opcao e lida como linha inteira e so depois convertida, para que
+           uma letra digitada por engano nao deixe caractere preso na entrada e
+           faca o menu girar sozinho. */
+        if (!leLinha(linha, sizeof linha)) {
             putchar('\n');
             return;
         }
@@ -599,13 +622,12 @@ void missaoMenu(void)
 
         if (opcao == OPCAO_ARQUIVO) {
             printf("Caminho do arquivo de entrada: ");
-            if (fgets(linha, sizeof linha, stdin) == NULL) {
+            /* Ler a linha inteira, e nao com scanf, permite caminhos com
+               espaco, como "arquivos de teste/teste1.txt". */
+            if (!leLinha(linha, sizeof linha)) {
                 putchar('\n');
                 return;
             }
-            /* O fgets guarda a quebra de linha, que nao faz parte do caminho.
-               Ler com fgets, e nao com scanf, permite caminhos com espaco. */
-            removeFimDeLinha(linha);
             putchar('\n');
             missaoExecutarPorArquivo(linha);
             putchar('\n');

@@ -421,6 +421,19 @@ else
     vermelho "opcao de arquivo do menu nao completou a missao"
 fi
 
+# Caminho maior que o vetor: precisa ser truncado e o resto da linha
+# descartado, sem virar uma opcao invalida na rodada seguinte do menu.
+longo=$(printf 'x%.0s' $(seq 1 400))
+saida=$(printf '1
+%s
+0
+' "$longo" | "$EXE" 2>&1)
+if echo "$saida" | grep -q 'Até a próxima' && ! echo "$saida" | grep -q 'Opção inválida'; then
+    verde "caminho longo demais e truncado sem sujar a opcao seguinte"
+else
+    vermelho "caminho longo demais deixou sobra na entrada"
+fi
+
 # Arquivo inexistente digitado no menu: avisa e volta ao menu.
 if printf '1\nnao_existe.txt\n0\n' | "$EXE" 2>&1 | grep -q 'nao foi possivel abrir'; then
     verde "menu avisa arquivo inexistente e volta ao menu"

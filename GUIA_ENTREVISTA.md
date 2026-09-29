@@ -387,6 +387,22 @@ Esse bug existiu no meio do desenvolvimento e o teste
 `testes/erro_coordenada_fora_do_mapa.txt` é o que o guarda. É a razão de o
 limite `COORD_MAX` existir, e está explicado em `include/coordenadas.h`.
 
+**Por que a impressão do treinador não mostra o identificador nem a lista dele?**
+Porque o formato dessa linha vem do exemplo do enunciado:
+`Treinador(a) Rosa: posição (0,0) | Pokébolas: 2`. Acrescentar campos afastaria
+a saída do exemplo. Os Pokémon que o treinador carrega aparecem no relatório
+final, depois que ele entrega, e o TAD PokeLista tem a sua própria operação de
+impressão — quem a usa é o Centro de Pesquisa, para listar os fugitivos.
+
+**Tem trechos do seu código que nunca executam. Por quê?**
+Dois, e são de propósito: a captura que falha por falta de Pokébola, e o aviso
+de que sobrou Pokémon na lista de fugitivos. O fluxo da missão garante que
+nenhum dos dois acontece — ninguém parte para capturar sem Pokébola, e todos
+são resgatados. Eles ficam porque uma operação de TAD não deve confiar em quem
+a chama: se alguém chamar `treinadorCapturar` fora de hora, a quantidade de
+Pokébolas não pode ficar negativa. Para alcançá-los de verdade seria preciso um
+`malloc` falhando.
+
 **Por que a busca por Id tem uso, se a lista já está na ordem do arquivo?**
 Porque a lista de fugitivos vai perdendo elementos. Meu laço percorre os Ids de
 1 até n; a busca no Centro é o que confirma que aquele Pokémon ainda está
