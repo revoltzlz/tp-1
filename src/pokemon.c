@@ -1,25 +1,82 @@
-#include "pokemon.h"
-#include "coordenadas.h"
-#include "pokelista.h"
-#include "treinador.h"
-#include "pokecenter.h"
-
 #include <stdio.h>
+#include <string.h>
 
-void InicializarPokemon(Pokemon *p, int indentificacao, int Numpokedex, char nome[], int cordX, int cordY)
+#include "pokemon.h"
+
+void pokemonInicializar(Pokemon *p, int identificacao, int numPokedex,
+                        const char *nome, const char *tipo, int cordX, int cordY)
 {
-    strcpy(p->Nome, nome);
-    p->indentificacao = indentificacao;
-    p->Numpokedex = Numpokedex;
+    pokemonSetId(p, identificacao);
+    pokemonSetNumPokedex(p, numPokedex);
+    pokemonSetNome(p, nome);
+    pokemonSetTipo(p, tipo);
+    pokemonSetLocalizacao(p, cordX, cordY);
+}
 
+void pokemonSetId(Pokemon *p, int identificacao)
+{
+    p->identificacao = identificacao;
+}
+
+void pokemonSetNumPokedex(Pokemon *p, int numPokedex)
+{
+    p->numPokedex = numPokedex;
+}
+
+void pokemonSetNome(Pokemon *p, const char *nome)
+{
+    /* strncpy copia no maximo TAM_NOME - 1 caracteres, deixando a ultima
+       posicao do vetor livre para o '\0' escrito na linha seguinte. Se o nome
+       de origem for mais curto, o strncpy ja preenche o resto com '\0'. */
+    strncpy(p->nome, nome, TAM_NOME - 1);
+    p->nome[TAM_NOME - 1] = '\0';
+}
+
+void pokemonSetTipo(Pokemon *p, const char *tipo)
+{
+    strncpy(p->tipo, tipo, TAM_TIPO - 1);
+    p->tipo[TAM_TIPO - 1] = '\0';
+}
+
+void pokemonSetLocalizacao(Pokemon *p, int cordX, int cordY)
+{
     p->localizacao.cordX = cordX;
     p->localizacao.cordY = cordY;
 }
 
-void ImprimirPokemon(Pokemon *p)
+int pokemonGetId(const Pokemon *p)
 {
-    printf("Pokemon alvo: %s\n", p->Nome);
-    printf("Indentificacao: %d\n", p->indentificacao);
-    printf("Numero na Pokedex: %s\n", p->Numpokedex);
-    printf("Localizacao: (%d , %d)", p->localizacao.cordX, p->localizacao.cordY);
+    return p->identificacao;
+}
+
+int pokemonGetNumPokedex(const Pokemon *p)
+{
+    return p->numPokedex;
+}
+
+const char *pokemonGetNome(const Pokemon *p)
+{
+    return p->nome;
+}
+
+const char *pokemonGetTipo(const Pokemon *p)
+{
+    return p->tipo;
+}
+
+cord pokemonGetLocalizacao(const Pokemon *p)
+{
+    /* Devolve uma copia da struct. Quem recebe pode mexer na copia sem
+       alterar o Pokemon. */
+    return p->localizacao;
+}
+
+void pokemonImprimir(const Pokemon *p)
+{
+    /* O %03d imprime o numero da Pokedex com pelo menos tres digitos, para que
+       um numero como 025, que foi lido do arquivo como o inteiro 25, saia
+       escrito do mesmo jeito que estava na entrada. */
+    printf("Id %d | Pokedex %03d | %s | Tipo: %s | Localizacao: (%d,%d)\n",
+           p->identificacao, p->numPokedex, p->nome, p->tipo,
+           p->localizacao.cordX, p->localizacao.cordY);
 }
