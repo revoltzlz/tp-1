@@ -175,11 +175,16 @@ Nate 2
 197 Umbreon Noturno 5 7
 ```
 
-**Esta reconstrução foi validada contra a saída de exemplo**: recalculando as 10
-distâncias do exemplo a partir dela, todas as 10 batem com os valores impressos no PDF
-(9.90/9.90, 3.00/12.21, 1.41/1.41, 15.56/14.14, 7.21/22.67), e a ordem do relatório
-(610, 657, 387, 197, 715) também é reproduzida. Fica gravado em
-`testes/entrada_exemplo.txt`.
+**Esta reconstrução foi validada de duas formas independentes:**
+
+1. Recalculando as 10 distâncias do exemplo a partir dela, todas as 10 batem com os
+   valores impressos no PDF (9.90/9.90, 3.00/12.21, 1.41/1.41, 15.56/14.14,
+   7.21/22.67), e a ordem do relatório (610, 657, 387, 197, 715) também é reproduzida.
+2. **Confirmada depois contra o arquivo oficial** `testes/oficiais/teste1.txt`, que o
+   Gabriel baixou do Moodle: é idêntico byte a byte (a única diferença é que o oficial
+   está em CRLF e não tem quebra de linha na última linha).
+
+Fica gravado também em `testes/entrada_exemplo.txt` (versão em LF).
 
 Formato, portanto:
 
@@ -192,6 +197,30 @@ Observações:
 - A entrada **não traz o identificador** dos treinadores nem o **Id** dos Pokémon
   (ver decisão D02 e D03).
 - A entrada **não traz a localização** dos treinadores: ela é (0,0) por R26.
+
+### Arquivos de teste oficiais (`testes/oficiais/`)
+
+Os dois arquivos que o PDF menciona na lin. 169-170, baixados do Moodle.
+
+- **`teste1.txt`** — o exemplo do PDF (5 Pokémon). Oráculo completo: a saída deve bater
+  com `testes/saida_exemplo_pdf.txt` e o relatório com
+  `testes/relatorio_exemplo_pdf.txt`, a menos da quantidade sorteada na recarga.
+- **`teste2.txt`** — 20 Pokémon. **Contém quatro Pikachus com o mesmo número de
+  Pokédex `025`** (linhas 9, 16, 19 e 23). Isso confirma R13 + D02 de forma definitiva:
+  o Id **não pode** ser o número da Pokédex, porque ele não é único. Um programa que
+  usasse a Pokédex como Id daria busca e remoção erradas neste arquivo.
+
+Características dos dois arquivos que impõem requisitos de robustez:
+
+| Característica | Consequência |
+|---|---|
+| Terminação de linha **CRLF** (`
+`) | O `` não pode entrar no nome nem no tipo (R73). |
+| **Sem quebra de linha** na última linha | A leitura do último Pokémon não pode depender de `
+` final. |
+| Número da Pokédex com **zeros à esquerda** (`025`, `004`, `007`, `001`, `039`, `094`) | Ver D18. |
+| Acentos em UTF-8 nos tipos (`Dragão`, `Água`, `Elétrico`, `Psíquico`) | Cada acento gasta **2 bytes**; `TAM_TIPO` precisa de folga (D19). |
+| Nomes de até 10 caracteres (`Charmander`, `Jigglypuff`) | `TAM_NOME 12` do rascunho era apertado (D19). |
 
 ---
 
@@ -237,6 +266,10 @@ Amparadas por R09. Vão para os slides e para o `GUIA_ENTREVISTA.md`.
 | D14 | Nome do relatório fixado em uma constante | R64 (nenhum nome fixo solto). O PDF não define o nome do arquivo. |
 | D15 | Dois treinadores em **duas variáveis**, não em vetor | R12 obriga lista encadeada para as listas lineares; manter o vetor fora do projeto evita qualquer dúvida na correção. R40 fixa o número em dois. |
 | D16 | A impressão da lista de fugitivos (R36) é chamada no **modo interativo**, após o registro | Dá uso real a R24/R36 sem poluir a saída do modo arquivo, que precisa bater com o exemplo (R57). O exemplo do PDF é do modo arquivo (lin. 174: "Como resolução do primeiro arquivo de teste"). |
+| D17 | A escrita do relatório fica no TAD **PokeLista** (`pokelistaEscreverRelatorio`), recebendo um `FILE *` já aberto; o Centro abre o arquivo, escreve o cabeçalho e fecha | Quem sabe percorrer a lista é a lista. Mantém O(n) e o encapsulamento: o Centro nunca toca em `primeiro`/`prox`. A alternativa (um `getPorPosicao` chamado de fora) seria O(n²). |
+| D18 | Número da Pokédex impresso com **`%03d`** | Os arquivos oficiais trazem `025`, `004`, `007`, `001`. Lido como `int`, `025` vira 25; com `%03d` volta a sair `025`, igual à entrada, e é o formato canônico da Pokédex. Para os números do exemplo do PDF (610, 657, 387, 715, 197) `%03d` e `%d` dão o mesmo resultado. |
+| D19 | `TAM_NOME` de 12 → **30**; `TAM_TIPO` **20** | `Jigglypuff`/`Charmander` têm 10 caracteres e já ocupam 11 dos 12 bytes. Os tipos acentuados (`Elétrico`, `Psíquico`) gastam 9 bytes em UTF-8. A entrevista usa arquivos novos (R73), então a folga é barata. |
+| D20 | O `` do CRLF é removido de nome e tipo depois da leitura | Os arquivos oficiais estão em CRLF. Sem isso, `%s` no `fscanf` engole o `` no fim do tipo e a impressão sai com um retorno de carro no meio da linha. |
 
 ---
 
