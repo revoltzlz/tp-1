@@ -47,13 +47,28 @@ LDLIBS  = -lm
 ALVO    = tp1
 OBJS    = main.o pokemon.o pokelista.o treinador.o pokecenter.o missao.o
 
-# ---- Comando de limpeza, escolhido conforme o sistema -----------------------
-# A variavel de ambiente OS vale Windows_NT apenas no Windows.
+# ---- Comando de limpeza -----------------------------------------------------
+# Nao basta olhar o sistema operacional: no Windows o make pode estar rodando
+# sob o cmd e o PowerShell, onde existe o comando del, ou sob o sh do Git Bash,
+# onde existe o rm. Duas variaveis de ambiente respondem isso:
+#
+#   OS       vale Windows_NT so no Windows; no Linux e no WSL vem vazia
+#   MSYSTEM  vale MINGW64 dentro do Git Bash; nos outros shells vem vazia
+#
+# Escolher errado aqui e pior do que falhar: o comando nao existe, o "-" da
+# regra clean manda o make seguir em frente, e os arquivos ficam onde estavam.
 
 ifeq ($(OS),Windows_NT)
-    LIMPAR = del /Q /F $(ALVO).exe *.o
+    ifeq ($(MSYSTEM),)
+        # Windows sob o cmd ou o PowerShell.
+        LIMPAR = del /Q /F $(ALVO).exe *.o
+    else
+        # Windows sob o Git Bash.
+        LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
+    endif
 else
-    LIMPAR = rm -f $(ALVO) *.o
+    # Linux, WSL ou macOS.
+    LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
 endif
 
 # ---- Alvos ------------------------------------------------------------------

@@ -352,7 +352,12 @@ cabeçalhos. Depois os `.o` são ligados num executável, com `-lm` **depois** d
 objetos, porque o ligador resolve os símbolos da esquerda para a direita e é o
 meu código que chama `sqrt`. As dependências de cabeçalho estão declaradas, então
 mudar um `.h` recompila só os `.o` que o incluem. O `clean` escolhe entre `del`
-e `rm` pela variável `OS`, que só existe no Windows.
+e `rm` olhando duas variaveis de ambiente: `OS`, que so vale `Windows_NT` no
+Windows, e `MSYSTEM`, que so vem preenchida dentro do Git Bash. Nao basta olhar
+o sistema, porque no Windows o make pode rodar sob o cmd, onde existe `del`, ou
+sob o `sh` do Git Bash, onde existe `rm` — e escolher errado e pior que falhar,
+porque o `-` da regra faz o make seguir em frente e os arquivos ficam onde
+estavam. Testei o `clean` nos dois shells.
 
 **Como você garante que toda a memória é liberada?**
 Todo o `malloc` do projeto está em `src/pokelista.c`, em dois lugares: a célula
