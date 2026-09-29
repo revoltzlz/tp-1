@@ -73,10 +73,16 @@ cord pokemonGetLocalizacao(const Pokemon *p)
 
 void pokemonImprimir(const Pokemon *p)
 {
-    /* O %03d imprime o numero da Pokedex com pelo menos tres digitos, para que
+    cord posicao = pokemonGetLocalizacao(p);
+
+    /* A impressao le os atributos pelos proprios get, e nao direto da struct.
+       Assim, se um dia a forma de guardar algum campo mudar, so o get precisa
+       mudar de lugar.
+
+       O %03d imprime o numero da Pokedex com pelo menos tres digitos, para que
        um numero como 025, que foi lido do arquivo como o inteiro 25, saia
        escrito do mesmo jeito que estava na entrada. */
     printf("Id %d | Pokédex %03d | %s | Tipo: %s | Localização: (%d,%d)\n",
-           p->identificacao, p->numPokedex, p->nome, p->tipo,
-           p->localizacao.cordX, p->localizacao.cordY);
+           pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
+           pokemonGetTipo(p), posicao.cordX, posicao.cordY);
 }

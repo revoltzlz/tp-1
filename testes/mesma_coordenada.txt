@@ -1,0 +1,7 @@
+Rosa 5
+Nate 5
+4
+001 Bulbasaur Folha 4 4
+004 Charmander Fogo 4 4
+007 Squirtle Água 4 4
+133 Eevee Normal 4 4

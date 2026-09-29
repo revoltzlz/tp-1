@@ -55,9 +55,6 @@ cord treinadorGetLocalizacao(const Treinador *t);
 /* Devolve quantas Pokebolas o treinador ainda tem. */
 int treinadorGetPokebolas(const Treinador *t);
 
-/* Devolve quantos Pokemon o treinador esta carregando. */
-int treinadorGetQtdPokemon(const Treinador *t);
-
 /* Move o treinador para a coordenada indicada. Nao imprime nada: a mensagem
    do deslocamento pertence a quem narra a missao. */
 void treinadorMovimentar(Treinador *t, int cordX, int cordY);

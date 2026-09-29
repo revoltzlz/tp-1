@@ -175,6 +175,12 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
             return 0;
         }
 
+        if (numPokedex < 0) {
+            fprintf(stderr, "Erro: o numero na Pokedex do Pokemon %s nao pode ser negativo (%d).\n",
+                    nome, numPokedex);
+            return 0;
+        }
+
         /* O Id e a ordem de leitura, comecando em 1. A especificacao exige que
            ele seja unico, e o numero da Pokedex nao serve: o proprio arquivo de
            teste oficial traz quatro Pikachus com o numero 25. */
@@ -298,7 +304,7 @@ static void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
     /* Caso anomalo: se alguma captura falhou, mostra quem ficou para tras em
        vez de anunciar que todos foram resgatados. */
     if (pokecenterTemFugitivos(cp)) {
-        printf("Atenção: %d Pokémon não foram recuperados:\n",
+        printf("Atenção: ainda há %d Pokémon na lista de fugitivos:\n",
                pokecenterGetQtdFugitivos(cp));
         pokecenterImprimirFugitivos(cp);
         putchar('\n');
@@ -341,8 +347,11 @@ static void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdF
     printf("\nPokémons fugitivos a serem resgatados: %d\n\n",
            pokecenterGetQtdFugitivos(cp));
 
-    recarregaSeComecouSemPokebola(cp, t1);
-    recarregaSeComecouSemPokebola(cp, t2);
+    /* Se nao ha nenhum fugitivo, ninguem precisa de Pokebola. */
+    if (qtdFugitivos > 0) {
+        recarregaSeComecouSemPokebola(cp, t1);
+        recarregaSeComecouSemPokebola(cp, t2);
+    }
 
     /* Percorre os identificadores na ordem em que os Pokemon foram lidos. A
        busca no Centro confirma que aquele Pokemon ainda esta fugido antes de

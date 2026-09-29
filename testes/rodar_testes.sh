@@ -291,6 +291,9 @@ checa_valido "$T/zero_pokemon.txt"             0
 checa_valido "$T/pokedex_repetida.txt"         4
 checa_valido "$T/coordenadas_negativas.txt"    3
 checa_valido "$T/nomes_maximos.txt"            2
+checa_valido "$T/espacos_e_linhas_extras.txt" 3
+checa_valido "$T/coordenadas_grandes.txt"     3
+checa_valido "$T/mesma_coordenada.txt"        4
 
 
 # ---------------------------------------------------------------------------
@@ -333,6 +336,10 @@ checa_invalido "$T/erro_pokebolas_texto.txt"
 checa_invalido "$T/erro_vazio.txt"
 checa_invalido "$T/erro_incompleto.txt"
 checa_invalido "$T/nomes_longos_demais.txt"
+checa_invalido "$T/erro_pokedex_negativa.txt"
+checa_invalido "$T/erro_coordenada_texto.txt"
+checa_invalido "$T/erro_quantidade_texto.txt"
+checa_invalido "$T/erro_so_espacos.txt"
 checa_invalido "$T/este_arquivo_nao_existe.txt"
 
 # ---------------------------------------------------------------------------

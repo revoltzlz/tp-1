@@ -78,7 +78,14 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
        do treinador, que e liberada, e entra copiado na celula nova do Centro.
        Nenhuma memoria e compartilhada entre as duas listas. */
     while (treinadorRetirarPokemon(t, &entregue)) {
-        pokelistaInserir(&cp->recuperados, &entregue);
+        if (!pokelistaInserir(&cp->recuperados, &entregue)) {
+            /* O Pokemon ja saiu da lista do treinador e nao ha memoria para a
+               celula nova. Avisa em vez de perde-lo em silencio, e para a
+               entrega: sem memoria, insistir nao ajudaria. */
+            fprintf(stderr, "Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
+                    pokemonGetNome(&entregue));
+            return recebidos;
+        }
         recebidos++;
     }
 

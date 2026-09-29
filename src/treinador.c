@@ -61,11 +61,6 @@ int treinadorGetPokebolas(const Treinador *t)
     return t->qntdpokebolas;
 }
 
-int treinadorGetQtdPokemon(const Treinador *t)
-{
-    return pokelistaGetTamanho(&t->lista);
-}
-
 void treinadorMovimentar(Treinador *t, int cordX, int cordY)
 {
     /* A movimentacao nao imprime nada: quem narra a missao e o modulo da
