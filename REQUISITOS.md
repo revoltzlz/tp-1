@@ -14,22 +14,22 @@ Status: `pendente` | `feito` | `verificado`
 | # | Exigência | Lin. | Trecho do PDF | Status | Evidência |
 |---|---|---|---|---|---|
 | R01 | Trabalho em dupla, valor 10 pontos | 9 | "Valor: 10 pontos" | verificado | — |
-| R02 | Entrega no Moodle em `.zip` ou `.tar.gz` | 12 | "Forma de Entrega: Moodle (formato .zip ou .tar.gz)" | pendente | |
-| R03 | `.zip` nomeado `TP1Aluno1Matricula1Aluno2Matricula2` | 318 | "nomeado no formato "TP1Aluno1Matricula1Aluno2Matricula2"" | pendente | |
-| R04 | `.zip` contém **todo** o código-fonte, **incluindo os `.h`** | 318-319 | "(1) todo código-fonte produzido, incluindo os arquivos de cabeçalho" | pendente | |
-| R05 | `.zip` contém slides em **PDF**, no formato disponibilizado no Moodle | 319-320 | "(2) um conjunto de slides, utilizando o formato disponibilizado no Moodle. O formato para a slides é pdf." | pendente | **Depende do Gabriel: baixar o modelo do Moodle.** |
+| R02 | Entrega no Moodle em `.zip` ou `.tar.gz` | 12 | "Forma de Entrega: Moodle (formato .zip ou .tar.gz)" | verificado | `.zip` gerado na Fase 8; formato aceito pelo Moodle. |
+| R03 | `.zip` nomeado `TP1Aluno1Matricula1Aluno2Matricula2` | 318 | "nomeado no formato "TP1Aluno1Matricula1Aluno2Matricula2"" | pendente | **Depende do Gabriel: nomes e matriculas.** |
+| R04 | `.zip` contém **todo** o código-fonte, **incluindo os `.h`** | 318-319 | "(1) todo código-fonte produzido, incluindo os arquivos de cabeçalho" | pendente | Conteudo do zip definido na Fase 8. |
+| R05 | `.zip` contém slides em **PDF**, no formato disponibilizado no Moodle | 319-320 | "(2) um conjunto de slides, utilizando o formato disponibilizado no Moodle. O formato para a slides é pdf." | pendente | **Depende do Gabriel: baixar o modelo do Moodle.** **Depende do Gabriel: modelo de slides do Moodle.** |
 | R06 | Avaliação por entrevista com monitores + avaliação do código | 322-324 | "avaliado através de uma apresentação/entrevista" | — | Cada aluno explica sozinho. |
 | R07 | Trabalhos copiados serão penalizados | 307 | "Trabalhos copiados serão penalizados." | — | **O PDF não diz nada sobre uso de IA.** Única regra: não copiar. |
-| R08 | Erros da especificação podem e devem ser reportados | 310-312 | "A especificação pode conter erros ou problemas não intencionais que podem e devem ser reportados" | pendente | Erratas na seção E; vão para os slides. |
-| R09 | Decisões de projeto são responsabilidade da dupla | 312-313 | "diversas decisões de projeto e desenvolvimento precisam e devem ser feitas por cada dupla" | pendente | Seção F. |
+| R08 | Erros da especificação podem e devem ser reportados | 310-312 | "A especificação pode conter erros ou problemas não intencionais que podem e devem ser reportados" | verificado | Erratas na seção E; vão para os slides. 7 erratas na secao H, cada uma com o trecho do PDF e o tratamento. |
+| R09 | Decisões de projeto são responsabilidade da dupla | 312-313 | "diversas decisões de projeto e desenvolvimento precisam e devem ser feitas por cada dupla" | verificado | Seção F. 20 decisoes de projeto na secao I. |
 | R10 | Implementações extras são permitidas, mas só depois de cumprir tudo o que foi pedido | 313-315 | "Implementações extras são possíveis e serão bem-vindas, desde que tudo o que foi explicitamente pedido [...] tenha sido contemplado" | — | |
-| R11 | Soluções que não sejam TADs são "duramente penalizadas" | 309-310 | "Soluções que não correspondam à implementação de Tipos Abstratos de Dados serão duramente penalizadas" | pendente | |
+| R11 | Soluções que não sejam TADs são "duramente penalizadas" | 309-310 | "Soluções que não correspondam à implementação de Tipos Abstratos de Dados serão duramente penalizadas" | verificado | 4 TADs em `include/` e `src/`, cada um com struct e operacoes proprias. |
 
 ## B. Estrutura de dados obrigatória
 
 | # | Exigência | Lin. | Trecho do PDF | Status | Evidência |
 |---|---|---|---|---|---|
-| R12 | A estrutura das listas lineares é **OBRIGATORIAMENTE LISTA ENCADEADA** | 38-39 | "a estrutura de dados a ser utilizada [...] será OBRIGATORIAMENTE LISTA ENCADEADA" | pendente | Nenhuma coleção de Pokémon pode ser vetor. |
+| R12 | A estrutura das listas lineares é **OBRIGATORIAMENTE LISTA ENCADEADA** | 38-39 | "a estrutura de dados a ser utilizada [...] será OBRIGATORIAMENTE LISTA ENCADEADA" | verificado | Nenhuma coleção de Pokémon pode ser vetor. `Pokelista` e lista encadeada (`include/pokelista.h`). Nenhum vetor de Pokemon no projeto. Os dois treinadores sao duas variaveis (D15). |
 
 ## C. Os quatro TADs
 
@@ -37,83 +37,83 @@ Status: `pendente` | `feito` | `verificado`
 
 | # | Exigência | Lin. | Status | Evidência |
 |---|---|---|---|---|
-| R13 | Atributo: `Id` — inteiro de identificação **único** | 50 | pendente | |
-| R14 | Atributo: `Número na Pokedex` | 51 | pendente | |
-| R15 | Atributo: `Nome` | 52 | pendente | |
-| R16 | Atributo: `Tipo` | 53 | pendente | |
-| R17 | Atributo: `Localização` (coordenadas X e Y) | 54 | pendente | |
-| R18 | Operações: get e set de valores, inicialização e impressão | 56-57 | pendente | |
+| R13 | Atributo: `Id` — inteiro de identificação **único** | 50 | verificado | `pokemon.h` campo `identificacao`, atribuido na ordem de leitura em `missao.c:leFugitivos`. Provado por `testes/pokedex_repetida.txt` e por `teste2.txt`, em que 4 Pikachus de Pokedex 025 sao capturados individualmente. |
+| R14 | Atributo: `Número na Pokedex` | 51 | verificado | `pokemon.h` campo `numPokedex`. |
+| R15 | Atributo: `Nome` | 52 | verificado | `pokemon.h` campo `nome`. |
+| R16 | Atributo: `Tipo` | 53 | verificado | `pokemon.h` campo `tipo`. **Faltava no rascunho.** |
+| R17 | Atributo: `Localização` (coordenadas X e Y) | 54 | verificado | `pokemon.h` campo `localizacao`, do tipo `cord` de `coordenadas.h`. |
+| R18 | Operações: get e set de valores, inicialização e impressão | 56-57 | verificado | `pokemon.c`: `pokemonInicializar`, 5 Set, 5 Get e `pokemonImprimir`, todos com uso real (a impressao usa os proprios Get). |
 
 ### TAD PokeLista (lin. 59-67)
 
 | # | Exigência | Lin. | Status | Evidência |
 |---|---|---|---|---|
-| R19 | É uma lista encadeada de elementos do tipo Pokémon | 60 | pendente | |
-| R20 | Operação: inicialização da lista | 63 | pendente | |
-| R21 | Operação: inserção de um Pokémon | 64 | pendente | |
-| R22 | Operação: remoção de um Pokémon | 65 | pendente | |
-| R23 | Operação: busca de Pokémon **pelo Id** | 66 | pendente | |
-| R24 | Operação: impressão dos Pokémon armazenados | 67 | pendente | |
+| R19 | É uma lista encadeada de elementos do tipo Pokémon | 60 | verificado | `pokelista.h`: `primeiro`, `ultimo` e `tamanho`; celula em `conexao.h` guardando um `Pokemon` por valor. |
+| R20 | Operação: inicialização da lista | 63 | verificado | `pokelista.c:pokelistaInicializar`, que aloca a celula cabeca. |
+| R21 | Operação: inserção de um Pokémon | 64 | verificado | `pokelista.c:pokelistaInserir`, no fim, em O(1) pelo apontador `ultimo`. |
+| R22 | Operação: remoção de um Pokémon | 65 | verificado | `pokelista.c:pokelistaRemover` por Id, e `pokelistaRemoverPrimeiro`, que reaproveita a primeira. |
+| R23 | Operação: busca de Pokémon **pelo Id** | 66 | verificado | `pokelista.c:pokelistaBuscar`. Uso real: `missao.c:executaMissao` busca cada Id no Centro antes de montar o resgate. |
+| R24 | Operação: impressão dos Pokémon armazenados | 67 | verificado | `pokelista.c:pokelistaImprimir`, usada por `pokecenterImprimirFugitivos` no modo interativo e no caso anomalo. |
 
 ### TAD Treinador (lin. 69-87)
 
 | # | Exigência | Lin. | Status | Evidência |
 |---|---|---|---|---|
-| R25 | Atributos: Identificador, Nome, Localização, PokeLista, Quantidade de Pokébolas | 73-77 | pendente | |
-| R26 | Inicialização define identificação, **localização inicial (0,0)** e quantidade inicial de Pokébolas | 81-82 | pendente | |
-| R27 | Operação: movimentação para uma determinada coordenada | 84 | pendente | |
-| R28 | Operação: captura de um Pokémon, que **consome uma Pokébola** | 85 | pendente | |
-| R29 | Operação: retirar um Pokémon da sua PokeLista | 86 | pendente | |
-| R30 | Operação: impressão das informações do treinador | 87 | pendente | |
+| R25 | Atributos: Identificador, Nome, Localização, PokeLista, Quantidade de Pokébolas | 73-77 | verificado | `treinador.h`: `identificador`, `nome`, `loccoach`, `lista` (PokeLista) e `qntdpokebolas`. |
+| R26 | Inicialização define identificação, **localização inicial (0,0)** e quantidade inicial de Pokébolas | 81-82 | verificado | `treinador.c:treinadorInicializar` usa `TREINADOR_X_INICIAL` e `TREINADOR_Y_INICIAL`, ambos 0. **Os parametros de coordenada do rascunho foram removidos porque o PDF fixa (0,0).** |
+| R27 | Operação: movimentação para uma determinada coordenada | 84 | verificado | `treinador.c:treinadorMovimentar(t, x, y)`. **O rascunho nao recebia a coordenada de destino.** |
+| R28 | Operação: captura de um Pokémon, que **consome uma Pokébola** | 85 | verificado | `treinador.c:treinadorCapturar` insere na lista e so entao decrementa as Pokebolas; devolve 0 se nao havia Pokebola. |
+| R29 | Operação: retirar um Pokémon da sua PokeLista | 86 | verificado | `treinador.c:treinadorRetirarPokemon`, que devolve o Pokemon retirado. |
+| R30 | Operação: impressão das informações do treinador | 87 | verificado | `treinador.c:treinadorImprimir`, no formato exato do exemplo do PDF. |
 
 ### TAD Centro de Pesquisa (lin. 89-104)
 
 | # | Exigência | Lin. | Status | Evidência |
 |---|---|---|---|---|
-| R31 | Contém **duas** instâncias de PokeLista: fugitivos e recuperados | 92-94 | pendente | |
-| R32 | Localização do Centro é **(0,0)** | 94-95 | pendente | |
-| R33 | Operação: inicialização do centro de pesquisa | 98 | pendente | |
-| R34 | Operação: inserção dos registros de Pokémon fugitivos | 99 | pendente | |
-| R35 | Operação: remoção de um Pokémon da lista de fugitivos | 100 | pendente | |
-| R36 | Operação: impressão dos Pokémon que ainda não foram recuperados | 101 | pendente | |
-| R37 | Operação: recebimento dos Pokémon recuperados pelos treinadores | 102 | pendente | |
-| R38 | Operação: recarga de Pokébolas — quantidade **aleatória de 1 a 20** | 103-104 | pendente | |
+| R31 | Contém **duas** instâncias de PokeLista: fugitivos e recuperados | 92-94 | verificado | `pokecenter.h`: campos `fugitivos` e `recuperados`. |
+| R32 | Localização do Centro é **(0,0)** | 94-95 | verificado | `pokecenter.c:pokecenterInicializar` usa `CENTRO_X` e `CENTRO_Y`, ambos 0. |
+| R33 | Operação: inicialização do centro de pesquisa | 98 | verificado | `pokecenter.c:pokecenterInicializar`; se a segunda lista falhar, libera a primeira antes de retornar erro. |
+| R34 | Operação: inserção dos registros de Pokémon fugitivos | 99 | verificado | `pokecenter.c:pokecenterRegistrarFugitivo`, inserindo no fim para preservar a ordem do arquivo. |
+| R35 | Operação: remoção de um Pokémon da lista de fugitivos | 100 | verificado | `pokecenter.c:pokecenterRemoverFugitivo`, chamado a cada captura. |
+| R36 | Operação: impressão dos Pokémon que ainda não foram recuperados | 101 | verificado | `pokecenter.c:pokecenterImprimirFugitivos`. Teste: modo interativo lista os fugitivos registrados. |
+| R37 | Operação: recebimento dos Pokémon recuperados pelos treinadores | 102 | verificado | `pokecenter.c:pokecenterReceberPokemon`, retirando um a um do treinador e inserindo no fim dos recuperados. |
+| R38 | Operação: recarga de Pokébolas — quantidade **aleatória de 1 a 20** | 103-104 | verificado | `pokecenter.c:pokecenterRecarregarPokebolas`, com MIN_RECARGA 1 e MAX_RECARGA 20. **Faltava no rascunho e estava no TAD errado.** |
 
 ## D. Sistema de Controle da Missão (programa principal)
 
 | # | Exigência | Lin. | Trecho / regra | Status | Evidência |
 |---|---|---|---|---|---|
-| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | pendente | Tabela função × uso no `GUIA_ENTREVISTA.md`. |
-| R40 | Inicialização: cria 1 Centro de Pesquisa e **2** Treinadores | 112-114 | — | pendente | |
-| R41 | Registro: lê o arquivo de entrada, registra os fugitivos na PokeLista do Centro e inicializa os dois treinadores | 116-119 | — | pendente | |
-| R42 | Missão de captura: para cada Pokémon registrado, atribui ao treinador de **menor distância euclidiana naquele momento** | 121-125 | — | pendente | |
-| R43 | Movimenta o treinador escolhido até a coordenada do Pokémon, captura e adiciona à PokeLista dele | 125-127 | — | pendente | |
-| R44 | Empate de distância → treinador de **menor identificador** | 127-129 | — | pendente | |
-| R45 | Atualização da listagem de fugas **a cada captura** | 131-133 | — | pendente | |
-| R46 | Retorno (caso 1): último Pokémon resgatado → **ambos** retornam e devolvem todos os Pokémon da sua PokeLista à lista de recuperados | 138-141 | "removê-los da sua PokeLista e adicioná-los à lista de Pokémon recuperados" | pendente | |
-| R47 | Retorno (caso 2): logo após uma captura, se o treinador ficou sem Pokébolas → retorna, devolve o que capturou e **solicita novo carregamento** | 142-145 | — | pendente | |
-| R48 | Relatório final em arquivo **`.txt`** com os Pokémon recuperados | 147-150 | "emitir um relatório no formato de arquivo .txt" | pendente | |
-| R49 | Conteúdo do relatório: **"o ID e o Nome"** (texto) — mas o exemplo mostra o **número da Pokédex** | 149-150 / 288-293 | — | pendente | **Errata E01.** |
-| R50 | Modo de utilização **por arquivo** | 153 | "Para o modo de utilização por arquivo" | pendente | |
-| R51 | Modo de utilização **interativo** | 170-171 | "criar seus próprios casos de teste, tanto interativos quanto por arquivo" | pendente | |
-| R52 | Formato do arquivo de entrada conforme lin. 156-166 | 152-166 | Ver seção G | pendente | `testes/entrada_exemplo.txt` |
-| R53 | Informações do Pokémon na entrada: Número na Pokédex, nome, tipo, coordenadas X e Y | 165-166 | — | pendente | |
-| R54 | A dupla deve criar seus próprios casos de teste, interativos e por arquivo | 169-172 | — | pendente | pasta `testes/` |
-| R55 | Saída no terminal deve **detalhar a execução das funcionalidades** | 174-175 | — | pendente | |
-| R56 | A aleatoriedade da recarga permite resultados diferentes a cada execução; o **fluxo** é que precisa estar correto | 175-178 | "o fator de aleatoriedade [...] possibilitará diferentes resultados a cada execução, entretanto, o fluxo das operações deve ser corretamente detalhado" | pendente | A saída de exemplo é "uma possível solução". |
-| R57 | Saída de exemplo do terminal (lin. 179-285) | 179-285 | — | pendente | `testes/saida_exemplo_pdf.txt` (transcrição validada por `diff`) |
-| R58 | Saída de exemplo do relatório (lin. 288-293) | 287-293 | — | pendente | `testes/relatorio_exemplo_pdf.txt` (idem) |
+| R39 | Programa principal valida os TADs "a partir da utilização de **todos** os elementos disponíveis" | 107-109 | — | verificado | Tabela função × uso no `GUIA_ENTREVISTA.md`. As 51 funcoes declaradas nos `.h` tem chamada real; conferido na Fase 6. Tabela funcao x uso no `GUIA_ENTREVISTA.md`. |
+| R40 | Inicialização: cria 1 Centro de Pesquisa e **2** Treinadores | 112-114 | — | verificado | `missao.c:executa` cria 1 `PokeCenter` e 2 `Treinador`. |
+| R41 | Registro: lê o arquivo de entrada, registra os fugitivos na PokeLista do Centro e inicializa os dois treinadores | 116-119 | — | verificado | `missao.c:leTreinador` e `missao.c:leFugitivos`. |
+| R42 | Missão de captura: para cada Pokémon registrado, atribui ao treinador de **menor distância euclidiana naquele momento** | 121-125 | — | verificado | `missao.c:resgataPokemon` recalcula as duas distancias a cada alvo, da posicao atual de cada treinador. Teste: as 10 distancias do exemplo conferidas uma a uma. |
+| R43 | Movimenta o treinador escolhido até a coordenada do Pokémon, captura e adiciona à PokeLista dele | 125-127 | — | verificado | `missao.c:resgataPokemon`: `treinadorMovimentar` e depois `treinadorCapturar`. |
+| R44 | Empate de distância → treinador de **menor identificador** | 127-129 | — | verificado | `missao.c:escolheTreinador` compara os identificadores no empate. Teste: empate de distancia vai para Rosa, o de menor id. |
+| R45 | Atualização da listagem de fugas **a cada captura** | 131-133 | — | verificado | `missao.c:resgataPokemon` chama `pokecenterRemoverFugitivo` logo apos cada captura. |
+| R46 | Retorno (caso 1): último Pokémon resgatado → **ambos** retornam e devolvem todos os Pokémon da sua PokeLista à lista de recuperados | 138-141 | "removê-los da sua PokeLista e adicioná-los à lista de Pokémon recuperados" | verificado | `missao.c:encerraMissao`. Teste: lista de fugas vazia e relatorio com exatamente n Pokemon nos 18 casos validos. |
+| R47 | Retorno (caso 2): logo após uma captura, se o treinador ficou sem Pokébolas → retorna, devolve o que capturou e **solicita novo carregamento** | 142-145 | — | verificado | `missao.c:retornaAoCentro`, chamado quando as Pokebolas chegam a zero. Teste: `testes/uma_pokebola.txt` recarrega a cada captura. |
+| R48 | Relatório final em arquivo **`.txt`** com os Pokémon recuperados | 147-150 | "emitir um relatório no formato de arquivo .txt" | verificado | `pokecenter.c:pokecenterGerarRelatorio` com `pokelista.c:pokelistaEscreverRelatorio`. |
+| R49 | Conteúdo do relatório: **"o ID e o Nome"** (texto) — mas o exemplo mostra o **número da Pokédex** | 149-150 / 288-293 | — | verificado | **Errata E01.** Seguimos o exemplo: numero da Pokedex mais nome. O `diff` do relatorio passa. **Errata E01.** |
+| R50 | Modo de utilização **por arquivo** | 153 | "Para o modo de utilização por arquivo" | verificado | `missao.c:missaoExecutarPorArquivo`. Teste: menu executa a missao pela opcao de arquivo. |
+| R51 | Modo de utilização **interativo** | 170-171 | "criar seus próprios casos de teste, tanto interativos quanto por arquivo" | verificado | `missao.c:missaoExecutarInterativo`. Teste: modo interativo executa a missao e gera o relatorio. |
+| R52 | Formato do arquivo de entrada conforme lin. 156-166 | 152-166 | Ver seção G | verificado | `testes/entrada_exemplo.txt` `testes/entrada_exemplo.txt`, identico ao oficial `testes/oficiais/teste1.txt`. |
+| R53 | Informações do Pokémon na entrada: Número na Pokédex, nome, tipo, coordenadas X e Y | 165-166 | — | verificado | `missao.c:leFugitivos`, com um unico `fscanf` de 5 campos. |
+| R54 | A dupla deve criar seus próprios casos de teste, interativos e por arquivo | 169-172 | — | verificado | pasta `testes/` 25 arquivos de teste em `testes/`, mais os 2 oficiais, rodados por `testes/rodar_testes.sh`. |
+| R55 | Saída no terminal deve **detalhar a execução das funcionalidades** | 174-175 | — | verificado | Saida do exemplo identica a do PDF, conferida por `diff`. |
+| R56 | A aleatoriedade da recarga permite resultados diferentes a cada execução; o **fluxo** é que precisa estar correto | 175-178 | "o fator de aleatoriedade [...] possibilitará diferentes resultados a cada execução, entretanto, o fluxo das operações deve ser corretamente detalhado" | verificado | A saída de exemplo é "uma possível solução". A recarga e sorteada no programa entregue; o build de teste usa `-DRECARGA_FIXA=2` somente para permitir o `diff` exato. |
+| R57 | Saída de exemplo do terminal (lin. 179-285) | 179-285 | — | verificado | `testes/saida_exemplo_pdf.txt` (transcrição validada por `diff`) `diff` contra `testes/saida_exemplo_esperada.txt` passa. Unica diferenca contra a transcricao fiel do PDF: errata E05. |
+| R58 | Saída de exemplo do relatório (lin. 288-293) | 287-293 | — | verificado | `testes/relatorio_exemplo_pdf.txt` (idem) `diff` contra `testes/relatorio_exemplo_esperado.txt` passa. Unica diferenca contra o PDF: errata E07. |
 
 ## E. Informações Importantes (lin. 295-307)
 
 | # | Exigência | Lin. | Status | Evidência |
 |---|---|---|---|---|
-| R59 | Programa organizado em **módulos**, conforme estudado em sala | 298-300 | pendente | |
-| R60 | O módulo do **programa principal separado** dos módulos dos TADs | 299-300 | pendente | |
-| R61 | Programa **bem indentado** | 302 | pendente | 4 espaços |
-| R62 | Programa **comentado** | 302 | pendente | |
-| R63 | **Makefile com comentário explicando como compilar** | 303 | pendente | |
-| R64 | Números fixos definidos como **constantes** | 304-306 | pendente | `#define` |
+| R59 | Programa organizado em **módulos**, conforme estudado em sala | 298-300 | verificado | 6 modulos: os 4 TADs, o modulo da missao e o programa principal. |
+| R60 | O módulo do **programa principal separado** dos módulos dos TADs | 299-300 | verificado | `main.c` na raiz, so com `srand`, o ajuste do terminal e a chamada do menu. |
+| R61 | Programa **bem indentado** | 302 | verificado | 4 espaços 4 espacos em todo o projeto. |
+| R62 | Programa **comentado** | 302 | verificado | Comentario acima de cada prototipo nos `.h`; conferido na Fase 6. |
+| R63 | **Makefile com comentário explicando como compilar** | 303 | verificado | `Makefile`, linhas 1 a 40: como compilar, executar e limpar, no Linux e no Windows. |
+| R64 | Números fixos definidos como **constantes** | 304-306 | verificado | `#define` 28 constantes. Nenhum numero literal solto no codigo, conferido na Fase 6. |
 
 ## F. Requisitos adicionais (decisões da dupla / boas práticas da disciplina)
 
@@ -122,18 +122,18 @@ disciplina. Registrados aqui para não se perderem.
 
 | # | Item | Status | Evidência |
 |---|---|---|---|
-| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | pendente | |
-| R66 | Toda a memória alocada é liberada (inclusive a célula cabeça de cada lista) | pendente | O PDF só diz "limpem a memória" (lin. 35-36), na narrativa. |
-| R67 | Todo `malloc` testado contra `NULL` | pendente | |
-| R68 | Include guards em todo `.h`, únicos no projeto | pendente | |
-| R69 | Sem ciclo de inclusão: `centro.h → treinador.h → pokelista.h → pokemon.h` | pendente | |
-| R70 | Prefixo do TAD em todas as funções (`pokemonGetId`, `treinadorGetId`...) | pendente | C não tem sobrecarga. |
-| R71 | Comentário acima de cada protótipo nos `.h` | pendente | |
-| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | pendente | Decorre de R39. |
-| R73 | Entradas inválidas não travam o programa (arquivo inexistente, campos faltando, etc.) | pendente | Entrevista usa arquivos novos. |
-| R74 | `srand(time(NULL))` chamado **uma única vez**, no `main` | pendente | |
-| R75 | `.gitignore` com `*.exe`, `*.o`, `*.zip` e o relatório gerado | pendente | |
-| R76 | Zip testado: extrair em pasta limpa, compilar do zero, rodar o exemplo | pendente | |
+| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | verificado | Teste: build normal, como na entrega, com zero avisos. |
+| R66 | Toda a memória alocada é liberada (inclusive a célula cabeça de cada lista) | verificado | O PDF só diz "limpem a memória" (lin. 35-36), na narrativa. Teste: contagem de malloc e free igual em 7 casos. Em `teste2.txt`, 64 e 64, que e 4 celulas cabeca mais 20 registros, 20 capturas e 20 entregas. |
+| R67 | Todo `malloc` testado contra `NULL` | verificado | `pokelista.c`, nos dois unicos `malloc` do projeto. |
+| R68 | Include guards em todo `.h`, únicos no projeto | verificado | 7 `.h` com 7 guards distintos, conferido compilando um `.c` que inclui todos duas vezes, em ordem inversa. **O rascunho tinha um `#ifndef` sem `#define` e 6 arquivos sem guard.** |
+| R69 | Sem ciclo de inclusão: `centro.h → treinador.h → pokelista.h → pokemon.h` | verificado | `coordenadas.h` para `pokemon.h` para `conexao.h` para `pokelista.h` para `treinador.h` para `pokecenter.h` para `missao.h`. Cada `.c` inclui somente o seu `.h`. |
+| R70 | Prefixo do TAD em todas as funções (`pokemonGetId`, `treinadorGetId`...) | verificado | C não tem sobrecarga. As 51 funcoes publicas usam o prefixo do TAD. |
+| R71 | Comentário acima de cada protótipo nos `.h` | verificado | Conferido na Fase 6, prototipo por prototipo. |
+| R72 | Nenhuma operação declarada fica sem uso (sem código morto) | verificado | Decorre de R39. Conferido na Fase 6: `pokemonGetTipo` ganhou uso real e `treinadorGetQtdPokemon` foi removida. |
+| R73 | Entradas inválidas não travam o programa (arquivo inexistente, campos faltando, etc.) | verificado | Entrevista usa arquivos novos. 13 casos invalidos no `rodar_testes.sh`, todos recusados com `Erro:` e codigo de saida 1. |
+| R74 | `srand(time(NULL))` chamado **uma única vez**, no `main` | verificado | `main.c`, uma unica chamada de `srand`. |
+| R75 | `.gitignore` com `*.exe`, `*.o`, `*.zip` e o relatório gerado | verificado | `.gitignore`. |
+| R76 | Zip testado: extrair em pasta limpa, compilar do zero, rodar o exemplo | pendente | Fase 8. |
 
 ---
 
@@ -215,7 +215,8 @@ Características dos dois arquivos que impõem requisitos de robustez:
 | Característica | Consequência |
 |---|---|
 | Terminação de linha **CRLF** (`
-`) | O `` não pode entrar no nome nem no tipo (R73). |
+`) | O `
+` não pode entrar no nome nem no tipo (R73). |
 | **Sem quebra de linha** na última linha | A leitura do último Pokémon não pode depender de `
 ` final. |
 | Número da Pokédex com **zeros à esquerda** (`025`, `004`, `007`, `001`, `039`, `094`) | Ver D18. |
@@ -269,7 +270,9 @@ Amparadas por R09. Vão para os slides e para o `GUIA_ENTREVISTA.md`.
 | D17 | A escrita do relatório fica no TAD **PokeLista** (`pokelistaEscreverRelatorio`), recebendo um `FILE *` já aberto; o Centro abre o arquivo, escreve o cabeçalho e fecha | Quem sabe percorrer a lista é a lista. Mantém O(n) e o encapsulamento: o Centro nunca toca em `primeiro`/`prox`. A alternativa (um `getPorPosicao` chamado de fora) seria O(n²). |
 | D18 | Número da Pokédex impresso com **`%03d`** | Os arquivos oficiais trazem `025`, `004`, `007`, `001`. Lido como `int`, `025` vira 25; com `%03d` volta a sair `025`, igual à entrada, e é o formato canônico da Pokédex. Para os números do exemplo do PDF (610, 657, 387, 715, 197) `%03d` e `%d` dão o mesmo resultado. |
 | D19 | `TAM_NOME` de 12 → **30**; `TAM_TIPO` **20** | `Jigglypuff`/`Charmander` têm 10 caracteres e já ocupam 11 dos 12 bytes. Os tipos acentuados (`Elétrico`, `Psíquico`) gastam 9 bytes em UTF-8. A entrevista usa arquivos novos (R73), então a folga é barata. |
-| D20 | O `` do CRLF é removido de nome e tipo depois da leitura | Os arquivos oficiais estão em CRLF. Sem isso, `%s` no `fscanf` engole o `` no fim do tipo e a impressão sai com um retorno de carro no meio da linha. |
+| D20 | O `
+` do CRLF é removido de nome e tipo depois da leitura | Os arquivos oficiais estão em CRLF. Sem isso, `%s` no `fscanf` engole o `
+` no fim do tipo e a impressão sai com um retorno de carro no meio da linha. |
 
 ---
 

@@ -201,17 +201,34 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
  * Execucao da missao
  * ------------------------------------------------------------------------- */
 
+/* Imprime a moldura de destaque que anuncia um treinador sem Pokebolas. O
+   titulo e montado em um vetor porque inclui o nome do treinador. */
+static void imprimeMolduraSemPokebolas(const Treinador *t)
+{
+    char titulo[TAM_TITULO];
+
+    snprintf(titulo, sizeof titulo, "Treinador(a) %s SEM POKÉBOLAS",
+             treinadorGetNome(t));
+    imprimeMoldura(titulo, INDENT_SEM_POKEBOLAS);
+    putchar('\n');
+}
+
+/* Pede ao Centro um novo carregamento de Pokebolas para o treinador e anuncia
+   quantas ele recebeu. */
+static void recarregaNoCentro(PokeCenter *cp, Treinador *t)
+{
+    int recebidas = pokecenterRecarregarPokebolas(cp, t);
+
+    printf("Treinador(a) %s recebeu %d Pokébolas.\n\n", treinadorGetNome(t), recebidas);
+}
+
 /* Leva o treinador de volta ao Centro, entrega tudo o que ele capturou e pede
    um novo carregamento de Pokebolas. */
 static void retornaAoCentro(PokeCenter *cp, Treinador *t)
 {
     cord posicaoCentro = pokecenterGetLocalizacao(cp);
-    char titulo[TAM_TITULO];
-    int recebidas;
 
-    snprintf(titulo, sizeof titulo, "Treinador(a) %s SEM POKÉBOLAS", treinadorGetNome(t));
-    imprimeMoldura(titulo, INDENT_SEM_POKEBOLAS);
-    putchar('\n');
+    imprimeMolduraSemPokebolas(t);
 
     printf("Treinador(a) %s retorna ao Centro de Pesquisa.\n\n", treinadorGetNome(t));
     treinadorMovimentar(t, posicaoCentro.cordX, posicaoCentro.cordY);
@@ -219,28 +236,21 @@ static void retornaAoCentro(PokeCenter *cp, Treinador *t)
     printf("Entregando Pokémon ao Centro de Pesquisa.\n\n");
     pokecenterReceberPokemon(cp, t);
 
-    recebidas = pokecenterRecarregarPokebolas(cp, t);
-    printf("Treinador(a) %s recebeu %d Pokébolas.\n\n", treinadorGetNome(t), recebidas);
+    recarregaNoCentro(cp, t);
 }
 
 /* Trata o treinador que comecou a missao sem nenhuma Pokebola. Como ninguem
    parte para uma captura sem Pokebola e os dois treinadores comecam no Centro,
-   ele e recarregado antes do primeiro resgate. */
+   ele e recarregado antes do primeiro resgate. Nao precisa entregar nada nem
+   se movimentar: ele ainda nao capturou nada e ja esta no Centro. */
 static void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
 {
-    char titulo[TAM_TITULO];
-    int recebidas;
-
     if (treinadorGetPokebolas(t) > 0) {
         return;
     }
 
-    snprintf(titulo, sizeof titulo, "Treinador(a) %s SEM POKÉBOLAS", treinadorGetNome(t));
-    imprimeMoldura(titulo, INDENT_SEM_POKEBOLAS);
-    putchar('\n');
-
-    recebidas = pokecenterRecarregarPokebolas(cp, t);
-    printf("Treinador(a) %s recebeu %d Pokébolas.\n\n", treinadorGetNome(t), recebidas);
+    imprimeMolduraSemPokebolas(t);
+    recarregaNoCentro(cp, t);
 }
 
 /* Faz o resgate de um Pokemon: calcula a distancia de cada treinador ate ele,
@@ -275,7 +285,7 @@ static Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
            treinadorGetNome(escolhido), posicaoAlvo.cordX, posicaoAlvo.cordY);
 
     if (!treinadorCapturar(escolhido, alvo)) {
-        /* Só acontece se o treinador escolhido estiver sem Pokebolas, o que o
+        /* So acontece se o treinador escolhido estiver sem Pokebolas, o que o
            fluxo da missao evita. O Pokemon continua na lista de fugitivos. */
         printf("%s escapou: Treinador(a) %s está sem Pokébolas!\n\n",
                pokemonGetNome(alvo), treinadorGetNome(escolhido));

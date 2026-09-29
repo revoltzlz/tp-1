@@ -1,0 +1,108 @@
+========================================
+                  INÍCIO DA MISSÃO
+
+========================================
+
+Treinador(a) Rosa: posição (0,0) | Pokébolas: 2
+Treinador(a) Nate: posição (0,0) | Pokébolas: 2
+
+Pokémons fugitivos a serem resgatados: 5
+
+----------------------------------------
+Pokémon alvo: Axew
+Localização: (7,7)
+
+Distância Treinador(a) Rosa: 9.90
+Distância Treinador(a) Nate: 9.90
+
+Missão atribuída ao Treinador(a) Rosa.
+
+Treinador(a) Rosa se movimentou para (7,7).
+Axew capturado com sucesso!
+
+Pokébolas restantes para o Treinador(a) Rosa: 1
+
+----------------------------------------
+Pokémon alvo: Frogadier
+Localização: (10,7)
+
+Distância Treinador(a) Rosa: 3.00
+Distância Treinador(a) Nate: 12.21
+
+Missão atribuída ao Treinador(a) Rosa.
+
+Treinador(a) Rosa se movimentou para (10,7).
+Frogadier capturado com sucesso!
+
+Pokébolas restantes para o Treinador(a) Rosa: 0
+
+========================================
+            Treinador(a) Rosa SEM POKÉBOLAS
+
+========================================
+
+Treinador(a) Rosa retorna ao Centro de Pesquisa.
+
+Entregando Pokémon ao Centro de Pesquisa.
+
+Treinador(a) Rosa recebeu 2 Pokébolas.
+
+----------------------------------------
+Pokémon alvo: Turtwig
+Localização: (1,1)
+
+Distância Treinador(a) Rosa: 1.41
+Distância Treinador(a) Nate: 1.41
+
+Missão atribuída ao Treinador(a) Rosa.
+
+Treinador(a) Rosa se movimentou para (1,1).
+Turtwig capturado com sucesso!
+
+Pokébolas restantes para o Treinador(a) Rosa: 1
+
+----------------------------------------
+Pokémon alvo: Noivern
+Localização: (-10,-10)
+
+Distância Treinador(a) Rosa: 15.56
+Distância Treinador(a) Nate: 14.14
+
+Missão atribuída ao Treinador(a) Nate.
+
+Treinador(a) Nate se movimentou para (-10,-10).
+Noivern capturado com sucesso!
+
+Pokébolas restantes para o Treinador(a) Nate: 1
+
+----------------------------------------
+Pokémon alvo: Umbreon
+Localização: (5,7)
+
+Distância Treinador(a) Rosa: 7.21
+Distância Treinador(a) Nate: 22.67
+
+Missão atribuída ao Treinador(a) Rosa.
+
+Treinador(a) Rosa se movimentou para (5,7).
+Umbreon capturado com sucesso!
+
+Pokébolas restantes para o Treinador(a) Rosa: 0
+
+========================================
+       Todos Pokemons foram resgatados
+
+========================================
+
+Ambos treinadores retornam ao Centro de Pesquisa.
+
+Treinador(a) Rosa devolve os Pokémon.
+
+Treinador(a) Nate devolve os Pokémon.
+
+========================================
+            MISSÃO CONCLUÍDA
+
+========================================
+
+Relatório dos 5 Pokémon recuperados gravado em relatorio.txt
