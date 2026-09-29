@@ -1,106 +1,87 @@
-# ============================================================================
 # TP1 - Algoritmos e Estruturas de Dados I (CCF211) - UFV Campus Florestal
 # Resgate de Pokemon com listas encadeadas
-# ============================================================================
 #
 # COMO COMPILAR
 #
-#   Linux / WSL / Git Bash:   make
-#   Windows (MinGW):          mingw32-make
+#   Linux ou Git Bash:    make
+#   Windows (MinGW):      mingw32-make
 #
-# O que a compilacao faz, em duas etapas:
-#
-#   1. Cada modulo .c vira um arquivo-objeto .o separado, compilado com
-#      -Iinclude para que o gcc ache os cabecalhos dentro da pasta include/.
-#      Os avisos -Wall -Wextra ficam ligados e o padrao da linguagem e fixado
-#      em C99 (-std=c99). O projeto compila com zero avisos.
-#   2. Os .o sao ligados em um unico executavel. A biblioteca matematica
-#      (-lm) entra DEPOIS dos objetos, porque o ligador resolve os simbolos
-#      da esquerda para a direita e e o nosso codigo que chama sqrt().
+# A compilacao tem duas etapas. Primeiro cada arquivo .c vira um arquivo-objeto
+# .o separado, compilado com -Iinclude para o gcc achar os cabecalhos dentro da
+# pasta include/, com os avisos -Wall -Wextra ligados e o padrao da linguagem
+# fixado em C99. Depois os seis .o sao ligados em um unico executavel. A
+# biblioteca matematica (-lm) entra depois dos objetos, porque o ligador
+# resolve os simbolos da esquerda para a direita e e o nosso codigo que chama
+# sqrt.
 #
 # COMO EXECUTAR
 #
-#   Linux / Git Bash:         ./tp1
-#   Windows (PowerShell):     .\tp1.exe
-#   Windows (cmd):            tp1.exe
+#   Linux ou Git Bash:    ./tp1
+#   Windows (PowerShell): .\tp1.exe
 #
-#   O programa abre um menu: opcao 1 le os dados de um arquivo, opcao 2 pede
-#   os dados pelo teclado e opcao 0 encerra. Exemplo de arquivo de entrada:
-#   testes/oficiais/teste1.txt
+# O programa abre um menu: a opcao 1 le os dados de um arquivo, a opcao 2 pede
+# os dados pelo teclado e a opcao 0 encerra. Ha arquivos de entrada de exemplo
+# na pasta testes/.
 #
 # COMO LIMPAR
 #
-#   make clean      (ou mingw32-make clean no Windows)
-#
-#   Remove o executavel e todos os arquivos-objeto .o. Funciona nos dois
-#   sistemas: a variavel OS so existe no Windows, e e ela que escolhe entre
-#   o comando del e o comando rm.
-#
-# ============================================================================
+#   make clean            (ou mingw32-make clean no Windows)
 
-# ---- Ferramentas e opcoes ---------------------------------------------------
+CC     = gcc
+CFLAGS = -Wall -Wextra -std=c99 -Iinclude
+LDLIBS = -lm
 
-CC      = gcc
-CFLAGS  = -Wall -Wextra -std=c99 -Iinclude
-LDLIBS  = -lm
+ALVO = tp1
+OBJS = main.o pokemon.o pokelista.o treinador.o pokecenter.o missao.o
 
-ALVO    = tp1
-OBJS    = main.o pokemon.o pokelista.o treinador.o pokecenter.o missao.o
-
-# ---- Comando de limpeza -----------------------------------------------------
-# Nao basta olhar o sistema operacional: no Windows o make pode estar rodando
-# sob o cmd e o PowerShell, onde existe o comando del, ou sob o sh do Git Bash,
-# onde existe o rm. Duas variaveis de ambiente respondem isso:
-#
-#   OS       vale Windows_NT so no Windows; no Linux e no WSL vem vazia
-#   MSYSTEM  vale MINGW64 dentro do Git Bash; nos outros shells vem vazia
-#
-# Escolher errado aqui e pior do que falhar: o comando nao existe, o "-" da
-# regra clean manda o make seguir em frente, e os arquivos ficam onde estavam.
-
+# Qual comando de apagar usar no clean. Nao basta olhar o sistema: no Windows o
+# make pode rodar sob o cmd e o PowerShell, onde existe "del", ou sob o sh do
+# Git Bash, onde existe "rm". A variavel OS so vem preenchida no Windows, e a
+# variavel MSYSTEM so vem preenchida dentro do Git Bash.
 ifeq ($(OS),Windows_NT)
     ifeq ($(MSYSTEM),)
-        # Windows sob o cmd ou o PowerShell.
         LIMPAR = del /Q /F $(ALVO).exe *.o
     else
-        # Windows sob o Git Bash.
         LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
     endif
 else
-    # Linux, WSL ou macOS.
     LIMPAR = rm -f $(ALVO) $(ALVO).exe *.o
 endif
 
-# ---- Alvos ------------------------------------------------------------------
-# .PHONY marca os alvos que sao nomes de tarefa, e nao de arquivo, para que o
-# make os execute mesmo que apareca um arquivo com esse nome na pasta.
-
+# all e clean sao nomes de tarefa, e nao de arquivo.
 .PHONY: all clean
 
 all: $(ALVO)
 
-# Ligacao final: junta os objetos e a biblioteca matematica no executavel.
 $(ALVO): $(OBJS)
 	$(CC) $(CFLAGS) -o $(ALVO) $(OBJS) $(LDLIBS)
 
-# Compilacao do programa principal, que fica na raiz do projeto.
-main.o: main.c
+# Cada regra lista os arquivos de que o .o depende: o proprio .c e os
+# cabecalhos que ele inclui, direta ou indiretamente. Assim, mudar um .h
+# recompila so o que precisa.
+main.o: main.c include/missao.h include/pokecenter.h include/treinador.h \
+        include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
-# Regra geral: qualquer alvo x.o e obtido compilando src/x.c.
-# O $< e o primeiro pre-requisito (o .c) e o $@ e o alvo (o .o).
-%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+pokemon.o: src/pokemon.c include/pokemon.h include/coordenadas.h
+	$(CC) $(CFLAGS) -c src/pokemon.c -o pokemon.o
 
-# Dependencias de cabecalho: se um .h muda, os .o que o incluem sao
-# recompilados. Cada TAD depende do seu proprio cabecalho e dos TADs abaixo
-# dele na hierarquia pokemon -> pokelista -> treinador -> pokecenter.
-main.o:      include/missao.h include/pokecenter.h
-missao.o:    include/missao.h include/pokecenter.h include/treinador.h include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
-pokecenter.o: include/pokecenter.h include/treinador.h include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
-treinador.o: include/treinador.h include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
-pokelista.o: include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
-pokemon.o:   include/pokemon.h include/coordenadas.h
+pokelista.o: src/pokelista.c include/pokelista.h include/conexao.h \
+             include/pokemon.h include/coordenadas.h
+	$(CC) $(CFLAGS) -c src/pokelista.c -o pokelista.o
+
+treinador.o: src/treinador.c include/treinador.h include/pokelista.h \
+             include/conexao.h include/pokemon.h include/coordenadas.h
+	$(CC) $(CFLAGS) -c src/treinador.c -o treinador.o
+
+pokecenter.o: src/pokecenter.c include/pokecenter.h include/treinador.h \
+              include/pokelista.h include/conexao.h include/pokemon.h \
+              include/coordenadas.h
+	$(CC) $(CFLAGS) -c src/pokecenter.c -o pokecenter.o
+
+missao.o: src/missao.c include/missao.h include/pokecenter.h include/treinador.h \
+          include/pokelista.h include/conexao.h include/pokemon.h include/coordenadas.h
+	$(CC) $(CFLAGS) -c src/missao.c -o missao.o
 
 clean:
 	-$(LIMPAR)
