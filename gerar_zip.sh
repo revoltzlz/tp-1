@@ -24,8 +24,10 @@
 #     src/*.c
 #     slides.pdf          (se existir em slides/slides.pdf)
 #
-# O que NAO entra: CLAUDE.md, REQUISITOS.md, GUIA_ENTREVISTA.md, este script,
-# a pasta testes/, o PDF do enunciado, executaveis e arquivos-objeto.
+# O que NAO entra: a pasta descricoes/, a pasta testes/, este script, o
+# CLAUDE.md, o PDF do enunciado, executaveis, arquivos-objeto e pastas
+# temporarias. A especificacao pede o codigo-fonte e os slides, nao
+# documentacao nem testes.
 #
 # Depois de montar, o script extrai o zip numa pasta temporaria, compila do
 # zero com make e roda o exemplo, para conferir que o pacote esta completo.
@@ -163,6 +165,9 @@ echo
 echo "  rodando o exemplo:"
 cp testes/oficiais/teste1.txt "$TEMP/" 2>/dev/null
 
+# O programa so funciona pelo menu, entao o teste alimenta a entrada padrao:
+# 1 para abrir um arquivo, o caminho, e 0 para sair.
+#
 # O Smart App Control do Windows 11 bloqueia executaveis sem assinatura de
 # forma imprevisivel. O laco tenta opcoes de otimizacao diferentes, que geram
 # binarios diferentes, ate um deles conseguir rodar.
@@ -172,7 +177,10 @@ for opt in "" "-O1" "-O2" "-O3" "-Os" "-Og" "-g"; do
      gcc -Wall -Wextra -std=c99 -Iinclude $opt -o tp1 main.c src/*.c -lm 2>/dev/null)
     EXE="$TEMP/tp1"
     [ -f "$TEMP/tp1.exe" ] && EXE="$TEMP/tp1.exe"
-    if (cd "$TEMP" && "./$(basename "$EXE")" teste1.txt 2>/dev/null) | grep -q 'MISSÃO CONCLUÍDA'; then
+    if (cd "$TEMP" && printf '1
+teste1.txt
+0
+'          | "./$(basename "$EXE")" 2>/dev/null) | grep -q 'MISSÃO CONCLUÍDA'; then
         OK=1
         break
     fi

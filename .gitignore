@@ -24,3 +24,6 @@ verifica.exe
 
 # Pasta temporaria do gerar_zip.sh
 teste_do_zip/
+
+# Pasta temporaria de testes/rodar_testes.sh
+tmp_testes/
