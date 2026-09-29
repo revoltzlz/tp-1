@@ -82,7 +82,8 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
             /* O Pokemon ja saiu da lista do treinador e nao ha memoria para a
                celula nova. Avisa em vez de perde-lo em silencio, e para a
                entrega: sem memoria, insistir nao ajudaria. */
-            fprintf(stderr, "Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
+            fprintf(stderr,
+                    "Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
                     pokemonGetNome(&entregue));
             return recebidos;
         }

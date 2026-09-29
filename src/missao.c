@@ -115,17 +115,20 @@ static int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
         printf("Pokebolas iniciais de %s: ", nome);
     }
     if (fscanf(entrada, "%d", &pokebolas) != 1) {
-        fprintf(stderr, "Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
+        fprintf(stderr,
+                "Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
         return 0;
     }
     if (pokebolas < 0) {
-        fprintf(stderr, "Erro: a quantidade de Pokebolas de %s nao pode ser negativa (%d).\n",
+        fprintf(stderr,
+                "Erro: a quantidade de Pokebolas de %s nao pode ser negativa (%d).\n",
                 nome, pokebolas);
         return 0;
     }
 
     if (!treinadorInicializar(t, id, nome, pokebolas)) {
-        fprintf(stderr, "Erro: memoria insuficiente para criar o treinador %s.\n", nome);
+        fprintf(stderr,
+                "Erro: memoria insuficiente para criar o treinador %s.\n", nome);
         return 0;
     }
 
@@ -150,18 +153,21 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
         printf("Quantidade de Pokemon fugitivos: ");
     }
     if (fscanf(entrada, "%d", &total) != 1) {
-        fprintf(stderr, "Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
+        fprintf(stderr,
+                "Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
         return 0;
     }
     if (total < 0) {
-        fprintf(stderr, "Erro: a quantidade de Pokemon fugitivos nao pode ser negativa (%d).\n",
+        fprintf(stderr,
+                "Erro: a quantidade de Pokemon fugitivos nao pode ser negativa (%d).\n",
                 total);
         return 0;
     }
 
     for (i = 0; i < total; i++) {
         if (interativo) {
-            printf("Pokemon %d de %d (numero na Pokedex, nome, tipo, X e Y): ", i + 1, total);
+            printf("Pokemon %d de %d (numero na Pokedex, nome, tipo, X e Y): ",
+                   i + 1, total);
         }
 
         /* O %s do fscanf para em qualquer espaco em branco, e o '\r' do fim de
@@ -176,7 +182,8 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
         }
 
         if (numPokedex < 0) {
-            fprintf(stderr, "Erro: o numero na Pokedex do Pokemon %s nao pode ser negativo (%d).\n",
+            fprintf(stderr,
+                    "Erro: o numero na Pokedex do Pokemon %s nao pode ser negativo (%d).\n",
                     nome, numPokedex);
             return 0;
         }
@@ -187,7 +194,8 @@ static int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quant
         pokemonInicializar(&p, i + 1, numPokedex, nome, tipo, cordX, cordY);
 
         if (!pokecenterRegistrarFugitivo(cp, &p)) {
-            fprintf(stderr, "Erro: memoria insuficiente para registrar o Pokemon %s.\n", nome);
+            fprintf(stderr,
+                    "Erro: memoria insuficiente para registrar o Pokemon %s.\n", nome);
             return 0;
         }
     }
@@ -405,7 +413,8 @@ static int executa(FILE *entrada, int interativo)
     int ok;
 
     if (!pokecenterInicializar(&centro)) {
-        fprintf(stderr, "Erro: memoria insuficiente para criar o Centro de Pesquisa.\n");
+        fprintf(stderr,
+                "Erro: memoria insuficiente para criar o Centro de Pesquisa.\n");
         return 0;
     }
 
@@ -451,7 +460,8 @@ static int executa(FILE *entrada, int interativo)
         printf("\nRelatório dos %d Pokémon recuperados gravado em %s\n",
                pokecenterGetQtdRecuperados(&centro), ARQ_RELATORIO);
     } else {
-        fprintf(stderr, "\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
+        fprintf(stderr,
+                "\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
     }
 
     /* Toda a memoria alocada volta para o sistema: as celulas das duas listas
@@ -475,7 +485,8 @@ int missaoExecutarPorArquivo(const char *nomeArquivo)
 
     entrada = fopen(nomeArquivo, "r");
     if (entrada == NULL) {
-        fprintf(stderr, "Erro: nao foi possivel abrir o arquivo \"%s\".\n", nomeArquivo);
+        fprintf(stderr,
+                "Erro: nao foi possivel abrir o arquivo \"%s\".\n", nomeArquivo);
         return 0;
     }
 
