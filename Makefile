@@ -14,9 +14,13 @@
 #
 #   make run              (ou apenas ./tp1, ou .\tp1.exe no PowerShell)
 #
-# O programa abre um menu: a opcao 1 le os dados de um arquivo, a opcao 2 pede
-# os dados pelo teclado e a opcao 0 encerra. Ha arquivos de entrada de exemplo
-# na pasta testes/, e os dois oficiais em testes/oficiais/.
+# O programa abre um menu: a opcao 1 le os dados de um arquivo e pergunta o
+# caminho, a opcao 2 pede os dados pelo teclado e a opcao 0 encerra.
+#
+# O arquivo de entrada tem, nesta ordem: uma linha por treinador, com o nome e
+# a quantidade de Pokebolas; uma linha com a quantidade de Pokemon fugitivos; e
+# uma linha por Pokemon, com o numero na Pokedex, o nome, o tipo e as
+# coordenadas X e Y.
 #
 # COMO LIMPAR
 #

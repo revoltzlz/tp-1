@@ -1,5 +1,0 @@
-Rosa 3
-Nate 3
-2
-133 Eevee Normal 0 0
-143 Snorlax Normal 9 9

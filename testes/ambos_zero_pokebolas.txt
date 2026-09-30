@@ -1,5 +1,0 @@
-Rosa 0
-Nate 0
-2
-025 Pikachu Elétrico 4 4
-094 Gengar Fantasma -4 -4

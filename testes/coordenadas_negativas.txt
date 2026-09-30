@@ -1,6 +1,0 @@
-Rosa 3
-Nate 3
-3
-143 Snorlax Normal -10 -10
-094 Gengar Fantasma -20 -5
-282 Gardevoir Psíquico -1 -30
