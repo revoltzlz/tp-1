@@ -27,20 +27,29 @@ projeção.
 
 ## De onde vêm as figuras
 
-Nenhuma imagem foi desenhada à mão. As de código foram recortadas dos
+Nenhuma imagem foi desenhada à mão. As de código são recortes dos
 arquivos-fonte de verdade (`src/pokelista.c`, `src/missao.c`,
 `include/conexao.h`, `include/pokelista.h`), com os números de linha reais. As
-de terminal são a saída de uma execução real com
-`testes/oficiais/teste1.txt`, e o `relatorio.txt` é o que o programa gravou
-nessa mesma execução.
+de terminal são a saída de uma **execução real**: o programa é compilado e
+rodado com `testes/oficiais/teste1.txt` na hora de gerar as figuras, e o
+`relatorio.txt` que aparece é o que ele gravou nessa mesma execução. Assim
+nenhuma figura pode ficar desatualizada em relação ao código.
 
-Por isso duas coisas mudam se o código mudar: os **números de linha** nas
-figuras e o valor da **recarga** (9 Pokébolas, na figura 08), que é sorteado a
-cada execução.
+Por isso duas coisas mudam se as figuras forem geradas de novo: os **números
+de linha**, se o código tiver mudado, e a quantidade da **recarga** na figura
+08, que é sorteada a cada execução.
 
-O template recomenda tema claro nos screenshots de código, "para facilitar a
-visualização na projeção" — é o que está sendo usado. As figuras de terminal
-ficaram escuras porque é assim que o terminal realmente aparece.
+Todas as nove figuras têm a mesma aparência: a do **VS Code no tema claro**
+(Light+) — mesmo fundo branco, mesma moldura, mesma aba no topo, mesma fonte
+(Consolas) e as cores de sintaxe reais desse tema. Isso é o que o template
+pede:
+
+> *Dica: Caso esteja usando o VSCode, use a extensão CodeSnap, e use um tema
+> claro, para facilitar a visualização na projeção.*
+
+Nas figuras 03 e 05, as linhas importantes aparecem com o fundo azul da
+**seleção** do VS Code, que é como um trecho realmente selecionado aparece na
+tela.
 
 ## Os pontos de cada slide
 
