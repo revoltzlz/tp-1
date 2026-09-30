@@ -35,11 +35,15 @@ estrutura de dados.
 de teste, `setvbuf`, `argc`/`argv`, `snprintf`, `fgets` com `sscanf`, `static`
 em função, `size_t` onde `int` basta, `strtol`, `strtok`, `memcpy`, `memset`,
 `assert`, `stdbool.h`, `enum`, `union`, ponteiro para função, macro com
-parâmetros, recursão onde um laço resolve, regra de padrão no Makefile com `$<`
-e `$@`.
+parâmetros, recursão onde um laço resolve.
 
 Todos esses **já estiveram no projeto e foram removidos** na revisão final. Se
 reintroduzir algum, você está desfazendo trabalho feito.
+
+A regra de padrão do Makefile (`%.o:`, `$<`, `$@`) também estava nessa lista e
+**voltou de propósito**: é a forma do modelo que a disciplina disponibilizou, e
+o Makefile agora segue esse modelo. Ver
+[descricoes/makefile.md](descricoes/makefile.md).
 
 **Pode usar:** `stdio.h`, `stdlib.h`, `string.h`, `math.h`, `time.h`; `#define`;
 include guards; `typedef struct`; ponteiros e `->`; `const` em parâmetro de

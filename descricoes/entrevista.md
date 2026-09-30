@@ -192,9 +192,17 @@ como um módulo separado dos TADs e do programa principal, e é isso que ele é.
 Em duas etapas. Primeiro cada `.c` vira um `.o` separado, com `-Iinclude` para
 o gcc achar os cabeçalhos. Depois os seis `.o` são ligados num executável, com
 `-lm` **depois** dos objetos, porque o ligador resolve os símbolos da esquerda
-para a direita e é o meu código que chama `sqrt`. Cada regra lista os
-cabeçalhos de que o objeto depende, então mudar um `.h` recompila só o que
-precisa. Mais detalhes em [makefile.md](makefile.md).
+para a direita e é o meu código que chama `sqrt`. Ele está escrito na forma do
+modelo que a disciplina disponibilizou. Mais detalhes em
+[makefile.md](makefile.md).
+
+**O que significam o `%`, o `$<` e o `$@` do Makefile?**
+O `%` é um coringa: `%.o: %.c` quer dizer "qualquer `x.o` sai de compilar
+`x.c`", então uma regra só serve para os seis arquivos. Dentro do comando, o
+`$<` é o arquivo de entrada e o `$@` é o alvo. São duas regras dessas porque o
+`main.c` está na raiz e os TADs estão em `src/`: o make tenta a primeira e,
+como não existe `pokemon.c` na raiz, cai na segunda. A linha
+`$(OBJS): $(HDRS)` diz que mudar qualquer cabeçalho recompila tudo.
 
 **Por que o `make clean` tem dois comandos de apagar?**
 Porque o comando depende do shell, não só do sistema. No Windows o make pode
@@ -302,4 +310,6 @@ git diff estado-inicial HEAD
 Está em [revisao.md](revisao.md). Em resumo: nada de errado no comportamento do
 programa, e várias simplificações — saíram `windows.h`, `SetConsoleOutputCP`,
 `setvbuf`, `argc`/`argv`, os `#ifdef` de teste, `snprintf`, `fgets` com
-`sscanf`, o `static` das funções auxiliares e a regra de padrão do Makefile.
+`sscanf` e o `static` das funções auxiliares. A regra de padrão do Makefile
+também tinha saído, e depois **voltou**, quando o modelo de Makefile da
+disciplina apareceu: ele usa exatamente essa forma.

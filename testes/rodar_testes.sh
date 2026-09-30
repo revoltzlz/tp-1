@@ -56,7 +56,7 @@ compila() {
     local saida opt
 
     rm -f "$dir/tp1" "$dir/tp1.exe"
-    saida=$( (cd "$dir" && gcc -Wall -Wextra -std=c99 -Iinclude -o tp1 \
+    saida=$( (cd "$dir" && gcc -Wall -Wextra -std=c99 -g -Iinclude -o tp1 \
                                main.c src/*.c -lm) 2>&1 )
     if [ -n "$saida" ]; then
         vermelho "$rotulo: com avisos ou erros"

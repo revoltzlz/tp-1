@@ -153,7 +153,7 @@ echo "  conteudo extraido:"
 
 echo
 echo "  compilando do zero:"
-SAIDA=$( (cd "$TEMP" && gcc -Wall -Wextra -std=c99 -Iinclude -o tp1 main.c src/*.c -lm) 2>&1 )
+SAIDA=$( (cd "$TEMP" && gcc -Wall -Wextra -std=c99 -g -Iinclude -o tp1 main.c src/*.c -lm) 2>&1 )
 if [ -n "$SAIDA" ]; then
     echo "  FALHOU: a compilacao do pacote deu avisos ou erros:"
     echo "$SAIDA" | sed 's/^/    /'

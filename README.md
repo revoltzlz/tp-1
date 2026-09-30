@@ -16,8 +16,11 @@ a especificação exige. Nenhuma é vetor.
 
 ```sh
 make            # ou mingw32-make, no Windows
-./tp1           # ou .\tp1.exe, no PowerShell
+make run        # compila, se precisar, e executa
 ```
+
+O executável também pode ser chamado direto: `./tp1`, ou `.\tp1.exe` no
+PowerShell.
 
 O programa abre um menu: a opção **1** lê os dados de um arquivo, a **2** pede
 os dados pelo teclado e a **0** encerra. Há arquivos de entrada de exemplo em

@@ -116,7 +116,7 @@ Status: `pendente` | `feito` | `verificado`
 | R60 | O módulo do **programa principal separado** dos módulos dos TADs | 299-300 | verificado | `main.c` na raiz, so com `srand`, o ajuste do terminal e a chamada do menu. |
 | R61 | Programa **bem indentado** | 302 | verificado | 4 espaços 4 espacos em todo o projeto. |
 | R62 | Programa **comentado** | 302 | verificado | Comentario acima de cada prototipo nos `.h`; conferido na Fase 6. |
-| R63 | **Makefile com comentário explicando como compilar** | 303 | verificado | `Makefile`, linhas 1 a 40: como compilar, executar e limpar, no Linux e no Windows. |
+| R63 | **Makefile com comentário explicando como compilar** | 303 | verificado | `Makefile`, comentario do topo: como compilar, executar e limpar, no Linux e no Windows. Escrito na forma do 2o modelo do documento "Makefile" da disciplina; as diferencas estao listadas em [makefile.md](makefile.md). |
 | R64 | Números fixos definidos como **constantes** | 304-306 | verificado | `#define` 29 constantes, sem contar os 7 include guards. Nenhuma grandeza do problema aparece como numero solto: tamanhos, quantidade de treinadores, coordenadas do Centro, limites da recarga e do mapa, nome do relatorio e opcoes do menu sao todos `#define`. Continuam literais, por serem parte da propria expressao e nao grandezas configuraveis: o `1` de `i + 1` que transforma indice em Id, o `1` inicial do laco de Ids, as precisoes `%.2f` e `%03d` dos formatos, o `5` de `fscanf(...) != 5`, que e a quantidade de campos da propria chamada logo acima, e os tres bytes da marca UTF-8 (`0xEF`, `0xBB`, `0xBF`), que sao o valor fixo definido pelo padrao. |
 
 ## F. Requisitos adicionais (decisões da dupla / boas práticas da disciplina)
@@ -126,7 +126,7 @@ disciplina. Registrados aqui para não se perderem.
 
 | # | Item | Status | Evidência |
 |---|---|---|---|
-| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | verificado | Teste: build normal, como na entrega, com zero avisos. Conferido também acrescentando `-pedantic`. |
+| R65 | Compilar com `gcc -Wall -Wextra -std=c99` com **zero avisos** | verificado | Teste: build normal, como na entrega (`-Wall -Wextra -std=c99 -g -Iinclude`), com zero avisos. Conferido tambem acrescentando `-pedantic` e outras 20 opcoes de analise: o unico aviso que aparece e o `-Wsign-conversion` do `srand(time(NULL))`, que foi mantido de proposito. |
 | R66 | Toda a memória alocada é liberada (inclusive a célula cabeça de cada lista) | verificado | O PDF só diz "limpem a memória" (lin. 35-36), na narrativa. Teste: contagem de `malloc` e `free` igual em 7 casos, incluindo os de erro. Em `teste2.txt`, 64 e 64, que é 4 células cabeça mais 3 por Pokémon; em `quinhentos_pokemon.txt`, 1504 e 1504. **Ressalva de método: contar `malloc` e `free` prova que nada vazou, mas não detecta apontador pendurado, uso depois do `free` nem escrita fora de vetor. Para isso seria preciso o `valgrind`, que não existe nesta máquina** — ver a seção J. |
 | R67 | Todo `malloc` testado contra `NULL` | verificado | `pokelista.c`, nos dois unicos `malloc` do projeto. |
 | R68 | Include guards em todo `.h`, únicos no projeto | verificado | 7 `.h` com 7 guards distintos, conferido compilando um `.c` que inclui todos duas vezes, em ordem inversa. **O rascunho tinha um `#ifndef` sem `#define` e 6 arquivos sem guard.** |
