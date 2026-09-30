@@ -18,7 +18,8 @@ git log antes-da-revisao..HEAD --oneline # um commit por correção
 | 3. Pasta `descricoes/` | feita |
 | 4. Enxugar os comentários | feita |
 | 5. Revisão independente | feita: três revisores, os três aplicados |
-| 6. Slides, zip e fechamento | ver a seção "O que depende do Gabriel" |
+| 6. Slides, zip e fechamento | feita: slides em `apresentacao/` |
+| 7. Apresentação, Makefile do modelo e revisão geral | feita: ver a última seção |
 
 ---
 
@@ -429,7 +430,7 @@ quarta passagem não achou mais nada.
 ### Para a entrevista
 
 O revisor destacou onde o trabalho está seguro, e vale saber conduzir a conversa
-por aí: `main.c` inteiro (18 linhas), `conexao.h`, **`pokelista.c` inteiro** —
+por aí: `main.c` inteiro (17 linhas), `conexao.h`, **`pokelista.c` inteiro** —
 que é o Ziviani capítulo 2 bem feito, com a correção do `ultimo` na remoção do
 último, que é o ponto que separa quem entendeu de quem copiou —, `pokemon.c`,
 `treinador.c`, `pokecenter.c` exceto o sorteio, `escolheTreinador`, o `switch`
@@ -532,16 +533,85 @@ relatório, as distâncias, a ordem das entregas e a memória já estavam corret
 quando ela começou. O que mudou foi simplicidade, documentação, uma mensagem a
 mais na saída e um punhado de afirmações erradas na documentação.
 
+## A segunda rodada: apresentação, Makefile do modelo e revisão geral
+
+Depois que os slides ficaram prontos, o projeto inteiro foi revisto de novo.
+O que essa passada encontrou:
+
+| # | O que estava errado | Onde | Correção |
+|---|---|---|---|
+| 1 | O `gerar_zip.sh` procurava os slides em `slides/slides.pdf`, caminho que nunca existiu. O pacote sairia **sem os slides**, com um aviso fácil de não ver | `gerar_zip.sh` | aponta para `apresentacao/slides.pdf`; o teste do pacote confirma que o PDF entra |
+| 2 | O `README.md` da raiz tinha só o título `# tp-1` | `README.md` | passou a explicar o problema, como compilar, rodar, testar e gerar o zip |
+| 3 | A lista de pendências tinha o item do `valgrind` **duplicado** e dois itens já resolvidos | `descricoes/requisitos.md` | reescrita; o R05 deixou de ser pendência |
+| 4 | O `main.c` incluía `<stdio.h>` sem usar. A própria descrição dizia que ele vinha "por hábito" | `main.c` | removido: o arquivo não imprime nada |
+| 5 | Duas afirmações erradas nos slides, achadas na conferência visual: a ordem dos campos do arquivo de entrada e a faixa da recarga, que é de 1 a 20 e não de 1 a 10 | `apresentacao/` | corrigidas antes de gerar o PDF |
+| 6 | A descrição do Makefile falava de regras explícitas e argumentava **contra** a regra de padrão | `descricoes/makefile.md` | reescrita para o Makefile novo |
+| 7 | O `CLAUDE.md` listava a regra de padrão do Makefile entre as coisas a não usar | `CLAUDE.md` | registra que ela voltou de propósito, por causa do modelo da disciplina |
+| 8 | A tabela das seções de teste dizia "19 casos válidos" numa seção que conta 20 verificações | `descricoes/testes.md` | a tabela agora traz a contagem de cada seção e o total |
+
+### O Makefile foi reescrito na forma do modelo da disciplina
+
+O documento "Makefile" das instruções traz dois modelos. O segundo usa `CC`,
+`CFLAGS`, `SRC_DIR`, `BIN`, `SRCS` e `OBJS`, os alvos `all`, `run` e `clean`, e
+uma regra de padrão com `$<` e `$@`. O nosso tinha uma regra explícita por
+módulo e não tinha o `run`.
+
+Veio do modelo: a regra de padrão, o alvo `run`, as variáveis de diretório e o
+`-g`, que o próprio documento chama de essencial para o `gdb` e o `valgrind`.
+Ficou diferente o que tinha motivo: `-Wextra` e `-std=c99`, o `-lm` do `sqrt`,
+o executável `tp1` e o `main.c` na raiz. A lista completa, com o porquê de
+cada item, está em [makefile.md](makefile.md).
+
+Note a reviravolta: a regra de padrão **tinha sido removida** na primeira
+revisão, por ser sintaxe a mais para explicar. Ela voltou porque é a forma que
+a disciplina pediu. As duas decisões estão certas para o que se sabia em cada
+momento.
+
+### O que foi conferido de novo
+
+- **Compilação**: zero avisos com as opções do Makefile, com `-pedantic`, e
+  com outras 20 opções de análise. O único aviso que aparece no conjunto
+  ampliado é o `-Wsign-conversion` do `srand(time(NULL))`, mantido de
+  propósito.
+- **Recompilação incremental**: tocar um `.h` recompila os seis objetos; tocar
+  um `.c` recompila só ele.
+- **`make clean`**: testado no Git Bash e no PowerShell; nos dois não sobra
+  nada.
+- **`make run`**: executa.
+- **Os 72 testes**: todos passando, antes e depois da troca do Makefile.
+- **O `.zip`**: monta, o `apresentacao/slides.pdf` entra, compila do zero sem
+  avisos e roda o exemplo, com o relatório idêntico ao esperado.
+- **Os números da documentação**, um a um: 29 constantes, 7 include guards, 17
+  linhas no `main.c`, nenhuma função `static`, 51 funções públicas nos
+  cabeçalhos, `sizeof(Pokemon)` igual a 68, 19 casos válidos e 16 inválidos, 72
+  verificações, 4 + 3n alocações. Todos conferem.
+
+### O que foi olhado e ficou como está
+
+**A mensagem de escape em `resgataPokemon`.** Se `treinadorCapturar` falhar, a
+saída diz "está sem Pokébolas", mas a captura também pode falhar por `malloc`.
+Nesse caso a mensagem estaria errada. O trecho é inalcançável no fluxo normal,
+e separar os dois casos acrescentaria um `if` num caminho que nunca executa.
+Fica anotado aqui em vez de no código.
+
+**O relink a cada `make`.** No Windows o gcc grava `tp1.exe`, e o make procura
+um arquivo chamado `tp1`, que nunca existe: a ligação refaz toda vez, mesmo sem
+nada ter mudado. Custa uma fração de segundo. Corrigir exigiria voltar com um
+condicional de sistema operacional no Makefile, que é justamente o que a
+primeira revisão tirou.
+
 ## O que depende do Gabriel
 
-1. **Nome e matrícula dos dois alunos**, para o nome do `.zip`, que a
-   especificação exige no formato `TP1Aluno1Matricula1Aluno2Matricula2`.
-2. **Os slides em PDF**, no formato disponibilizado no Moodle.
-3. **Rodar o `valgrind` uma vez**, num Linux ou no WSL. A contagem de `malloc` e
+1. **Nome e matrícula dos dois alunos**, em três lugares: o nome do `.zip`, que
+   a especificação exige no formato `TP1Aluno1Matricula1Aluno2Matricula2`, a
+   capa dos slides e a divisão de tarefas no slide 3. Nos slides, os dois
+   lugares estão marcados com `<...>`.
+2. **Rodar o `valgrind` uma vez**, num Linux ou no WSL. A contagem de `malloc` e
    `free` mostra que nada vazou, mas não cobre apontador pendurado nem escrita
-   fora de vetor.
-4. **Compilar e rodar uma vez no Linux**, pelo mesmo motivo: o ambiente de
+   fora de vetor. O `-g` agora está nas opções de compilação, então o valgrind
+   vai mostrar número de linha.
+3. **Compilar e rodar uma vez no Linux**, pelo mesmo motivo: o ambiente de
    correção é provavelmente Linux e não foi possível testar aqui.
-5. **Confirmar com os monitores** se o relatório deve trazer o Id, como o texto
+4. **Confirmar com os monitores** se o relatório deve trazer o Id, como o texto
    da especificação diz, ou o número da Pokédex, como o exemplo mostra. Se for o
    Id, é uma linha para mudar em `src/pokelista.c`.

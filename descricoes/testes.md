@@ -57,13 +57,14 @@ tivesse rodado.
 
 ## As cinco seções do script
 
-| Seção | O que verifica |
-|---|---|
-| 1 | a saída e o relatório do exemplo, comparados com `diff`, e as regras da missão |
-| 2 | 19 casos válidos, cada um com as invariantes |
-| 3 | 16 casos inválidos, que precisam ser recusados |
-| 4 | o menu e o modo interativo |
-| 5 | memória |
+| Seção | O que verifica | Verificações |
+|---|---|---|
+| 1 | a saída e o relatório do exemplo, comparados com `diff`, e as regras da missão | 21 |
+| 2 | a compilação sem avisos, mais 19 casos válidos, cada um com as invariantes | 20 |
+| 3 | 16 casos inválidos, que precisam ser recusados | 16 |
+| 4 | o menu e o modo interativo | 7 |
+| 5 | memória | 8 |
+| | **total** | **72** |
 
 ### O que cada caso válido precisa cumprir
 

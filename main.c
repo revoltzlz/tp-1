@@ -1,6 +1,5 @@
 /* Programa principal do TP1 de AEDS I. Prepara o sorteio e chama o menu. */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 

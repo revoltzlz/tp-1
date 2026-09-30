@@ -161,6 +161,27 @@ if [ -n "$SAIDA" ]; then
 fi
 echo "    zero avisos"
 
+# Quem corrige o trabalho vai rodar "make", e nao o gcc na mao. Se o Makefile
+# citar um arquivo que ficou de fora do pacote, so este teste pega.
+MAKE=""
+for m in make mingw32-make gmake; do
+    command -v "$m" > /dev/null 2>&1 && MAKE="$m" && break
+done
+
+if [ -z "$MAKE" ]; then
+    echo "    AVISO: nao achei o make aqui, entao o Makefile do pacote nao foi testado"
+else
+    echo
+    echo "  compilando com $MAKE, como o corretor vai fazer:"
+    SAIDA=$( (cd "$TEMP" && rm -f tp1 tp1.exe ./*.o && "$MAKE") 2>&1 )
+    if printf '%s' "$SAIDA" | grep -qiE "warning|error|No rule to make"; then
+        echo "  FALHOU: o $MAKE reclamou:"
+        echo "$SAIDA" | sed 's/^/    /'
+        exit 1
+    fi
+    echo "    zero avisos"
+fi
+
 echo
 echo "  rodando o exemplo:"
 cp testes/oficiais/teste1.txt "$TEMP/" 2>/dev/null

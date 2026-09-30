@@ -6,7 +6,6 @@ para o menu. Toda a lógica da missão está em `src/missao.c`, descrita em
 [missao.md](missao.md).
 
 ```c
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -29,7 +28,10 @@ int main(void)
 | `<stdlib.h>` | `srand` |
 | `<time.h>` | `time` |
 | `"missao.h"` | `missaoMenu` |
-| `<stdio.h>` | vem por hábito de arquivo de programa principal; a única saída deste arquivo é o que o menu imprime |
+
+São três, e cada um é usado. Havia um `<stdio.h>` aqui, que saiu na revisão
+final: este arquivo não imprime nada — quem imprime é o menu, dentro de
+`src/missao.c`.
 
 O `missao.h` é o único cabeçalho do projeto incluído aqui. Ele já traz toda a
 hierarquia de TADs abaixo dele, mas o `main.c` não usa nenhum deles
