@@ -21,7 +21,7 @@ Status: `pendente` | `feito` | `verificado`
 | R02 | Entrega no Moodle em `.zip` ou `.tar.gz` | 12 | "Forma de Entrega: Moodle (formato .zip ou .tar.gz)" | verificado | `.zip` gerado na Fase 8; formato aceito pelo Moodle. |
 | R03 | `.zip` nomeado `TP1Aluno1Matricula1Aluno2Matricula2` | 318 | "nomeado no formato "TP1Aluno1Matricula1Aluno2Matricula2"" | pendente | **Depende do Gabriel: nomes e matriculas.** |
 | R04 | `.zip` contém **todo** o código-fonte, **incluindo os `.h`** | 318-319 | "(1) todo código-fonte produzido, incluindo os arquivos de cabeçalho" | pendente | Conteudo do zip definido na Fase 8. |
-| R05 | `.zip` contém slides em **PDF**, no formato disponibilizado no Moodle | 319-320 | "(2) um conjunto de slides, utilizando o formato disponibilizado no Moodle. O formato para a slides é pdf." | pendente | **Depende do Gabriel: baixar o modelo do Moodle.** **Depende do Gabriel: modelo de slides do Moodle.** |
+| R05 | `.zip` contém slides em **PDF**, no formato disponibilizado no Moodle | 319-320 | "(2) um conjunto de slides, utilizando o formato disponibilizado no Moodle. O formato para a slides é pdf." | verificado | 12 slides montados sobre o `TemplateApresentacaoUFV.pptx`, em `apresentacao/`. O `gerar_zip.sh` inclui o `apresentacao/slides.pdf` no pacote. Faltam só os nomes e a divisão de tarefas. |
 | R06 | Avaliação por entrevista com monitores + avaliação do código | 322-324 | "avaliado através de uma apresentação/entrevista" | — | Cada aluno explica sozinho. |
 | R07 | Trabalhos copiados serão penalizados | 307 | "Trabalhos copiados serão penalizados." | — | **O PDF não diz nada sobre uso de IA.** Única regra: não copiar. |
 | R08 | Erros da especificação podem e devem ser reportados | 310-312 | "A especificação pode conter erros ou problemas não intencionais que podem e devem ser reportados" | verificado | Erratas na seção E; vão para os slides. 7 erratas na secao H, cada uma com o trecho do PDF e o tratamento. |
@@ -286,17 +286,10 @@ Amparadas por R09. Vão para os slides e para o [entrevista.md](entrevista.md).
 
 ## J. Pendências que dependem do Gabriel
 
-1. **Nomes e matrículas** dos dois alunos (R03).
-2. **Modelo de slides do Moodle** (R05) — não está na pasta.
-3. **Os "dois pequenos arquivos de teste"** que o PDF diz que foram disponibilizados
-   junto com a especificação (lin. 169-170) — não estão na pasta. Vale baixar do Moodle
-   e conferir contra `testes/entrada_exemplo.txt`.
-4. **Resposta dos monitores sobre E01** (Id × número da Pokédex no relatório).
-5. **Rodar o `valgrind` uma vez**, no WSL ou em outra máquina Linux, antes da
-   entrevista. A contagem de `malloc`/`free` mostra que nada vazou, mas não
-   cobre ponteiro pendurado nem escrita fora de vetor. O
-   `testes/rodar_testes.sh` já usa o valgrind automaticamente onde ele existir.
-5. **Rodar o `valgrind` uma vez**, no WSL ou em outra máquina Linux, antes da
+1. **Nomes e matrículas** dos dois alunos (R03). Faltam na capa e na divisão
+   de tarefas do slide 3 — os dois lugares estão marcados com `<...>`.
+2. **Resposta dos monitores sobre E01** (Id × número da Pokédex no relatório).
+3. **Rodar o `valgrind` uma vez**, no WSL ou em outra máquina Linux, antes da
    entrevista. A contagem de `malloc`/`free` mostra que nada vazou, mas não
    cobre ponteiro pendurado nem escrita fora de vetor. O
    `testes/rodar_testes.sh` já usa o valgrind automaticamente onde ele existir.

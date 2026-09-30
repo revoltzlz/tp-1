@@ -25,6 +25,9 @@ código-fonte e os slides, não documentação.
 | [entrevista.md](entrevista.md) | perguntas prováveis com resposta curta |
 | [revisao.md](revisao.md) | o que a revisão final encontrou e mudou |
 
+Os slides ficam em [`../apresentacao/`](../apresentacao/), com um README
+próprio dizendo o que falta preencher antes de entregar.
+
 ## Mapa dos arquivos
 
 ```
@@ -46,6 +49,7 @@ tp1 aedes/
 │   ├── pokecenter.c
 │   └── missao.c
 ├── testes/                arquivos de entrada e o script que roda tudo
+├── apresentacao/          os slides, em .pptx e em .pdf
 └── descricoes/            esta pasta
 ```
 

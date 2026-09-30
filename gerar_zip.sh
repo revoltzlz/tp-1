@@ -22,7 +22,7 @@
 #     main.c
 #     include/*.h
 #     src/*.c
-#     slides.pdf          (se existir em slides/slides.pdf)
+#     slides.pdf          (se existir em apresentacao/slides.pdf)
 #
 # O que NAO entra: a pasta descricoes/, a pasta testes/, este script, o
 # CLAUDE.md, o PDF do enunciado, executaveis, arquivos-objeto e pastas
@@ -80,11 +80,11 @@ if [ -n "$FALTANDO" ]; then
     exit 1
 fi
 
-if [ -f slides/slides.pdf ]; then
-    ARQUIVOS="$ARQUIVOS slides/slides.pdf"
-    echo "  slides/slides.pdf sera incluido"
+if [ -f apresentacao/slides.pdf ]; then
+    ARQUIVOS="$ARQUIVOS apresentacao/slides.pdf"
+    echo "  apresentacao/slides.pdf sera incluido"
 else
-    echo "  AVISO: slides/slides.pdf nao existe."
+    echo "  AVISO: apresentacao/slides.pdf nao existe."
     echo "         A especificacao exige os slides em PDF dentro do zip."
     echo "         O pacote vai sair sem eles."
 fi
@@ -220,5 +220,5 @@ echo "Pronto: $ZIP"
 echo "========================================"
 echo
 echo "Antes de enviar no Moodle, confira:"
-echo "  - slides/slides.pdf entrou no pacote"
+echo "  - apresentacao/slides.pdf entrou no pacote"
 echo "  - o nome do arquivo esta com os nomes e as matriculas certos"
