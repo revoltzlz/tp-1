@@ -19,7 +19,7 @@ Status: `pendente` | `feito` | `verificado`
 |---|---|---|---|---|---|
 | R01 | Trabalho em dupla, valor 10 pontos | 9 | "Valor: 10 pontos" | verificado | — |
 | R02 | Entrega no Moodle em `.zip` ou `.tar.gz` | 12 | "Forma de Entrega: Moodle (formato .zip ou .tar.gz)" | verificado | `.zip` gerado na Fase 8; formato aceito pelo Moodle. |
-| R03 | `.zip` nomeado `TP1Aluno1Matricula1Aluno2Matricula2` | 318 | "nomeado no formato "TP1Aluno1Matricula1Aluno2Matricula2"" | pendente | **Depende do Gabriel: nomes e matriculas.** |
+| R03 | `.zip` nomeado `TP1Aluno1Matricula1Aluno2Matricula2` | 318 | "nomeado no formato "TP1Aluno1Matricula1Aluno2Matricula2"" | verificado | Gabriel Henrique R. Macedo (07237) e Diego Soares Carvalho (07225). O `gerar_zip.sh` monta o `TP1GabrielHenriqueRMacedo07237DiegoSoaresCarvalho07225.zip`; o comando exato esta no comentario do topo do script. |
 | R04 | `.zip` contém **todo** o código-fonte, **incluindo os `.h`** | 318-319 | "(1) todo código-fonte produzido, incluindo os arquivos de cabeçalho" | pendente | Conteudo do zip definido na Fase 8. |
 | R05 | `.zip` contém slides em **PDF**, no formato disponibilizado no Moodle | 319-320 | "(2) um conjunto de slides, utilizando o formato disponibilizado no Moodle. O formato para a slides é pdf." | verificado | 12 slides montados sobre o `TemplateApresentacaoUFV.pptx`, em `apresentacao/`. O `gerar_zip.sh` inclui o `apresentacao/slides.pdf` no pacote. Faltam só os nomes e a divisão de tarefas. |
 | R06 | Avaliação por entrevista com monitores + avaliação do código | 322-324 | "avaliado através de uma apresentação/entrevista" | — | Cada aluno explica sozinho. |
@@ -286,10 +286,8 @@ Amparadas por R09. Vão para os slides e para o [entrevista.md](entrevista.md).
 
 ## J. Pendências que dependem do Gabriel
 
-1. **Nomes e matrículas** dos dois alunos (R03). Faltam na capa e na divisão
-   de tarefas do slide 3 — os dois lugares estão marcados com `<...>`.
-2. **Resposta dos monitores sobre E01** (Id × número da Pokédex no relatório).
-3. **Rodar o `valgrind` uma vez**, no WSL ou em outra máquina Linux, antes da
+1. **Resposta dos monitores sobre E01** (Id × número da Pokédex no relatório).
+2. **Rodar o `valgrind` uma vez**, no WSL ou em outra máquina Linux, antes da
    entrevista. A contagem de `malloc`/`free` mostra que nada vazou, mas não
    cobre ponteiro pendurado nem escrita fora de vetor. O
    `testes/rodar_testes.sh` já usa o valgrind automaticamente onde ele existir.

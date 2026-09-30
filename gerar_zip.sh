@@ -4,16 +4,14 @@
 #
 # COMO RODAR (no Git Bash, a partir da raiz do projeto):
 #
-#     bash gerar_zip.sh "Aluno1" "Matricula1" "Aluno2" "Matricula2"
+#     bash gerar_zip.sh "GabrielHenriqueRMacedo" "07237" \
+#                       "DiegoSoaresCarvalho" "07225"
 #
-# Exemplo:
-#
-#     bash gerar_zip.sh "GabrielHenrique" "12345" "NomeDoColega" "67890"
-#
-# Trabalhando sozinho, passe apenas os dois primeiros argumentos.
-#
-# O nome do arquivo segue o formato que a especificacao exige:
-# TP1Aluno1Matricula1Aluno2Matricula2, sem espacos e sem acentos.
+# Isso gera o
+# TP1GabrielHenriqueRMacedo07237DiegoSoaresCarvalho07225.zip,
+# que e o formato que a especificacao exige:
+# TP1Aluno1Matricula1Aluno2Matricula2, sem espacos e sem acentos. Por isso os
+# nomes vao sem o ponto do "R." e sem os espacos.
 #
 # O que entra no pacote, conforme a especificacao ("todo codigo-fonte
 # produzido, incluindo os arquivos de cabecalho" e "um conjunto de slides"):
@@ -43,7 +41,8 @@ if [ "$#" -lt 2 ]; then
     echo "Os nomes vao direto para o nome do arquivo, entao use-os sem espaco"
     echo "e sem acento. Exemplo:"
     echo
-    echo "    bash gerar_zip.sh \"GabrielHenrique\" \"12345\" \"Colega\" \"67890\""
+    echo "    bash gerar_zip.sh \"GabrielHenriqueRMacedo\" \"07237\" \\"
+    echo "                      \"DiegoSoaresCarvalho\" \"07225\""
     exit 1
 fi
 

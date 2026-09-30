@@ -153,11 +153,18 @@ otimização. As alternativas definitivas estão em `descricoes/README.md`.
 
 Para os acentos no terminal do Windows: `chcp 65001` antes de executar.
 
-## O que ainda depende do Gabriel
+## Os alunos
 
-1. nome e matrícula dos dois alunos, para o nome do `.zip`;
-2. os slides em PDF, no formato do Moodle;
-3. rodar o `valgrind` uma vez, num Linux;
-4. compilar e rodar uma vez no Linux — não foi possível testar aqui, porque o
+Gabriel Henrique R. Macedo — 07237
+Diego Soares Carvalho — 07225
+
+O `.zip` de entrega sai como
+`TP1GabrielHenriqueRMacedo07237DiegoSoaresCarvalho07225.zip`; o comando está no
+comentário do topo do `gerar_zip.sh`.
+
+## O que ainda depende deles
+
+1. rodar o `valgrind` uma vez, num Linux;
+2. compilar e rodar uma vez no Linux — não foi possível testar aqui, porque o
    WSL não inicia (virtualização desligada no firmware);
-5. confirmar com os monitores se o relatório leva o Id ou o número da Pokédex.
+3. confirmar com os monitores se o relatório leva o Id ou o número da Pokédex.

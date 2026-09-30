@@ -13,17 +13,14 @@ capa, o problema, modelagem, as partes do código com screenshots, a execução
 
 ## Antes de entregar
 
-Três coisas ficaram marcadas com `<...>` porque só você pode preencher:
+Os slides estão completos: a capa traz os dois nomes e matrículas, e a divisão
+de tarefas está na última linha do slide 3. Não ficou nenhum campo para
+preencher.
 
-1. **Capa** — nome e matrícula dos dois alunos.
-2. **Slide 3 (Modelagem)** — a divisão de tarefas: quem fez o quê.
-3. **Slide 3** — os mesmos nomes aparecem na última linha.
-
-Depois de preencher no PowerPoint, gere o PDF de novo com
+Vale abrir o `slides.pptx` no PowerPoint e exportar o PDF de novo, em
 *Arquivo → Exportar → Criar Documento PDF/XPS*. O `slides.pdf` que está aqui
-foi gerado sem o PowerPoint, então ele serve como está, mas o exportado pelo
-próprio PowerPoint é o que mais se parece com o que a banca vai ver na
-projeção.
+foi gerado sem o PowerPoint — ele serve como está, mas o exportado pelo próprio
+PowerPoint é o que mais se parece com o que a banca vai ver na projeção.
 
 ## De onde vêm as figuras
 

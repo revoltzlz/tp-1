@@ -602,16 +602,12 @@ primeira revisão tirou.
 
 ## O que depende do Gabriel
 
-1. **Nome e matrícula dos dois alunos**, em três lugares: o nome do `.zip`, que
-   a especificação exige no formato `TP1Aluno1Matricula1Aluno2Matricula2`, a
-   capa dos slides e a divisão de tarefas no slide 3. Nos slides, os dois
-   lugares estão marcados com `<...>`.
-2. **Rodar o `valgrind` uma vez**, num Linux ou no WSL. A contagem de `malloc` e
+1. **Rodar o `valgrind` uma vez**, num Linux ou no WSL. A contagem de `malloc` e
    `free` mostra que nada vazou, mas não cobre apontador pendurado nem escrita
    fora de vetor. O `-g` agora está nas opções de compilação, então o valgrind
    vai mostrar número de linha.
-3. **Compilar e rodar uma vez no Linux**, pelo mesmo motivo: o ambiente de
+2. **Compilar e rodar uma vez no Linux**, pelo mesmo motivo: o ambiente de
    correção é provavelmente Linux e não foi possível testar aqui.
-4. **Confirmar com os monitores** se o relatório deve trazer o Id, como o texto
+3. **Confirmar com os monitores** se o relatório deve trazer o Id, como o texto
    da especificação diz, ou o número da Pokédex, como o exemplo mostra. Se for o
    Id, é uma linha para mudar em `src/pokelista.c`.
