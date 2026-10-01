@@ -1,0 +1,23 @@
+Rosa 2
+Nate 2
+20
+610 Axew Dragão 7 7
+657 Frogadier Água 10 7
+387 Turtwig Folha 1 1
+715 Noivern Voador -10 -10
+197 Umbreon Noturno 5 7
+025 Pikachu Elétrico 3 4
+004 Charmander Fogo -5 6
+007 Squirtle Água 8 -3
+001 Bulbasaur Folha -2 -4
+133 Eevee Normal 6 2
+143 Snorlax Normal -8 -6
+039 Jigglypuff Normal 2 -7
+025 Pikachu Elétrico -4 3
+094 Gengar Fantasma -7 8
+448 Lucario Lutador 9 -5
+025 Pikachu Elétrico -6 -2
+280 Ralts Psíquico 4 -8
+282 Gardevoir Psíquico -9 5
+445 Garchomp Dragão 7 -9
+025 Pikachu Elétrico -10 10

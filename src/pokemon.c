@@ -3,8 +3,7 @@
 
 #include "pokemon.h"
 
-void pokemonInicializar(Pokemon *p, int identificacao, int numPokedex,
-                        const char *nome, const char *tipo, int cordX, int cordY)
+void pokemonInicializar(Pokemon *p, int identificacao, int numPokedex, const char *nome, const char *tipo, int cordX, int cordY)
 {
     pokemonSetId(p, identificacao);
     pokemonSetNumPokedex(p, numPokedex);
@@ -63,17 +62,17 @@ const char *pokemonGetTipo(const Pokemon *p)
     return p->tipo;
 }
 
-cord pokemonGetLocalizacao(const Pokemon *p)
+Coordenada pokemonGetLocalizacao(const Pokemon *p)
 {
     return p->localizacao;
 }
 
 void pokemonImprimir(const Pokemon *p)
 {
-    cord posicao = pokemonGetLocalizacao(p);
+    Coordenada posicao = pokemonGetLocalizacao(p);
 
     /* O %03d mantem o zero a esquerda, como em 025. */
     printf("Id %d | Pokedex %03d | %s | Tipo: %s | Localizacao: (%d,%d)\n",
-           pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
-           pokemonGetTipo(p), posicao.cordX, posicao.cordY);
+        pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
+        pokemonGetTipo(p), posicao.cordX, posicao.cordY);
 }

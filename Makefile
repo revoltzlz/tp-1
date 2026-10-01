@@ -23,7 +23,7 @@ SRCS = main.c \
 
 OBJS = main.o pokemon.o pokelista.o treinador.o pokecenter.o missao.o
 
-HDRS = include/coordenadas.h include/pokemon.h include/conexao.h \
+HDRS = include/coordenadas.h include/pokemon.h \
        include/pokelista.h include/treinador.h include/pokecenter.h \
        include/missao.h
 

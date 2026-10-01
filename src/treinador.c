@@ -3,8 +3,7 @@
 
 #include "treinador.h"
 
-int treinadorInicializar(Treinador *t, int identificador, const char *nome,
-                         int qntdpokebolas)
+int treinadorInicializar(Treinador *t, int identificador, const char *nome, int qntdpokebolas)
 {
     treinadorSetId(t, identificador);
     treinadorSetNome(t, nome);
@@ -47,7 +46,7 @@ const char *treinadorGetNome(const Treinador *t)
     return t->nome;
 }
 
-cord treinadorGetLocalizacao(const Treinador *t)
+Coordenada treinadorGetLocalizacao(const Treinador *t)
 {
     return t->loccoach;
 }
@@ -88,11 +87,11 @@ int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado)
 
 void treinadorImprimir(const Treinador *t)
 {
-    cord posicao = treinadorGetLocalizacao(t);
+    Coordenada posicao = treinadorGetLocalizacao(t);
 
     printf("Treinador(a) %s: posicao (%d,%d) | Pokebolas: %d\n",
-           treinadorGetNome(t), posicao.cordX, posicao.cordY,
-           treinadorGetPokebolas(t));
+        treinadorGetNome(t), posicao.cordX, posicao.cordY,
+        treinadorGetPokebolas(t));
 }
 
 void treinadorLiberar(Treinador *t)

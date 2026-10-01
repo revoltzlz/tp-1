@@ -10,7 +10,7 @@ int main(void)
     /* Semente do sorteio da recarga. */
     srand(time(NULL));
 
-    missaoMenu();
+    missaoCaptura();
 
     return 0;
 }

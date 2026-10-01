@@ -9,22 +9,17 @@
 #define TAM_NOME 30
 #define TAM_TIPO 20
 
-/* Largura de leitura do fscanf, sempre TAM_* - 1, para o '\0' caber. */
-#define FMT_NOME "%29s"
-#define FMT_TIPO "%19s"
-
 /* A identificacao e unica; o numPokedex e o numero da especie e pode repetir. */
 typedef struct {
     int identificacao;
     int numPokedex;
     char nome[TAM_NOME];
     char tipo[TAM_TIPO];
-    cord localizacao;
+    Coordenada localizacao;
 } Pokemon;
 
 /* Preenche os cinco atributos, chamando os proprios set. */
-void pokemonInicializar(Pokemon *p, int identificacao, int numPokedex,
-                        const char *nome, const char *tipo, int cordX, int cordY);
+void pokemonInicializar(Pokemon *p, int identificacao, int numPokedex, const char *nome, const char *tipo, int cordX, int cordY);
 
 /* Atribui a identificacao unica. */
 void pokemonSetId(Pokemon *p, int identificacao);
@@ -54,7 +49,7 @@ const char *pokemonGetNome(const Pokemon *p);
 const char *pokemonGetTipo(const Pokemon *p);
 
 /* Devolve uma copia da localizacao. */
-cord pokemonGetLocalizacao(const Pokemon *p);
+Coordenada pokemonGetLocalizacao(const Pokemon *p);
 
 /* Imprime os cinco atributos em uma linha. */
 void pokemonImprimir(const Pokemon *p);

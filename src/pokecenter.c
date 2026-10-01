@@ -52,7 +52,7 @@ int pokecenterGetQtdFugitivos(const PokeCenter *cp)
     return pokelistaGetTamanho(&cp->fugitivos);
 }
 
-cord pokecenterGetLocalizacao(const PokeCenter *cp)
+Coordenada pokecenterGetLocalizacao(const PokeCenter *cp)
 {
     return cp->locPokeCenter;
 }
@@ -67,8 +67,7 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
             /* O Pokemon ja saiu da lista do treinador, entao avisa. */
-            printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
-                   pokemonGetNome(&entregue));
+            printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n", pokemonGetNome(&entregue));
             return recebidos;
         }
         recebidos++;
@@ -79,13 +78,14 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
 
 int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
 {
-    cord posicaoCentro;
-    cord posicaoTreinador;
+    Coordenada posicaoCentro;
+    Coordenada posicaoTreinador;
     int quantidade;
 
     /* So recarrega o treinador que esta no Centro. */
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
+    
     if (posicaoTreinador.cordX != posicaoCentro.cordX ||
         posicaoTreinador.cordY != posicaoCentro.cordY) {
         return 0;

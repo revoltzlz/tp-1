@@ -8,7 +8,8 @@ int pokelistaInicializar(Pokelista *pl)
     /* A celula cabeca nao guarda Pokemon: ela existe para que o primeiro
        elemento tambem tenha um antecessor, e a remocao nao precise de um caso
        especial. */
-    pl->primeiro = (conec *) malloc(sizeof(conec));
+    pl->primeiro = (Pokecelula *) malloc(sizeof(Pokecelula));
+    
     if (pl->primeiro == NULL) {
         pl->ultimo = NULL;
         pl->tamanho = 0;
@@ -26,9 +27,9 @@ int pokelistaInicializar(Pokelista *pl)
 
 int pokelistaInserir(Pokelista *pl, const Pokemon *p)
 {
-    conec *nova;
+    Pokecelula *nova;
 
-    nova = (conec *) malloc(sizeof(conec));
+    nova = (Pokecelula *) malloc(sizeof(Pokecelula));
     if (nova == NULL) {
         return 0;
     }
@@ -47,8 +48,8 @@ int pokelistaInserir(Pokelista *pl, const Pokemon *p)
 
 int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
 {
-    conec *anterior;
-    conec *alvo;
+    Pokecelula *anterior;
+    Pokecelula *alvo;
 
     /* Anda com um apontador para a celula ANTERIOR ao alvo: para desligar uma
        celula e preciso ter quem aponta para ela. Comeca na cabeca. */
@@ -96,7 +97,7 @@ int pokelistaRemoverPrimeiro(Pokelista *pl, Pokemon *removido)
 
 int pokelistaBuscar(const Pokelista *pl, int id, Pokemon *encontrado)
 {
-    conec *atual;
+    Pokecelula *atual;
 
     atual = pl->primeiro->prox;
     while (atual != NULL) {
@@ -114,7 +115,7 @@ int pokelistaBuscar(const Pokelista *pl, int id, Pokemon *encontrado)
 
 void pokelistaImprimir(const Pokelista *pl)
 {
-    conec *atual;
+    Pokecelula *atual;
 
     if (pokelistaVazia(pl)) {
         printf("(nenhum Pokemon na lista)\n");
@@ -130,7 +131,7 @@ void pokelistaImprimir(const Pokelista *pl)
 
 void pokelistaEscreverRelatorio(const Pokelista *pl, FILE *saida)
 {
-    conec *atual;
+    Pokecelula *atual;
 
     atual = pl->primeiro->prox;
     while (atual != NULL) {
@@ -153,8 +154,8 @@ int pokelistaGetTamanho(const Pokelista *pl)
 
 void pokelistaLiberar(Pokelista *pl)
 {
-    conec *atual;
-    conec *seguinte;
+    Pokecelula *atual;
+    Pokecelula *seguinte;
 
     /* Comeca na cabeca, que tambem foi alocada. O prox e guardado ANTES do
        free, senao seria lido de memoria ja devolvida. */

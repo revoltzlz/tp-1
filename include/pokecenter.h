@@ -16,9 +16,9 @@
 
 /* As duas PokeLista: quem ainda esta fugido e quem ja foi entregue. */
 typedef struct {
-    Pokelista fugitivos;
-    Pokelista recuperados;
-    cord locPokeCenter;
+   Pokelista fugitivos;
+   Pokelista recuperados;
+   Coordenada locPokeCenter;
 } PokeCenter;
 
 /* Poe o Centro em (0,0) e cria as duas listas vazias. Devolve 0 se alguma
@@ -47,7 +47,7 @@ int pokecenterTemFugitivos(const PokeCenter *cp);
 int pokecenterGetQtdFugitivos(const PokeCenter *cp);
 
 /* Devolve uma copia da localizacao do Centro. */
-cord pokecenterGetLocalizacao(const PokeCenter *cp);
+Coordenada pokecenterGetLocalizacao(const PokeCenter *cp);
 
 /* Retira um por um os Pokemon do treinador e insere no fim dos recuperados,
    preservando a ordem de captura. Devolve quantos foram recebidos. */

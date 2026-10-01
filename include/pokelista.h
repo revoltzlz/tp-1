@@ -5,15 +5,25 @@
 
 #include <stdio.h>
 
-#include "conexao.h"
+#include "pokemon.h"
+
+/* O Pokemon e guardado por valor, e nao por ponteiro: assim cada lista tem a
+   sua propria copia e nenhuma memoria e compartilhada entre duas listas.
+
+   O nome struct conec e obrigatorio: o campo prox aponta para o proprio tipo,
+   e dentro do typedef o nome conec ainda nao existe. */
+typedef struct pokecelula {
+   Pokemon pokemon;
+   struct pokecelula *prox;
+} Pokecelula;
 
 /* primeiro aponta para a celula cabeca, que nao guarda Pokemon: o primeiro
    Pokemon de verdade fica em primeiro->prox, e a lista esta vazia quando
    primeiro == ultimo. O apontador ultimo faz a insercao no fim custar O(1). */
 typedef struct {
-    conec *primeiro;
-    conec *ultimo;
-    int tamanho;
+   Pokecelula *primeiro;
+   Pokecelula *ultimo;
+   int tamanho;
 } Pokelista;
 
 /* Cria a celula cabeca e deixa a lista vazia. Devolve 0 se o malloc falhar. */

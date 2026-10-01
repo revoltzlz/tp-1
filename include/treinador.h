@@ -7,7 +7,6 @@
 
 /* Tamanho do vetor do nome e a largura de leitura correspondente. */
 #define TAM_NOME_COACH 30
-#define FMT_NOME_COACH "%29s"
 
 /* Posicao inicial de todo treinador. */
 #define TREINADOR_X_INICIAL 0
@@ -17,15 +16,14 @@
 typedef struct {
     int identificador;
     char nome[TAM_NOME_COACH];
-    cord loccoach;
+    Coordenada loccoach;
     Pokelista lista;
     int qntdpokebolas;
 } Treinador;
 
 /* Prepara o treinador em (0,0) e cria a PokeLista dele. Devolve 0 se a lista
    nao puder ser criada. */
-int treinadorInicializar(Treinador *t, int identificador, const char *nome,
-                         int qntdpokebolas);
+int treinadorInicializar(Treinador *t, int identificador, const char *nome, int qntdpokebolas);
 
 /* Atribui o identificador. */
 void treinadorSetId(Treinador *t, int identificador);
@@ -46,7 +44,7 @@ int treinadorGetId(const Treinador *t);
 const char *treinadorGetNome(const Treinador *t);
 
 /* Devolve uma copia da localizacao. */
-cord treinadorGetLocalizacao(const Treinador *t);
+Coordenada treinadorGetLocalizacao(const Treinador *t);
 
 /* Devolve quantas Pokebolas ele ainda tem. */
 int treinadorGetPokebolas(const Treinador *t);
