@@ -98,7 +98,6 @@ int pokelistaBuscar(const Pokelista *pl, int id, Pokemon *encontrado)
 {
     conec *atual;
 
-    /* O custo e O(n): a unica forma de andar na lista e seguir os prox. */
     atual = pl->primeiro->prox;
     while (atual != NULL) {
         if (pokemonGetId(&atual->pokemon) == id) {
@@ -118,7 +117,7 @@ void pokelistaImprimir(const Pokelista *pl)
     conec *atual;
 
     if (pokelistaVazia(pl)) {
-        printf("(nenhum Pokémon na lista)\n");
+        printf("(nenhum Pokemon na lista)\n");
         return;
     }
 

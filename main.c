@@ -7,8 +7,7 @@
 
 int main(void)
 {
-    /* Uma unica vez, antes de qualquer sorteio: duas chamadas no mesmo segundo
-       receberiam a mesma semente e sorteariam o mesmo numero. */
+    /* Semente do sorteio da recarga. */
     srand(time(NULL));
 
     missaoMenu();

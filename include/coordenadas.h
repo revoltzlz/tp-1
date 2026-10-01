@@ -3,17 +3,13 @@
 #ifndef COORDENADAS_H
 #define COORDENADAS_H
 
-/* Limites do mapa. A leitura recusa coordenadas fora deste intervalo, e e isso
-   que impede o calculo da distancia de estourar: a soma dos quadrados das
-   diferencas chega a 8 * COORD_MAX^2, ou 8 x 10^12, que nao cabe em int (dai o
-   long long) mas cabe com folga em long long. Sem o limite, coordenadas nos
-   extremos de int dariam 3,2 x 10^19, que estoura ate o long long, e a
-   distancia sairia negativa. A conta esta em descricoes/coordenadas.md. */
+/* Limites do mapa. Com eles, a soma dos quadrados no calculo da distancia
+   chega no maximo a 8 * COORD_MAX^2 = 8 x 10^12: nao cabe em int, mas cabe em
+   long long. */
 #define COORD_MAX 1000000
 #define COORD_MIN (-COORD_MAX)
 
-/* Usado pela localizacao do Pokemon, do Treinador e do Centro. Nao tem
-   operacoes: e copiado por valor. */
+/* Localizacao do Pokemon, do Treinador e do Centro. */
 typedef struct {
     int cordX;
     int cordY;

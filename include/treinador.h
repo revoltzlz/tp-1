@@ -9,7 +9,7 @@
 #define TAM_NOME_COACH 30
 #define FMT_NOME_COACH "%29s"
 
-/* Posicao em que todo treinador comeca, exigida pela especificacao. */
+/* Posicao inicial de todo treinador. */
 #define TREINADOR_X_INICIAL 0
 #define TREINADOR_Y_INICIAL 0
 
@@ -22,9 +22,8 @@ typedef struct {
     int qntdpokebolas;
 } Treinador;
 
-/* Prepara o treinador, coloca-o em (0,0) e cria a PokeLista dele. Nao recebe
-   coordenadas porque a especificacao fixa a posicao inicial. Devolve 0 se a
-   PokeLista nao puder ser criada. */
+/* Prepara o treinador em (0,0) e cria a PokeLista dele. Devolve 0 se a lista
+   nao puder ser criada. */
 int treinadorInicializar(Treinador *t, int identificador, const char *nome,
                          int qntdpokebolas);
 
@@ -52,7 +51,7 @@ cord treinadorGetLocalizacao(const Treinador *t);
 /* Devolve quantas Pokebolas ele ainda tem. */
 int treinadorGetPokebolas(const Treinador *t);
 
-/* Move o treinador. Nao imprime nada: a mensagem e de quem narra a missao. */
+/* Move o treinador para (cordX, cordY). */
 void treinadorMovimentar(Treinador *t, int cordX, int cordY);
 
 /* Gasta uma Pokebola e guarda uma copia do Pokemon na lista do treinador.
@@ -63,7 +62,7 @@ int treinadorCapturar(Treinador *t, const Pokemon *p);
    se ele nao esta carregando nenhum. */
 int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado);
 
-/* Imprime nome, posicao e Pokebolas, no formato do exemplo da especificacao. */
+/* Imprime nome, posicao e Pokebolas. */
 void treinadorImprimir(const Treinador *t);
 
 /* Libera a PokeLista do treinador. */

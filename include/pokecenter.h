@@ -6,11 +6,11 @@
 
 #include "treinador.h"
 
-/* Posicao do Centro, fixada pela especificacao. */
+/* Posicao do Centro. */
 #define CENTRO_X 0
 #define CENTRO_Y 0
 
-/* Intervalo fechado da recarga, exigido pela especificacao. */
+/* Intervalo da recarga de Pokebolas. */
 #define MIN_RECARGA 1
 #define MAX_RECARGA 20
 

@@ -65,8 +65,6 @@ const char *pokemonGetTipo(const Pokemon *p)
 
 cord pokemonGetLocalizacao(const Pokemon *p)
 {
-    /* Devolve uma copia da struct. Quem recebe pode mexer na copia sem
-       alterar o Pokemon. */
     return p->localizacao;
 }
 
@@ -74,9 +72,8 @@ void pokemonImprimir(const Pokemon *p)
 {
     cord posicao = pokemonGetLocalizacao(p);
 
-    /* O %03d devolve o numero da Pokedex com tres digitos: 025 e lido como 25
-       e precisa sair escrito como estava na entrada. */
-    printf("Id %d | Pokédex %03d | %s | Tipo: %s | Localização: (%d,%d)\n",
+    /* O %03d mantem o zero a esquerda, como em 025. */
+    printf("Id %d | Pokedex %03d | %s | Tipo: %s | Localizacao: (%d,%d)\n",
            pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
            pokemonGetTipo(p), posicao.cordX, posicao.cordY);
 }

@@ -41,7 +41,7 @@ void imprimeMolduraSemPokebolas(const Treinador *t)
     imprimeRepetido('=', LARGURA_MOLDURA);
     printf("\n");
     imprimeRepetido(' ', INDENT_SEM_POKEBOLAS);
-    printf("Treinador(a) %s SEM POKÉBOLAS\n\n", treinadorGetNome(t));
+    printf("Treinador(a) %s SEM POKEBOLAS\n\n", treinadorGetNome(t));
     imprimeRepetido('=', LARGURA_MOLDURA);
     printf("\n\n");
 }
@@ -78,8 +78,7 @@ Treinador *escolheTreinador(Treinador *t1, Treinador *t2,
 
 /* Pula os tres bytes invisiveis (EF BB BF) que o Bloco de Notas escreve no
    comeco dos arquivos UTF-8, e que entrariam colados no nome do primeiro
-   treinador. So serve para arquivo: numa entrada do teclado o rewind nao
-   funciona. */
+   treinador. */
 void pulaMarcaUtf8(FILE *entrada)
 {
     int a, b, c;
@@ -95,23 +94,17 @@ void pulaMarcaUtf8(FILE *entrada)
 
 /* Le nome e Pokebolas de um treinador e o inicializa. Devolve 0 se os dados
    forem invalidos ou a PokeLista nao puder ser criada. */
-int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
+int leTreinador(FILE *entrada, Treinador *t, int id)
 {
     char nome[TAM_NOME_COACH];
     int pokebolas;
 
-    if (interativo) {
-        printf("Nome do treinador %d: ", id);
-    }
     /* A largura do formato impede escrita fora do vetor. */
     if (fscanf(entrada, FMT_NOME_COACH, nome) != 1) {
         printf("Erro: nao foi possivel ler o nome do treinador %d.\n", id);
         return 0;
     }
 
-    if (interativo) {
-        printf("Pokebolas iniciais de %s: ", nome);
-    }
     if (fscanf(entrada, "%d", &pokebolas) != 1) {
         printf("Erro: nao foi possivel ler a quantidade de Pokebolas de %s.\n", nome);
         return 0;
@@ -134,7 +127,7 @@ int leTreinador(FILE *entrada, int interativo, Treinador *t, int id)
 
 /* Le os n fugitivos e registra cada um no Centro. A quantidade sai em
    *quantidade. Devolve 0 se os dados forem invalidos ou faltarem linhas. */
-int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quantidade)
+int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
 {
     char nome[TAM_NOME];
     char tipo[TAM_TIPO];
@@ -145,9 +138,6 @@ int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quantidade)
     int cordX;
     int cordY;
 
-    if (interativo) {
-        printf("Quantidade de Pokemon fugitivos: ");
-    }
     if (fscanf(entrada, "%d", &total) != 1) {
         printf("Erro: nao foi possivel ler a quantidade de Pokemon fugitivos.\n");
         return 0;
@@ -160,11 +150,6 @@ int leFugitivos(FILE *entrada, int interativo, PokeCenter *cp, int *quantidade)
     }
 
     for (i = 0; i < total; i++) {
-        if (interativo) {
-            printf("Pokemon %d de %d (numero na Pokedex, nome, tipo, X e Y): ",
-                   i + 1, total);
-        }
-
         /* O %s para em espaco em branco, e o '\r' do fim de linha do Windows
            conta como tal: nome e tipo nunca o recebem. */
         if (fscanf(entrada, "%d " FMT_NOME " " FMT_TIPO " %d %d",
@@ -212,7 +197,7 @@ void recarregaNoCentro(PokeCenter *cp, Treinador *t)
     int recebidas;
 
     recebidas = pokecenterRecarregarPokebolas(cp, t);
-    printf("Treinador(a) %s recebeu %d Pokébolas.\n\n", treinadorGetNome(t), recebidas);
+    printf("Treinador(a) %s recebeu %d Pokebolas.\n\n", treinadorGetNome(t), recebidas);
 }
 
 /* Volta ao Centro, entrega tudo e pede um novo carregamento. */
@@ -227,7 +212,7 @@ void retornaAoCentro(PokeCenter *cp, Treinador *t)
     printf("Treinador(a) %s retorna ao Centro de Pesquisa.\n\n", treinadorGetNome(t));
     treinadorMovimentar(t, posicaoCentro.cordX, posicaoCentro.cordY);
 
-    printf("Entregando Pokémon ao Centro de Pesquisa.\n\n");
+    printf("Entregando Pokemon ao Centro de Pesquisa.\n\n");
     pokecenterReceberPokemon(cp, t);
 
     recarregaNoCentro(cp, t);
@@ -258,20 +243,20 @@ Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
     posicaoAlvo = pokemonGetLocalizacao(alvo);
 
     imprimeSeparador();
-    printf("Pokémon alvo: %s\n", pokemonGetNome(alvo));
-    printf("Localização: (%d,%d)\n\n", posicaoAlvo.cordX, posicaoAlvo.cordY);
+    printf("Pokemon alvo: %s\n", pokemonGetNome(alvo));
+    printf("Localizacao: (%d,%d)\n\n", posicaoAlvo.cordX, posicaoAlvo.cordY);
 
     distancia1 = distanciaQuadrado(treinadorGetLocalizacao(t1), posicaoAlvo);
     distancia2 = distanciaQuadrado(treinadorGetLocalizacao(t2), posicaoAlvo);
 
     /* A raiz aparece so aqui, na impressao. */
-    printf("Distância Treinador(a) %s: %.2f\n", treinadorGetNome(t1),
+    printf("Distancia Treinador(a) %s: %.2f\n", treinadorGetNome(t1),
            sqrt((double) distancia1));
-    printf("Distância Treinador(a) %s: %.2f\n\n", treinadorGetNome(t2),
+    printf("Distancia Treinador(a) %s: %.2f\n\n", treinadorGetNome(t2),
            sqrt((double) distancia2));
 
     escolhido = escolheTreinador(t1, t2, distancia1, distancia2);
-    printf("Missão atribuída ao Treinador(a) %s.\n\n", treinadorGetNome(escolhido));
+    printf("Missao atribuida ao Treinador(a) %s.\n\n", treinadorGetNome(escolhido));
 
     treinadorMovimentar(escolhido, posicaoAlvo.cordX, posicaoAlvo.cordY);
     printf("Treinador(a) %s se movimentou para (%d,%d).\n",
@@ -279,7 +264,7 @@ Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
 
     if (!treinadorCapturar(escolhido, alvo)) {
         /* O fluxo da missao evita isto. O Pokemon continua fugitivo. */
-        printf("%s escapou: Treinador(a) %s está sem Pokébolas!\n\n",
+        printf("%s escapou: Treinador(a) %s esta sem Pokebolas!\n\n",
                pokemonGetNome(alvo), treinadorGetNome(escolhido));
         return NULL;
     }
@@ -289,7 +274,7 @@ Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2,
     /* A cada captura o Centro atualiza a listagem de fugas. */
     pokecenterRemoverFugitivo(cp, pokemonGetId(alvo), NULL);
 
-    printf("Pokébolas restantes para o Treinador(a) %s: %d\n\n",
+    printf("Pokebolas restantes para o Treinador(a) %s: %d\n\n",
            treinadorGetNome(escolhido), treinadorGetPokebolas(escolhido));
 
     return escolhido;
@@ -305,11 +290,11 @@ void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 
     /* Se alguma captura falhou, mostra quem ficou para tras. */
     if (pokecenterTemFugitivos(cp)) {
-        printf("Atenção: ainda há %d Pokémon na lista de fugitivos:\n",
+        printf("Atencao: ainda ha %d Pokemon na lista de fugitivos:\n",
                pokecenterGetQtdFugitivos(cp));
         pokecenterImprimirFugitivos(cp);
         printf("\n");
-        imprimeMoldura("Fim da missão de resgate", INDENT_RESGATADOS);
+        imprimeMoldura("Fim da missao de resgate", INDENT_RESGATADOS);
     } else {
         imprimeMoldura("Todos Pokemons foram resgatados", INDENT_RESGATADOS);
     }
@@ -321,13 +306,13 @@ void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 
     /* t1 tem o menor identificador, entao entrega primeiro: e essa ordem que
        faz o relatorio sair na ordem do exemplo. */
-    printf("Treinador(a) %s devolve os Pokémon.\n\n", treinadorGetNome(t1));
+    printf("Treinador(a) %s devolve os Pokemon.\n\n", treinadorGetNome(t1));
     pokecenterReceberPokemon(cp, t1);
 
-    printf("Treinador(a) %s devolve os Pokémon.\n\n", treinadorGetNome(t2));
+    printf("Treinador(a) %s devolve os Pokemon.\n\n", treinadorGetNome(t2));
     pokecenterReceberPokemon(cp, t2);
 
-    imprimeMoldura("MISSÃO CONCLUÍDA", INDENT_CONCLUIDA);
+    imprimeMoldura("MISSAO CONCLUIDA", INDENT_CONCLUIDA);
 }
 
 /* O laco da missao, sobre dados ja registrados. */
@@ -337,12 +322,12 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
     Treinador *escolhido;
     int id;
 
-    imprimeMoldura("INÍCIO DA MISSÃO", INDENT_INICIO);
+    imprimeMoldura("INICIO DA MISSAO", INDENT_INICIO);
     printf("\n");
 
     treinadorImprimir(t1);
     treinadorImprimir(t2);
-    printf("\nPokémons fugitivos a serem resgatados: %d\n\n",
+    printf("\nPokemons fugitivos a serem resgatados: %d\n\n",
            pokecenterGetQtdFugitivos(cp));
 
     /* Se nao ha nenhum fugitivo, ninguem precisa de Pokebola. */
@@ -378,10 +363,8 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
     encerraMissao(cp, t1, t2);
 }
 
-/* Caminho comum dos dois modos de uso: le, roda a missao, emite o relatorio e
-   libera tudo. O parametro interativo so liga as mensagens que pedem cada
-   dado. */
-int executa(FILE *entrada, int interativo)
+/* Le a entrada, roda a missao, emite o relatorio e libera tudo. */
+int executa(FILE *entrada)
 {
     PokeCenter centro;
     Treinador treinador1;
@@ -394,44 +377,33 @@ int executa(FILE *entrada, int interativo)
         return 0;
     }
 
-    /* Cada saida de erro libera exatamente o que chegou a ser criado ate ali:
-       liberar uma PokeLista que nunca foi inicializada leria lixo. */
-    if (!leTreinador(entrada, interativo, &treinador1, ID_TREINADOR_1)) {
+    /* Cada saida de erro libera so o que ja tinha sido criado. */
+    if (!leTreinador(entrada, &treinador1, ID_TREINADOR_1)) {
         pokecenterLiberar(&centro);
         return 0;
     }
 
-    if (!leTreinador(entrada, interativo, &treinador2, ID_TREINADOR_2)) {
+    if (!leTreinador(entrada, &treinador2, ID_TREINADOR_2)) {
         treinadorLiberar(&treinador1);
         pokecenterLiberar(&centro);
         return 0;
     }
 
-    if (!leFugitivos(entrada, interativo, &centro, &qtdFugitivos)) {
+    if (!leFugitivos(entrada, &centro, &qtdFugitivos)) {
         treinadorLiberar(&treinador1);
         treinadorLiberar(&treinador2);
         pokecenterLiberar(&centro);
         return 0;
     }
 
-    if (interativo) {
-        /* Para o usuario conferir o que digitou. */
-        printf("\nPokémon fugitivos registrados no Centro de Pesquisa:\n");
-        pokecenterImprimirFugitivos(&centro);
-        printf("\n");
-    }
-
     executaMissao(&centro, &treinador1, &treinador2, qtdFugitivos);
 
-    /* Emitir o relatorio e uma operacao que a especificacao exige: nao
-       conseguir grava-lo e falha da execucao. */
+    /* Nao conseguir gravar o relatorio conta como falha. */
     relatorioGravado = pokecenterGerarRelatorio(&centro, ARQ_RELATORIO);
     if (!relatorioGravado) {
         printf("\nErro: nao foi possivel gravar o relatorio em %s.\n", ARQ_RELATORIO);
     }
 
-    /* Tudo volta: as duas listas do Centro, a lista de cada treinador, e as
-       quatro celulas cabeca. */
     treinadorLiberar(&treinador1);
     treinadorLiberar(&treinador2);
     pokecenterLiberar(&centro);
@@ -452,17 +424,11 @@ int missaoExecutarPorArquivo(const char *nomeArquivo)
 
     pulaMarcaUtf8(entrada);
 
-    resultado = executa(entrada, 0);
+    resultado = executa(entrada);
 
     fclose(entrada);
 
     return resultado;
-}
-
-int missaoExecutarInterativo(void)
-{
-    /* Mesma funcao do modo por arquivo, com stdin no lugar do arquivo. */
-    return executa(stdin, 1);
 }
 
 void missaoMenu(void)
@@ -471,11 +437,10 @@ void missaoMenu(void)
     int opcao;
 
     while (1) {
-        imprimeMoldura("TP1 - RESGATE DE POKÉMON", INDENT_MENU);
-        printf("\n%d - Executar a missão a partir de um arquivo\n", OPCAO_ARQUIVO);
-        printf("%d - Executar a missão no modo interativo\n", OPCAO_INTERATIVO);
+        imprimeMoldura("TP1 - RESGATE DE POKEMON", INDENT_MENU);
+        printf("\n%d - Executar a missao a partir de um arquivo\n", OPCAO_ARQUIVO);
         printf("%d - Sair\n\n", OPCAO_SAIR);
-        printf("Opção: ");
+        printf("Opcao: ");
 
         /* Falha aqui significa fim da entrada ou algo que nao e numero. */
         if (scanf("%d", &opcao) != 1) {
@@ -485,7 +450,7 @@ void missaoMenu(void)
 
         switch (opcao) {
         case OPCAO_SAIR:
-            printf("\nAté a próxima!\n");
+            printf("\nAte a proxima!\n");
             return;
 
         case OPCAO_ARQUIVO:
@@ -499,14 +464,8 @@ void missaoMenu(void)
             printf("\n");
             break;
 
-        case OPCAO_INTERATIVO:
-            printf("\n");
-            missaoExecutarInterativo();
-            printf("\n");
-            break;
-
         default:
-            printf("\nOpção inválida.\n\n");
+            printf("\nOpcao invalida.\n\n");
             break;
         }
     }

@@ -1,15 +1,13 @@
-/* Sistema de controle da missao: conduz o resgate usando os quatro TADs.
-   Nao e um TAD: e o modulo separado que a especificacao pede. */
+/* Sistema de controle da missao: le a entrada, conduz o resgate e gera o
+   relatorio usando os quatro TADs. */
 
 #ifndef MISSAO_H
 #define MISSAO_H
 
 #include "pokecenter.h"
 
-/* Os dois treinadores do esquadrao, que a especificacao fixa em dois. Os
-   identificadores sao atribuidos na ordem de leitura, e sao eles que
-   desempatam quando os dois estao a mesma distancia do alvo: por isso o
-   primeiro treinador do arquivo precisa receber o menor. */
+/* Identificadores dos treinadores, na ordem do arquivo. No empate de
+   distancia, a missao vai para o de menor identificador. */
 #define ID_TREINADOR_1 1
 #define ID_TREINADOR_2 2
 
@@ -20,18 +18,15 @@
 #define TAM_CAMINHO 256
 #define FMT_CAMINHO "%255s"
 
-/* Teto das quantidades lidas. Existe porque o %d do scanf, diante de um numero
-   que nao cabe em um int, nao garante o que grava: o padrao da linguagem diz
-   que o comportamento e indefinido. Sem o teto, esse valor entraria no
-   programa como se fosse um dado valido. */
+/* Maior quantidade aceita na entrada. Um numero que nao cabe em int deixa o
+   valor lido pelo %d indefinido, entao valores grandes demais sao recusados. */
 #define MAX_QUANTIDADE 1000000
 
 /* Largura das linhas de "=" e de "-" da saida. */
 #define LARGURA_MOLDURA 40
 
-/* Espacos antes do titulo de cada moldura. Os tres do meio foram medidos no
-   exemplo da especificacao; os outros dois estao explicados em
-   descricoes/missao.md. */
+/* Espacos antes do titulo de cada moldura, para alinhar com o exemplo do
+   enunciado. */
 #define INDENT_MENU 8
 #define INDENT_INICIO 18
 #define INDENT_SEM_POKEBOLAS 12
@@ -41,7 +36,6 @@
 /* Opcoes do menu. */
 #define OPCAO_SAIR 0
 #define OPCAO_ARQUIVO 1
-#define OPCAO_INTERATIVO 2
 
 /* Mostra o menu e atende as opcoes ate o usuario escolher sair. E o unico
    ponto de entrada usado pelo programa principal. */
@@ -50,9 +44,5 @@ void missaoMenu(void);
 /* Roda a missao completa com os dados do arquivo indicado e libera toda a
    memoria. Devolve 0 se o arquivo nao abrir ou tiver dados invalidos. */
 int missaoExecutarPorArquivo(const char *nomeArquivo);
-
-/* Roda a missao completa pedindo os dados pelo teclado e libera toda a
-   memoria. Devolve 0 se os dados digitados forem invalidos. */
-int missaoExecutarInterativo(void);
 
 #endif

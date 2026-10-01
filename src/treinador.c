@@ -10,11 +10,8 @@ int treinadorInicializar(Treinador *t, int identificador, const char *nome,
     treinadorSetNome(t, nome);
     treinadorSetPokebolas(t, qntdpokebolas);
 
-    /* A especificacao fixa a posicao inicial em (0,0). */
     treinadorSetLocalizacao(t, TREINADOR_X_INICIAL, TREINADOR_Y_INICIAL);
 
-    /* Se a celula cabeca da lista nao puder ser alocada, o treinador nao esta
-       utilizavel e a falha sobe. */
     return pokelistaInicializar(&t->lista);
 }
 
@@ -62,21 +59,18 @@ int treinadorGetPokebolas(const Treinador *t)
 
 void treinadorMovimentar(Treinador *t, int cordX, int cordY)
 {
-    /* Nao imprime nada: o modulo da missao usa esta operacao para ir ate o
-       Pokemon e para voltar ao Centro, com mensagens diferentes. */
+    /* As mensagens ficam na missao, que usa isto para ir e para voltar. */
     treinadorSetLocalizacao(t, cordX, cordY);
 }
 
 int treinadorCapturar(Treinador *t, const Pokemon *p)
 {
-    /* A checagem fica no TAD para a quantidade nunca ficar negativa, mesmo se
-       a captura for chamada fora de hora. */
+    /* Sem Pokebola nao ha captura. */
     if (t->qntdpokebolas <= 0) {
         return 0;
     }
 
-    /* So gasta a Pokebola se a insercao deu certo, para o estado nao ficar
-       inconsistente. */
+    /* So gasta a Pokebola se a insercao deu certo. */
     if (!pokelistaInserir(&t->lista, p)) {
         return 0;
     }
@@ -96,8 +90,7 @@ void treinadorImprimir(const Treinador *t)
 {
     cord posicao = treinadorGetLocalizacao(t);
 
-    /* O formato e o do exemplo da especificacao. */
-    printf("Treinador(a) %s: posição (%d,%d) | Pokébolas: %d\n",
+    printf("Treinador(a) %s: posicao (%d,%d) | Pokebolas: %d\n",
            treinadorGetNome(t), posicao.cordX, posicao.cordY,
            treinadorGetPokebolas(t));
 }

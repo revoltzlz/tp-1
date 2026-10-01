@@ -5,7 +5,6 @@
 
 int pokecenterInicializar(PokeCenter *cp)
 {
-    /* A especificacao fixa o Centro em (0,0). */
     cp->locPokeCenter.cordX = CENTRO_X;
     cp->locPokeCenter.cordY = CENTRO_Y;
 
@@ -14,7 +13,7 @@ int pokecenterInicializar(PokeCenter *cp)
     }
 
     if (!pokelistaInicializar(&cp->recuperados)) {
-        /* A primeira deu certo e a segunda nao: libera a que ja existe. */
+        /* Libera a primeira, que ja tinha sido criada. */
         pokelistaLiberar(&cp->fugitivos);
         return 0;
     }
@@ -24,7 +23,7 @@ int pokecenterInicializar(PokeCenter *cp)
 
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p)
 {
-    /* Insere no fim: a lista fica na ordem do arquivo de entrada. */
+    /* Insere no fim, para manter a ordem do arquivo. */
     return pokelistaInserir(&cp->fugitivos, p);
 }
 
@@ -63,14 +62,11 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     Pokemon entregue;
     int recebidos = 0;
 
-    /* O Pokemon viaja dentro da variavel local: sai copiado da celula do
-       treinador, que e liberada, e entra copiado numa celula nova do Centro.
-       Como o treinador entrega o primeiro e o Centro insere no fim, a ordem de
-       captura e preservada. */
+    /* O treinador entrega do primeiro ao ultimo e o Centro insere no fim, entao
+       a ordem de captura se mantem. */
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
-            /* O Pokemon ja saiu da lista do treinador: avisa em vez de
-               perde-lo em silencio. */
+            /* O Pokemon ja saiu da lista do treinador, entao avisa. */
             printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n",
                    pokemonGetNome(&entregue));
             return recebidos;
@@ -87,10 +83,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
     cord posicaoTreinador;
     int quantidade;
 
-    /* As Pokebolas ficam no Centro: uma chamada fora de hora nao pode criar
-       Pokebolas do nada. No fluxo normal esta checagem nunca dispara, mas e
-       ela que usa o parametro cp - sem ela o compilador avisa que ele nao
-       serve para nada. */
+    /* So recarrega o treinador que esta no Centro. */
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
     if (posicaoTreinador.cordX != posicaoCentro.cordX ||
@@ -98,8 +91,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
         return 0;
     }
 
-    /* O resto da divisao por (MAX - MIN + 1) da de 0 a MAX - MIN, e somar MIN
-       desloca para o intervalo fechado [MIN, MAX]. O srand fica no main. */
+    /* O resto vai de 0 a MAX - MIN; somando MIN, fica entre MIN e MAX. */
     quantidade = MIN_RECARGA + rand() % (MAX_RECARGA - MIN_RECARGA + 1);
 
     treinadorSetPokebolas(t, quantidade);
@@ -118,7 +110,6 @@ int pokecenterGerarRelatorio(const PokeCenter *cp, const char *nomeArquivo)
 
     fprintf(saida, "Pokemon recuperados:\n");
 
-    /* Quem percorre a lista e a lista. */
     pokelistaEscreverRelatorio(&cp->recuperados, saida);
 
     fclose(saida);

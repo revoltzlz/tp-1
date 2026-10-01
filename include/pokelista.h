@@ -37,8 +37,7 @@ int pokelistaBuscar(const Pokelista *pl, int id, Pokemon *encontrado);
 /* Imprime todos os Pokemon, um por linha. Se a lista estiver vazia, avisa. */
 void pokelistaImprimir(const Pokelista *pl);
 
-/* Escreve no arquivo ja aberto uma linha "<numPokedex> <nome>" por Pokemon.
-   Quem percorre a lista e a lista; o Centro so abre e fecha o arquivo. */
+/* Escreve no arquivo ja aberto uma linha "<numPokedex> <nome>" por Pokemon. */
 void pokelistaEscreverRelatorio(const Pokelista *pl, FILE *saida);
 
 /* Devolve 1 se a lista nao tem nenhum Pokemon. */
