@@ -1,18 +1,18 @@
-/* TAD Treinador: um dos dois treinadores do esquadrao de recuperacao. */
+// tad treinador: um dos dois treinadores do esquadrao de recuperacao.
 
 #ifndef TREINADOR_H
 #define TREINADOR_H
 
 #include "pokelista.h"
 
-/* Tamanho do vetor do nome, contando o '\0'. */
+// tamanho do vetor do nome, contando o '\0'.
 #define TAM_NOME_COACH 30
 
-/* Posicao inicial de todo treinador. */
+// posicao inicial de todo treinador.
 #define TREINADOR_X_INICIAL 0
 #define TREINADOR_Y_INICIAL 0
 
-/* A lista guarda os Pokemon que ele capturou e ainda nao entregou. */
+// a lista guarda os pokemon que ele capturou e ainda nao entregou.
 typedef struct {
     int identificador;
     char nome[TAM_NOME_COACH];
@@ -21,49 +21,49 @@ typedef struct {
     int qntdpokebolas;
 } Treinador;
 
-/* Prepara o treinador em (0,0) e cria a PokeLista dele. Devolve 0 se a lista
-   nao puder ser criada. */
+// prepara o treinador em (0,0) e cria a pokelista dele. devolve 0 se a lista
+// nao puder ser criada.
 int treinadorInicializar(Treinador *t, int identificador, const char *nome, int qntdpokebolas);
 
-/* Atribui o identificador. */
+// atribui o identificador.
 void treinadorSetId(Treinador *t, int identificador);
 
-/* Copia o nome, truncando em TAM_NOME_COACH - 1 caracteres. */
+// copia o nome, truncando em tam_nome_coach - 1 caracteres.
 void treinadorSetNome(Treinador *t, const char *nome);
 
-/* Atribui a localizacao no mapa. */
+// atribui a localizacao no mapa.
 void treinadorSetLocalizacao(Treinador *t, int cordX, int cordY);
 
-/* Atribui a quantidade de Pokebolas. */
+// atribui a quantidade de pokebolas.
 void treinadorSetPokebolas(Treinador *t, int qntdpokebolas);
 
-/* Devolve o identificador. */
+// devolve o identificador.
 int treinadorGetId(const Treinador *t);
 
-/* Devolve o endereco do nome, somente para leitura. */
+// devolve o endereco do nome, somente para leitura.
 const char *treinadorGetNome(const Treinador *t);
 
-/* Devolve uma copia da localizacao. */
+// devolve uma copia da localizacao.
 Coordenada treinadorGetLocalizacao(const Treinador *t);
 
-/* Devolve quantas Pokebolas ele ainda tem. */
+// devolve quantas pokebolas ele ainda tem.
 int treinadorGetPokebolas(const Treinador *t);
 
-/* Move o treinador para (cordX, cordY). */
+// move o treinador para (cordx, cordy).
 void treinadorMovimentar(Treinador *t, int cordX, int cordY);
 
-/* Gasta uma Pokebola e guarda uma copia do Pokemon na lista do treinador.
-   Devolve 0 se ele nao tinha Pokebola ou se a insercao falhou. */
+// gasta uma pokebola e guarda uma copia do pokemon na lista do treinador.
+// devolve 0 se ele nao tinha pokebola ou se a insercao falhou.
 int treinadorCapturar(Treinador *t, const Pokemon *p);
 
-/* Retira o primeiro Pokemon da lista dele e o copia para *retirado. Devolve 0
-   se ele nao esta carregando nenhum. */
+// retira o primeiro pokemon da lista dele e o copia para *retirado. devolve 0
+// se ele nao esta carregando nenhum.
 int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado);
 
-/* Imprime nome, posicao e Pokebolas. */
+// imprime nome, posicao e pokebolas.
 void treinadorImprimir(const Treinador *t);
 
-/* Libera a PokeLista do treinador. */
+// libera a pokelista do treinador.
 void treinadorLiberar(Treinador *t);
 
 #endif

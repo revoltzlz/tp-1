@@ -1,68 +1,68 @@
-/* TAD Centro de Pesquisa: guarda os fugitivos, recebe os recuperados e
-   recarrega as Pokebolas dos treinadores. */
+// tad centro de pesquisa: guarda os fugitivos, recebe os recuperados e
+// recarrega as pokebolas dos treinadores.
 
 #ifndef POKECENTER_H
 #define POKECENTER_H
 
 #include "treinador.h"
 
-/* Posicao do Centro. */
+// posicao do centro.
 #define CENTRO_X 0
 #define CENTRO_Y 0
 
-/* Intervalo da recarga de Pokebolas. */
+// intervalo da recarga de pokebolas.
 #define MIN_RECARGA 1
 #define MAX_RECARGA 20
 
-/* As duas PokeLista: quem ainda esta fugido e quem ja foi entregue. */
+// as duas pokelista: quem ainda esta fugido e quem ja foi entregue.
 typedef struct {
    Pokelista fugitivos;
    Pokelista recuperados;
    Coordenada locPokeCenter;
 } PokeCenter;
 
-/* Poe o Centro em (0,0) e cria as duas listas vazias. Devolve 0 se alguma
-   delas nao puder ser criada. */
+// poe o centro em (0,0) e cria as duas listas vazias. devolve 0 se alguma
+// delas nao puder ser criada.
 int pokecenterInicializar(PokeCenter *cp);
 
-/* Insere uma copia do Pokemon no fim da lista de fugitivos. Devolve 0 se a
-   insercao falhar. */
+// insere uma copia do pokemon no fim da lista de fugitivos. devolve 0 se a
+// insercao falhar.
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p);
 
-/* Remove o Pokemon de identificacao id da lista de fugitivos, copiando-o para
-   *removido se este nao for NULL. Devolve 1 se encontrou e removeu. */
+// remove o pokemon de identificacao id da lista de fugitivos, copiando-o para
+// *removido se este nao for null. devolve 1 se encontrou e removeu.
 int pokecenterRemoverFugitivo(PokeCenter *cp, int id, Pokemon *removido);
 
-/* Procura o Pokemon de identificacao id entre os fugitivos. Devolve 1 se
-   encontrou, 0 se nao. */
+// procura o pokemon de identificacao id entre os fugitivos. devolve 1 se
+// encontrou, 0 se nao.
 int pokecenterBuscarFugitivo(const PokeCenter *cp, int id, Pokemon *encontrado);
 
-/* Imprime os Pokemon que ainda nao foram recuperados. */
+// imprime os pokemon que ainda nao foram recuperados.
 void pokecenterImprimirFugitivos(const PokeCenter *cp);
 
-/* Devolve 1 se ainda ha Pokemon fugitivos. */
+// devolve 1 se ainda ha pokemon fugitivos.
 int pokecenterTemFugitivos(const PokeCenter *cp);
 
-/* Devolve quantos Pokemon ainda estao fugidos. */
+// devolve quantos pokemon ainda estao fugidos.
 int pokecenterGetQtdFugitivos(const PokeCenter *cp);
 
-/* Devolve uma copia da localizacao do Centro. */
+// devolve uma copia da localizacao do centro.
 Coordenada pokecenterGetLocalizacao(const PokeCenter *cp);
 
-/* Retira um por um os Pokemon do treinador e insere no fim dos recuperados,
-   preservando a ordem de captura. Devolve quantos foram recebidos. */
+// retira um por um os pokemon do treinador e insere no fim dos recuperados,
+// preservando a ordem de captura. devolve quantos foram recebidos.
 int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t);
 
-/* Sorteia uma quantidade de Pokebolas em [MIN_RECARGA, MAX_RECARGA], entrega
-   ao treinador e devolve essa quantidade. Devolve 0, sem recarregar, se o
-   treinador nao estiver no Centro. Depende de srand, chamado no main. */
+// sorteia uma quantidade de pokebolas em [min_recarga, max_recarga], entrega
+// ao treinador e devolve essa quantidade. devolve 0, sem recarregar, se o
+// treinador nao estiver no centro. depende de srand, chamado no main.
 int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t);
 
-/* Grava o relatorio final dos recuperados. Devolve 0 se nao conseguir abrir o
-   arquivo para escrita. */
+// grava o relatorio final dos recuperados. devolve 0 se nao conseguir abrir o
+// arquivo para escrita.
 int pokecenterGerarRelatorio(const PokeCenter *cp, const char *nomeArquivo);
 
-/* Libera as duas PokeLista do Centro. */
+// libera as duas pokelista do centro.
 void pokecenterLiberar(PokeCenter *cp);
 
 #endif

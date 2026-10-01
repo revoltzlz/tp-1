@@ -58,18 +58,18 @@ int treinadorGetPokebolas(const Treinador *t)
 
 void treinadorMovimentar(Treinador *t, int cordX, int cordY)
 {
-    /* As mensagens ficam na missao, que usa isto para ir e para voltar. */
+    // as mensagens ficam na missao, que usa isto para ir e para voltar.
     treinadorSetLocalizacao(t, cordX, cordY);
 }
 
 int treinadorCapturar(Treinador *t, const Pokemon *p)
 {
-    /* Sem Pokebola nao ha captura. */
+    // sem pokebola nao ha captura.
     if (t->qntdpokebolas <= 0) {
         return 0;
     }
 
-    /* So gasta a Pokebola se a insercao deu certo. */
+    // so gasta a pokebola se a insercao deu certo.
     if (!pokelistaInserir(&t->lista, p)) {
         return 0;
     }
@@ -81,7 +81,7 @@ int treinadorCapturar(Treinador *t, const Pokemon *p)
 
 int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado)
 {
-    /* O primeiro da lista e o mais antigo: a entrega sai na ordem de captura. */
+    // o primeiro da lista e o mais antigo: a entrega sai na ordem de captura.
     return pokelistaRemoverPrimeiro(&t->lista, retirado);
 }
 

@@ -5,9 +5,9 @@
 
 int pokelistaInicializar(Pokelista *pl)
 {
-    /* A celula cabeca nao guarda Pokemon: ela existe para que o primeiro
-       elemento tambem tenha um antecessor, e a remocao nao precise de um caso
-       especial. */
+    // a celula cabeca nao guarda pokemon: ela existe para que o primeiro
+    // elemento tambem tenha um antecessor, e a remocao nao precise de um caso
+    // especial.
     pl->primeiro = (Pokecelula *) malloc(sizeof(Pokecelula));
     
     if (pl->primeiro == NULL) {
@@ -18,7 +18,7 @@ int pokelistaInicializar(Pokelista *pl)
 
     pl->primeiro->prox = NULL;
 
-    /* Lista vazia: primeiro e ultimo apontam para a mesma celula, a cabeca. */
+    // lista vazia: primeiro e ultimo apontam para a mesma celula, a cabeca.
     pl->ultimo = pl->primeiro;
     pl->tamanho = 0;
 
@@ -34,11 +34,11 @@ int pokelistaInserir(Pokelista *pl, const Pokemon *p)
         return 0;
     }
 
-    /* Copia a struct inteira: a lista fica dona da sua propria copia. */
+    // copia a struct inteira: a lista fica dona da sua propria copia.
     nova->pokemon = *p;
     nova->prox = NULL;
 
-    /* O apontador ultimo faz isto custar O(1), sem percorrer a lista. */
+    // o apontador ultimo faz isto custar o(1), sem percorrer a lista.
     pl->ultimo->prox = nova;
     pl->ultimo = nova;
     pl->tamanho++;
@@ -51,14 +51,14 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     Pokecelula *anterior;
     Pokecelula *alvo;
 
-    /* Anda com um apontador para a celula ANTERIOR ao alvo: para desligar uma
-       celula e preciso ter quem aponta para ela. Comeca na cabeca. */
+    // anda com um apontador para a celula anterior ao alvo: para desligar uma
+    // celula e preciso ter quem aponta para ela. comeca na cabeca.
     anterior = pl->primeiro;
     while (anterior->prox != NULL && pokemonGetId(&anterior->prox->pokemon) != id) {
         anterior = anterior->prox;
     }
 
-    /* Chegou ao fim sem achar. */
+    // chegou ao fim sem achar.
     if (anterior->prox == NULL) {
         return 0;
     }
@@ -69,11 +69,11 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
         *removido = alvo->pokemon;
     }
 
-    /* Desliga o alvo da corrente. */
+    // desliga o alvo da corrente.
     anterior->prox = alvo->prox;
 
-    /* Sem esta correcao, ultimo ficaria apontando para memoria liberada e a
-       proxima insercao escreveria nela. */
+    // sem esta correcao, ultimo ficaria apontando para memoria liberada e a
+    // proxima insercao escreveria nela.
     if (alvo == pl->ultimo) {
         pl->ultimo = anterior;
     }
@@ -90,8 +90,8 @@ int pokelistaRemoverPrimeiro(Pokelista *pl, Pokemon *removido)
         return 0;
     }
 
-    /* Reaproveita a remocao por id, para haver um unico algoritmo de remocao.
-       O primeiro Pokemon de verdade fica na celula seguinte a cabeca. */
+    // reaproveita a remocao por id, para haver um unico algoritmo de remocao.
+    // o primeiro pokemon de verdade fica na celula seguinte a cabeca.
     return pokelistaRemover(pl, pokemonGetId(&pl->primeiro->prox->pokemon), removido);
 }
 
@@ -143,7 +143,7 @@ void pokelistaEscreverRelatorio(const Pokelista *pl, FILE *saida)
 
 int pokelistaVazia(const Pokelista *pl)
 {
-    /* Vazia quando a unica celula e a cabeca. */
+    // vazia quando a unica celula e a cabeca.
     return pl->primeiro == pl->ultimo;
 }
 
@@ -157,8 +157,8 @@ void pokelistaLiberar(Pokelista *pl)
     Pokecelula *atual;
     Pokecelula *seguinte;
 
-    /* Comeca na cabeca, que tambem foi alocada. O prox e guardado ANTES do
-       free, senao seria lido de memoria ja devolvida. */
+    // comeca na cabeca, que tambem foi alocada. o prox e guardado antes do
+    // free, senao seria lido de memoria ja devolvida.
     atual = pl->primeiro;
     while (atual != NULL) {
         seguinte = atual->prox;
@@ -166,7 +166,7 @@ void pokelistaLiberar(Pokelista *pl)
         atual = seguinte;
     }
 
-    /* Anula os apontadores: um uso acidental depois disto falha de imediato. */
+    // anula os apontadores: um uso acidental depois disto falha de imediato.
     pl->primeiro = NULL;
     pl->ultimo = NULL;
     pl->tamanho = 0;

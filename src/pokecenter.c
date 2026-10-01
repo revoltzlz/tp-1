@@ -13,7 +13,7 @@ int pokecenterInicializar(PokeCenter *cp)
     }
 
     if (!pokelistaInicializar(&cp->recuperados)) {
-        /* Libera a primeira, que ja tinha sido criada. */
+        // libera a primeira, que ja tinha sido criada.
         pokelistaLiberar(&cp->fugitivos);
         return 0;
     }
@@ -23,7 +23,7 @@ int pokecenterInicializar(PokeCenter *cp)
 
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p)
 {
-    /* Insere no fim, para manter a ordem do arquivo. */
+    // insere no fim, para manter a ordem do arquivo.
     return pokelistaInserir(&cp->fugitivos, p);
 }
 
@@ -62,11 +62,11 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     Pokemon entregue;
     int recebidos = 0;
 
-    /* O treinador entrega do primeiro ao ultimo e o Centro insere no fim, entao
-       a ordem de captura se mantem. */
+    // o treinador entrega do primeiro ao ultimo e o centro insere no fim, entao
+    // a ordem de captura se mantem.
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
-            /* O Pokemon ja saiu da lista do treinador, entao avisa. */
+            // o pokemon ja saiu da lista do treinador, entao avisa.
             printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n", pokemonGetNome(&entregue));
             return recebidos;
         }
@@ -82,7 +82,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
     Coordenada posicaoTreinador;
     int quantidade;
 
-    /* So recarrega o treinador que esta no Centro. */
+    // so recarrega o treinador que esta no centro.
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
     
@@ -91,7 +91,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
         return 0;
     }
 
-    /* O resto vai de 0 a MAX - MIN; somando MIN, fica entre MIN e MAX. */
+    // o resto vai de 0 a max - min; somando min, fica entre min e max.
     quantidade = MIN_RECARGA + rand() % (MAX_RECARGA - MIN_RECARGA + 1);
 
     treinadorSetPokebolas(t, quantidade);

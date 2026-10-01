@@ -1,9 +1,9 @@
-/* O par de coordenadas (X,Y) do mapa. */
+// o par de coordenadas (x,y) do mapa.
 
 #ifndef COORDENADAS_H
 #define COORDENADAS_H
 
-/* Localizacao do Pokemon, do Treinador e do Centro. */
+// localizacao do pokemon, do treinador e do centro.
 typedef struct {
     int cordX;
     int cordY;

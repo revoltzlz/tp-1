@@ -1,19 +1,19 @@
-# TP1 - AEDS I (CCF211) - Resgate de Pokemon
+# tp1 - aeds i (ccf211) - resgate de pokemon
 #
-# Para compilar:  make            (no Windows: mingw32-make)
-# Para executar:  make run        (ou ./tp1)
-# Para limpar:    make clean
+# para compilar:  make            (no windows: mingw32-make)
+# para executar:  make run        (ou ./tp1)
+# para limpar:    make clean
 
-# Compilador e flags
+# compilador e flags
 CC     = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g -Iinclude
 LDLIBS = -lm
 
-# Diretorios
+# diretorios
 SRC_DIR = src
 BIN     = tp1
 
-# Arquivos fonte, objetos e cabecalhos
+# arquivos fonte, objetos e cabecalhos
 SRCS = main.c \
        $(SRC_DIR)/pokemon.c \
        $(SRC_DIR)/pokelista.c \
@@ -29,14 +29,14 @@ HDRS = include/coordenadas.h include/pokemon.h \
 
 .PHONY: all run clean
 
-# Regra padrao
+# regra padrao
 all: $(BIN)
 
-# Linkagem final
+# linkagem final
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS) $(LDLIBS)
 
-# Compilacao dos .c
+# compilacao dos .c
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -45,11 +45,11 @@ $(BIN): $(OBJS)
 
 $(OBJS): $(HDRS)
 
-# Executar
+# executar
 run: $(BIN)
 	./$(BIN)
 
-# Limpar arquivos compilados (rm no Linux/Git Bash, del no Windows)
+# limpar arquivos compilados (rm no linux/git bash, del no windows)
 clean:
 	-rm -f $(BIN) $(BIN).exe $(OBJS)
 	-del /Q /F $(BIN).exe $(OBJS)

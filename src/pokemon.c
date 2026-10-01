@@ -24,8 +24,8 @@ void pokemonSetNumPokedex(Pokemon *p, int numPokedex)
 
 void pokemonSetNome(Pokemon *p, const char *nome)
 {
-    /* O '\0' explicito e necessario: o strncpy nao termina a string quando o
-       texto de origem enche o limite. */
+    // o '\0' explicito e necessario: o strncpy nao termina a string quando o
+    // texto de origem enche o limite.
     strncpy(p->nome, nome, TAM_NOME - 1);
     p->nome[TAM_NOME - 1] = '\0';
 }
@@ -71,7 +71,7 @@ void pokemonImprimir(const Pokemon *p)
 {
     Coordenada posicao = pokemonGetLocalizacao(p);
 
-    /* O %03d mantem o zero a esquerda, como em 025. */
+    // o %03d mantem o zero a esquerda, como em 025.
     printf("Id %d | Pokedex %03d | %s | Tipo: %s | Localizacao: (%d,%d)\n",
         pokemonGetId(p), pokemonGetNumPokedex(p), pokemonGetNome(p),
         pokemonGetTipo(p), posicao.cordX, posicao.cordY);
