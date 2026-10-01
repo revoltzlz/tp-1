@@ -5,9 +5,7 @@
 
 int pokelistaInicializar(Pokelista *pl)
 {
-    // a celula cabeca nao guarda pokemon: ela existe para que o primeiro
-    // elemento tambem tenha um antecessor, e a remocao nao precise de um caso
-    // especial
+    // a celula cabeca nao guarda pokemon: ela existe para que o primeiro elemento tambem tenha um antecessor, e a remocao nao precise de um caso especial
     pl->primeiro = (Pokecelula *) malloc(sizeof(Pokecelula));
     
     if (pl->primeiro == NULL) {
@@ -51,8 +49,7 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     Pokecelula *anterior;
     Pokecelula *alvo;
 
-    // anda com um apontador para a celula anterior ao alvo: para desligar uma
-    // celula e preciso ter quem aponta para ela. comeca na cabeca
+    // anda com um apontador para a celula anterior ao alvo: para desligar uma celula e preciso ter quem aponta para ela. comeca na cabeca
     anterior = pl->primeiro;
     while (anterior->prox != NULL && pokemonGetId(&anterior->prox->pokemon) != id) {
         anterior = anterior->prox;
@@ -72,8 +69,7 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     // desliga o alvo da corrente
     anterior->prox = alvo->prox;
 
-    // sem esta correcao, ultimo ficaria apontando para memoria liberada e a
-    // proxima insercao escreveria nela
+    // sem esta correcao, ultimo ficaria apontando para memoria liberada e a proxima insercao escreveria nela
     if (alvo == pl->ultimo) {
         pl->ultimo = anterior;
     }
@@ -90,8 +86,7 @@ int pokelistaRemoverPrimeiro(Pokelista *pl, Pokemon *removido)
         return 0;
     }
 
-    // reaproveita a remocao por id, para haver um unico algoritmo de remocao.
-    // o primeiro pokemon de verdade fica na celula seguinte a cabeca
+    // reaproveita a remocao por id, para haver um unico algoritmo de remocao. o primeiro pokemon de verdade fica na celula seguinte a cabeca
     return pokelistaRemover(pl, pokemonGetId(&pl->primeiro->prox->pokemon), removido);
 }
 
@@ -157,8 +152,7 @@ void pokelistaLiberar(Pokelista *pl)
     Pokecelula *atual;
     Pokecelula *seguinte;
 
-    // comeca na cabeca, que tambem foi alocada. o prox e guardado antes do
-    // free, senao seria lido de memoria ja devolvida
+    // comeca na cabeca, que tambem foi alocada. o prox e guardado antes do free, senao seria lido de memoria ja devolvida
     atual = pl->primeiro;
     while (atual != NULL) {
         seguinte = atual->prox;

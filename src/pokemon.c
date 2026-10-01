@@ -24,8 +24,7 @@ void pokemonSetNumPokedex(Pokemon *p, int numPokedex)
 
 void pokemonSetNome(Pokemon *p, const char *nome)
 {
-    // o '\0' explicito e necessario: o strncpy nao termina a string quando o
-    // texto de origem enche o limite
+    // o '\0' explicito e necessario: o strncpy nao termina a string quando o texto de origem enche o limite
     strncpy(p->nome, nome, TAM_NOME - 1);
     p->nome[TAM_NOME - 1] = '\0';
 }

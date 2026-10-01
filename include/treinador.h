@@ -21,8 +21,7 @@ typedef struct {
     int qntdpokebolas;
 } Treinador;
 
-// prepara o treinador em (0,0) e cria a pokelista dele. devolve 0 se a lista
-// nao puder ser criada
+// prepara o treinador em (0,0) e cria a pokelista dele. devolve 0 se a lista nao puder ser criada
 int treinadorInicializar(Treinador *t, int identificador, const char *nome, int qntdpokebolas);
 
 // atribui o identificador
@@ -52,12 +51,10 @@ int treinadorGetPokebolas(const Treinador *t);
 // move o treinador para (cordx, cordy)
 void treinadorMovimentar(Treinador *t, int cordX, int cordY);
 
-// gasta uma pokebola e guarda uma copia do pokemon na lista do treinador.
-// devolve 0 se ele nao tinha pokebola ou se a insercao falhou
+// gasta uma pokebola e guarda uma copia do pokemon na lista do treinador. devolve 0 se ele nao tinha pokebola ou se a insercao falhou
 int treinadorCapturar(Treinador *t, const Pokemon *p);
 
-// retira o primeiro pokemon da lista dele e o copia para *retirado. devolve 0
-// se ele nao esta carregando nenhum
+// retira o primeiro pokemon da lista dele e o copia para *retirado. devolve 0 se ele nao esta carregando nenhum
 int treinadorRetirarPokemon(Treinador *t, Pokemon *retirado);
 
 // imprime nome, posicao e pokebolas

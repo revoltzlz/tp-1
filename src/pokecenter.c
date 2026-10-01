@@ -62,8 +62,7 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     Pokemon entregue;
     int recebidos = 0;
 
-    // o treinador entrega do primeiro ao ultimo e o centro insere no fim, entao
-    // a ordem de captura se mantem
+    // o treinador entrega do primeiro ao ultimo e o centro insere no fim, entao a ordem de captura se mantem
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
             // o pokemon ja saiu da lista do treinador, entao avisa

@@ -1,15 +1,11 @@
-// sistema de controle da missao: leitura da entrada, laco do resgate,
-// retornos ao centro e relatorio
+// sistema de controle da missao: leitura da entrada, laco do resgate, retornos ao centro e relatorio
 
 #include <math.h>
 #include <stdio.h>
 
 #include "missao.h"
 
-// devolve o quadrado da distancia, sem tirar a raiz: a raiz e crescente,
-// entao a ordem nao muda. o float guarda inteiros exatos ate 2^24, entao em
-// mapas de ate uns 2000 x 2000 o quadrado sai exato e o empate que a
-// especificacao pede e detectado com seguranca
+// devolve o quadrado da distancia, sem tirar a raiz: a raiz e crescente, entao a ordem nao muda. o float guarda inteiros exatos ate 2^24, entao em mapas de ate uns 2000 x 2000 o quadrado sai exato e o empate que a especificacao pede e detectado com seguranca
 float distanciaQuadrado(Coordenada a, Coordenada b)
 {
     float dx = (float) a.cordX - b.cordX;
@@ -51,8 +47,7 @@ int leTreinador(FILE *entrada, Treinador *t, int id)
     return 1;
 }
 
-// le os n fugitivos e registra cada um no centro. a quantidade sai em
-// *quantidade. devolve 0 se faltar memoria para registrar um pokemon
+// le os n fugitivos e registra cada um no centro. a quantidade sai em *quantidade. devolve 0 se faltar memoria para registrar um pokemon
 int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
 {
     // valores iniciais: se o fscanf falhar, nada fica com lixo de memoria
@@ -64,13 +59,10 @@ int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
     fscanf(entrada, "%d", &total);
 
     for (i = 0; i < total; i++) {
-        // o %s para em espaco em branco, e o '\r' do fim de linha do windows
-        // conta como tal: nome e tipo nunca o recebem. o 29 e o 19
-        // (tam_nome - 1 e tam_tipo - 1) impedem que passem do vetor
+        // o %s para em espaco em branco, e o '\r' do fim de linha do windows conta como tal: nome e tipo nunca o recebem. o 29 e o 19 (tam_nome - 1 e tam_tipo - 1) impedem que passem do vetor
         fscanf(entrada, "%d %29s %19s %d %d", &numPokedex, nome, tipo, &cordX, &cordY);
 
-        // o id e a ordem de leitura. o numero da pokedex nao serviria: o
-        // arquivo de teste oficial traz quatro pikachus com o numero 25
+        // o id e a ordem de leitura. o numero da pokedex nao serviria: o arquivo de teste oficial traz quatro pikachus com o numero 25
         pokemonInicializar(&p, i + 1, numPokedex, nome, tipo, cordX, cordY);
 
         if (!pokecenterRegistrarFugitivo(cp, &p)) {
@@ -113,8 +105,7 @@ void retornaAoCentro(PokeCenter *cp, Treinador *t)
     recarregaNoCentro(cp, t);
 }
 
-// ninguem parte para uma captura sem pokebola, e os dois comecam no centro:
-// quem tem zero recarrega antes do primeiro resgate
+// ninguem parte para uma captura sem pokebola, e os dois comecam no centro: quem tem zero recarrega antes do primeiro resgate
 void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
 {
     if (treinadorGetPokebolas(t) > 0) {
@@ -127,8 +118,7 @@ void recarregaSeComecouSemPokebola(PokeCenter *cp, Treinador *t)
     recarregaNoCentro(cp, t);
 }
 
-// um resgate completo: distancias, escolha, movimento, captura e aviso ao
-// centro. devolve o treinador que capturou, ou null se a captura falhou
+// um resgate completo: distancias, escolha, movimento, captura e aviso ao centro. devolve o treinador que capturou, ou null se a captura falhou
 Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2, const Pokemon *alvo)
 {
     Coordenada posicaoAlvo;
@@ -171,8 +161,7 @@ Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2, const Po
     return escolhido;
 }
 
-// os dois voltam ao centro e devolvem o que carregam, na ordem do
-// identificador
+// os dois voltam ao centro e devolvem o que carregam, na ordem do identificador
 void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 {
     Coordenada posicaoCentro;
@@ -196,8 +185,7 @@ void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
     treinadorMovimentar(t1, posicaoCentro.cordX, posicaoCentro.cordY);
     treinadorMovimentar(t2, posicaoCentro.cordX, posicaoCentro.cordY);
 
-    // t1 tem o menor identificador, entao entrega primeiro: e essa ordem que
-    // faz o relatorio sair na ordem do exemplo
+    // t1 tem o menor identificador, entao entrega primeiro: e essa ordem que faz o relatorio sair na ordem do exemplo
     printf("Treinador(a) %s devolve os Pokemon.\n\n", treinadorGetNome(t1));
     pokecenterReceberPokemon(cp, t1);
 
@@ -230,8 +218,7 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
         recarregaSeComecouSemPokebola(cp, t2);
     }
 
-    // os ids sao a ordem de leitura. a busca confirma que o pokemon ainda
-    // esta fugido antes de montar o resgate
+    // os ids sao a ordem de leitura. a busca confirma que o pokemon ainda esta fugido antes de montar o resgate
     for (id = 1; id <= qtdFugitivos; id++) {
         if (!pokecenterBuscarFugitivo(cp, id, &alvo)) {
             continue;
@@ -242,9 +229,7 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
             continue;
         }
 
-        // a ordem destes dois testes importa: se o pokemon capturado era o
-        // ultimo, a missao termina sem recarga, mesmo que o treinador tenha
-        // ficado sem pokebolas. e o que o exemplo da especificacao mostra
+        // a ordem destes dois testes importa: se o pokemon capturado era o ultimo, a missao termina sem recarga, mesmo que o treinador tenha ficado sem pokebolas. e o que o exemplo da especificacao mostra
         if (!pokecenterTemFugitivos(cp)) {
             break;
         }
