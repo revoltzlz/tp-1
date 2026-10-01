@@ -5,7 +5,7 @@
 
 #include "pokelista.h"
 
-/* Tamanho do vetor do nome e a largura de leitura correspondente. */
+/* Tamanho do vetor do nome, contando o '\0'. */
 #define TAM_NOME_COACH 30
 
 /* Posicao inicial de todo treinador. */

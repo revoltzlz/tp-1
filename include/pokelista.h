@@ -10,8 +10,8 @@
 /* O Pokemon e guardado por valor, e nao por ponteiro: assim cada lista tem a
    sua propria copia e nenhuma memoria e compartilhada entre duas listas.
 
-   O nome struct conec e obrigatorio: o campo prox aponta para o proprio tipo,
-   e dentro do typedef o nome conec ainda nao existe. */
+   O nome struct pokecelula e obrigatorio: o campo prox aponta para o proprio
+   tipo, e dentro do typedef o nome Pokecelula ainda nao existe. */
 typedef struct pokecelula {
    Pokemon pokemon;
    struct pokecelula *prox;

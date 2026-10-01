@@ -1,15 +1,15 @@
 /* Sistema de controle da missao: leitura da entrada, laco do resgate,
-   retornos ao Centro e menu. */
+   retornos ao Centro e relatorio. */
 
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "missao.h"
 
-/* Devolve o QUADRADO da distancia, sem tirar a raiz: o quadrado e inteiro e
-   exato, entao o empate que a especificacao pede e detectado com seguranca, e
-   a raiz e crescente, entao a ordem nao muda. */
+/* Devolve o QUADRADO da distancia, sem tirar a raiz: a raiz e crescente,
+   entao a ordem nao muda. O float guarda inteiros exatos ate 2^24, entao em
+   mapas de ate uns 2000 x 2000 o quadrado sai exato e o empate que a
+   especificacao pede e detectado com seguranca. */
 float distanciaQuadrado(Coordenada a, Coordenada b)
 {
     float dx = (float) a.cordX - b.cordX;
@@ -35,14 +35,15 @@ Treinador *escolheTreinador(Treinador *t1, Treinador *t2, float distancia1, floa
     return t2;
 }
 
-/* Le nome e Pokebolas de um treinador e o inicializa. Devolve 0 se os dados
-   forem invalidos ou a PokeLista nao puder ser criada. */
+/* Le nome e Pokebolas de um treinador e o inicializa. */
 int leTreinador(FILE *entrada, Treinador *t, int id)
 {
-    char nome[TAM_NOME_COACH];
-    int pokebolas;
+    /* Valores iniciais: se o fscanf falhar, nada fica com lixo de memoria. */
+    char nome[TAM_NOME_COACH] = "";
+    int pokebolas = 0;
 
-    fscanf(entrada, "%s", nome);
+    /* O 29 (TAM_NOME_COACH - 1) impede que um nome longo passe do vetor. */
+    fscanf(entrada, "%29s", nome);
     fscanf(entrada, "%d", &pokebolas);
 
     treinadorInicializar(t, id, nome, pokebolas);
@@ -51,20 +52,22 @@ int leTreinador(FILE *entrada, Treinador *t, int id)
 }
 
 /* Le os n fugitivos e registra cada um no Centro. A quantidade sai em
-   *quantidade. Devolve 0 se os dados forem invalidos ou faltarem linhas. */
+   *quantidade. Devolve 0 se faltar memoria para registrar um Pokemon. */
 int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
 {
-    char nome[TAM_NOME];
-    char tipo[TAM_TIPO];
-    int total, i, numPokedex, cordX, cordY;
+    /* Valores iniciais: se o fscanf falhar, nada fica com lixo de memoria. */
+    char nome[TAM_NOME] = "";
+    char tipo[TAM_TIPO] = "";
+    int total = 0, i, numPokedex = 0, cordX = 0, cordY = 0;
     Pokemon p;
 
     fscanf(entrada, "%d", &total);
 
     for (i = 0; i < total; i++) {
         /* O %s para em espaco em branco, e o '\r' do fim de linha do Windows
-           conta como tal: nome e tipo nunca o recebem. */
-        fscanf(entrada, "%d %s %s %d %d", &numPokedex, nome, tipo, &cordX, &cordY);
+           conta como tal: nome e tipo nunca o recebem. O 29 e o 19
+           (TAM_NOME - 1 e TAM_TIPO - 1) impedem que passem do vetor. */
+        fscanf(entrada, "%d %29s %19s %d %d", &numPokedex, nome, tipo, &cordX, &cordY);
 
         /* O Id e a ordem de leitura. O numero da Pokedex nao serviria: o
            arquivo de teste oficial traz quatro Pikachus com o numero 25. */
@@ -178,13 +181,12 @@ void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
 
     /* Se alguma captura falhou, mostra quem ficou para tras. */
     if (pokecenterTemFugitivos(cp)) {
-        printf("Atencao: ainda ha %d Pokemon na lista de fugitivos:\n", pokecenterGetQtdFugitivos(cp)); pokecenterImprimirFugitivos(cp);
+        printf("Atencao: ainda ha %d Pokemon na lista de fugitivos:\n", pokecenterGetQtdFugitivos(cp));
+        pokecenterImprimirFugitivos(cp);
         printf("========================================\n");
         printf("        Fim da missao de resgate        \n");
         printf("========================================\n");
-    } 
-    
-    else {
+    } else {
         printf("========================================\n");
         printf("        Todos Pokemons foram resgatados \n");
         printf("========================================\n");
@@ -291,10 +293,10 @@ int missaoCaptura()
 {
     FILE *entrada;
     int resultado;
-    char caminho[TAM_CAMINHO];
+    char caminho[TAM_CAMINHO] = "";
 
     printf("Caminho do arquivo de entrada: ");
-    scanf("%s", caminho);
+    scanf("%255s", caminho);
 
     entrada = fopen(caminho, "r");
     if (entrada == NULL) {

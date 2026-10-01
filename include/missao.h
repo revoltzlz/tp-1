@@ -14,11 +14,11 @@
 /* Nome do arquivo do relatorio final. */
 #define ARQ_RELATORIO "relatorio.txt"
 
-/* Vetor do caminho digitado no menu e a largura de leitura correspondente. */
+/* Tamanho do vetor do caminho digitado, contando o '\0'. */
 #define TAM_CAMINHO 256
 
-/* Roda a missao completa com os dados do arquivo indicado e libera toda a
-   memoria. Devolve 0 se o arquivo nao abrir ou tiver dados invalidos. */
+/* Pede o caminho do arquivo de entrada, roda a missao completa e libera toda
+   a memoria. Devolve 0 se o arquivo nao abrir ou o relatorio nao for gravado. */
 int missaoCaptura();
 
 #endif

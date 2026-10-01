@@ -1,4 +1,4 @@
-/* O par de coordenadas (X,Y) do mapa e os limites dele. */
+/* O par de coordenadas (X,Y) do mapa. */
 
 #ifndef COORDENADAS_H
 #define COORDENADAS_H
