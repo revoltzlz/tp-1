@@ -7,7 +7,7 @@ int pokelistaInicializar(Pokelista *pl)
 {
     // a celula cabeca nao guarda pokemon: ela existe para que o primeiro
     // elemento tambem tenha um antecessor, e a remocao nao precise de um caso
-    // especial.
+    // especial
     pl->primeiro = (Pokecelula *) malloc(sizeof(Pokecelula));
     
     if (pl->primeiro == NULL) {
@@ -18,7 +18,7 @@ int pokelistaInicializar(Pokelista *pl)
 
     pl->primeiro->prox = NULL;
 
-    // lista vazia: primeiro e ultimo apontam para a mesma celula, a cabeca.
+    // lista vazia: primeiro e ultimo apontam para a mesma celula, a cabeca
     pl->ultimo = pl->primeiro;
     pl->tamanho = 0;
 
@@ -34,11 +34,11 @@ int pokelistaInserir(Pokelista *pl, const Pokemon *p)
         return 0;
     }
 
-    // copia a struct inteira: a lista fica dona da sua propria copia.
+    // copia a struct inteira: a lista fica dona da sua propria copia
     nova->pokemon = *p;
     nova->prox = NULL;
 
-    // o apontador ultimo faz isto custar o(1), sem percorrer a lista.
+    // o apontador ultimo faz isto custar o(1), sem percorrer a lista
     pl->ultimo->prox = nova;
     pl->ultimo = nova;
     pl->tamanho++;
@@ -52,13 +52,13 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     Pokecelula *alvo;
 
     // anda com um apontador para a celula anterior ao alvo: para desligar uma
-    // celula e preciso ter quem aponta para ela. comeca na cabeca.
+    // celula e preciso ter quem aponta para ela. comeca na cabeca
     anterior = pl->primeiro;
     while (anterior->prox != NULL && pokemonGetId(&anterior->prox->pokemon) != id) {
         anterior = anterior->prox;
     }
 
-    // chegou ao fim sem achar.
+    // chegou ao fim sem achar
     if (anterior->prox == NULL) {
         return 0;
     }
@@ -69,11 +69,11 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
         *removido = alvo->pokemon;
     }
 
-    // desliga o alvo da corrente.
+    // desliga o alvo da corrente
     anterior->prox = alvo->prox;
 
     // sem esta correcao, ultimo ficaria apontando para memoria liberada e a
-    // proxima insercao escreveria nela.
+    // proxima insercao escreveria nela
     if (alvo == pl->ultimo) {
         pl->ultimo = anterior;
     }
@@ -91,7 +91,7 @@ int pokelistaRemoverPrimeiro(Pokelista *pl, Pokemon *removido)
     }
 
     // reaproveita a remocao por id, para haver um unico algoritmo de remocao.
-    // o primeiro pokemon de verdade fica na celula seguinte a cabeca.
+    // o primeiro pokemon de verdade fica na celula seguinte a cabeca
     return pokelistaRemover(pl, pokemonGetId(&pl->primeiro->prox->pokemon), removido);
 }
 
@@ -143,7 +143,7 @@ void pokelistaEscreverRelatorio(const Pokelista *pl, FILE *saida)
 
 int pokelistaVazia(const Pokelista *pl)
 {
-    // vazia quando a unica celula e a cabeca.
+    // vazia quando a unica celula e a cabeca
     return pl->primeiro == pl->ultimo;
 }
 
@@ -158,7 +158,7 @@ void pokelistaLiberar(Pokelista *pl)
     Pokecelula *seguinte;
 
     // comeca na cabeca, que tambem foi alocada. o prox e guardado antes do
-    // free, senao seria lido de memoria ja devolvida.
+    // free, senao seria lido de memoria ja devolvida
     atual = pl->primeiro;
     while (atual != NULL) {
         seguinte = atual->prox;
@@ -166,7 +166,7 @@ void pokelistaLiberar(Pokelista *pl)
         atual = seguinte;
     }
 
-    // anula os apontadores: um uso acidental depois disto falha de imediato.
+    // anula os apontadores: um uso acidental depois disto falha de imediato
     pl->primeiro = NULL;
     pl->ultimo = NULL;
     pl->tamanho = 0;

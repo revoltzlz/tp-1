@@ -13,7 +13,7 @@ int pokecenterInicializar(PokeCenter *cp)
     }
 
     if (!pokelistaInicializar(&cp->recuperados)) {
-        // libera a primeira, que ja tinha sido criada.
+        // libera a primeira, que ja tinha sido criada
         pokelistaLiberar(&cp->fugitivos);
         return 0;
     }
@@ -23,7 +23,7 @@ int pokecenterInicializar(PokeCenter *cp)
 
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p)
 {
-    // insere no fim, para manter a ordem do arquivo.
+    // insere no fim, para manter a ordem do arquivo
     return pokelistaInserir(&cp->fugitivos, p);
 }
 
@@ -63,10 +63,10 @@ int pokecenterReceberPokemon(PokeCenter *cp, Treinador *t)
     int recebidos = 0;
 
     // o treinador entrega do primeiro ao ultimo e o centro insere no fim, entao
-    // a ordem de captura se mantem.
+    // a ordem de captura se mantem
     while (treinadorRetirarPokemon(t, &entregue)) {
         if (!pokelistaInserir(&cp->recuperados, &entregue)) {
-            // o pokemon ja saiu da lista do treinador, entao avisa.
+            // o pokemon ja saiu da lista do treinador, entao avisa
             printf("Erro: memoria insuficiente ao receber %s no Centro de Pesquisa.\n", pokemonGetNome(&entregue));
             return recebidos;
         }
@@ -82,7 +82,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
     Coordenada posicaoTreinador;
     int quantidade;
 
-    // so recarrega o treinador que esta no centro.
+    // so recarrega o treinador que esta no centro
     posicaoCentro = pokecenterGetLocalizacao(cp);
     posicaoTreinador = treinadorGetLocalizacao(t);
     
@@ -91,7 +91,7 @@ int pokecenterRecarregarPokebolas(PokeCenter *cp, Treinador *t)
         return 0;
     }
 
-    // o resto vai de 0 a max - min; somando min, fica entre min e max.
+    // o resto vai de 0 a max - min; somando min, fica entre min e max
     quantidade = MIN_RECARGA + rand() % (MAX_RECARGA - MIN_RECARGA + 1);
 
     treinadorSetPokebolas(t, quantidade);
