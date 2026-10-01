@@ -1,11 +1,11 @@
-// sistema de controle da missao: leitura da entrada, laco do resgate, retornos ao centro e relatorio
-
 #include <math.h>
 #include <stdio.h>
 
 #include "missao.h"
 
-// devolve o quadrado da distancia, sem tirar a raiz: a raiz e crescente, entao a ordem nao muda. o float guarda inteiros exatos ate 2^24, entao em mapas de ate uns 2000 x 2000 o quadrado sai exato e o empate que a especificacao pede e detectado com seguranca
+// sistema de controle da missao: leitura da entrada, laco do resgate, retornos ao centro e relatorio
+
+// devolve o quadrado da distancia, sem tirar a raiz: a raiz e crescente, entao a ordem nao muda, o float guarda inteiros exatos ate 2^24, entao em mapas de ate uns 2000 x 2000 o quadrado sai exato e o empate que a especificacao pede e detectado com seguranca
 float distanciaQuadrado(Coordenada a, Coordenada b)
 {
     float dx = (float) a.cordX - b.cordX;
@@ -14,7 +14,7 @@ float distanciaQuadrado(Coordenada a, Coordenada b)
     return dx * dx + dy * dy;
 }
 
-// o mais proximo do alvo e, em caso de empate, o de menor identificador
+// o mais proximo do alvo e em caso de empate, o de menor identificador
 Treinador *escolheTreinador(Treinador *t1, Treinador *t2, float distancia1, float distancia2)
 {
     if (distancia1 < distancia2) {
@@ -38,8 +38,7 @@ int leTreinador(FILE *entrada, Treinador *t, int id)
     char nome[TAM_NOME_COACH] = "";
     int pokebolas = 0;
 
-    // o 29 (tam_nome_coach - 1) impede que um nome longo passe do vetor
-    fscanf(entrada, "%29s", nome);
+    fscanf(entrada, "%s", nome);
     fscanf(entrada, "%d", &pokebolas);
 
     treinadorInicializar(t, id, nome, pokebolas);
@@ -47,7 +46,7 @@ int leTreinador(FILE *entrada, Treinador *t, int id)
     return 1;
 }
 
-// le os n fugitivos e registra cada um no centro. a quantidade sai em *quantidade. devolve 0 se faltar memoria para registrar um pokemon
+// le os n fugitivos e registra cada um no centro, a quantidade sai em *quantidade e devolve 0 se faltar memoria para registrar um pokemon
 int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
 {
     // valores iniciais: se o fscanf falhar, nada fica com lixo de memoria
@@ -59,8 +58,7 @@ int leFugitivos(FILE *entrada, PokeCenter *cp, int *quantidade)
     fscanf(entrada, "%d", &total);
 
     for (i = 0; i < total; i++) {
-        // o %s para em espaco em branco, e o '\r' do fim de linha do windows conta como tal: nome e tipo nunca o recebem. o 29 e o 19 (tam_nome - 1 e tam_tipo - 1) impedem que passem do vetor
-        fscanf(entrada, "%d %29s %19s %d %d", &numPokedex, nome, tipo, &cordX, &cordY);
+        fscanf(entrada, "%d %s %s %d %d", &numPokedex, nome, tipo, &cordX, &cordY);
 
         // o id e a ordem de leitura. o numero da pokedex nao serviria: o arquivo de teste oficial traz quatro pikachus com o numero 25
         pokemonInicializar(&p, i + 1, numPokedex, nome, tipo, cordX, cordY);
@@ -146,7 +144,7 @@ Treinador *resgataPokemon(PokeCenter *cp, Treinador *t1, Treinador *t2, const Po
     printf("Treinador(a) %s se movimentou para (%d,%d).\n", treinadorGetNome(escolhido), posicaoAlvo.cordX, posicaoAlvo.cordY);
 
     if (!treinadorCapturar(escolhido, alvo)) {
-        // o fluxo da missao evita isto. o pokemon continua fugitivo
+        // o fluxo da missao evita isto, o pokemon continua fugitivo
         printf("%s escapou: Treinador(a) %s esta sem Pokebolas!\n\n", pokemonGetNome(alvo), treinadorGetNome(escolhido));
         return NULL;
     }
@@ -185,7 +183,7 @@ void encerraMissao(PokeCenter *cp, Treinador *t1, Treinador *t2)
     treinadorMovimentar(t1, posicaoCentro.cordX, posicaoCentro.cordY);
     treinadorMovimentar(t2, posicaoCentro.cordX, posicaoCentro.cordY);
 
-    // t1 tem o menor identificador, entao entrega primeiro: e essa ordem que faz o relatorio sair na ordem do exemplo
+    // t1 tem o menor identificador, entao entrega primeiro
     printf("Treinador(a) %s devolve os Pokemon.\n\n", treinadorGetNome(t1));
     pokecenterReceberPokemon(cp, t1);
 
@@ -218,7 +216,7 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
         recarregaSeComecouSemPokebola(cp, t2);
     }
 
-    // os ids sao a ordem de leitura. a busca confirma que o pokemon ainda esta fugido antes de montar o resgate
+    // os ids sao a ordem de leitura, a busca confirma que o pokemon ainda esta fugido antes de montar o resgate
     for (id = 1; id <= qtdFugitivos; id++) {
         if (!pokecenterBuscarFugitivo(cp, id, &alvo)) {
             continue;
@@ -229,7 +227,7 @@ void executaMissao(PokeCenter *cp, Treinador *t1, Treinador *t2, int qtdFugitivo
             continue;
         }
 
-        // a ordem destes dois testes importa: se o pokemon capturado era o ultimo, a missao termina sem recarga, mesmo que o treinador tenha ficado sem pokebolas. e o que o exemplo da especificacao mostra
+        // a ordem destes dois testes importa: se o pokemon capturado era o ultimo, a missao termina sem recarga, mesmo que o treinador tenha ficado sem pokebolas
         if (!pokecenterTemFugitivos(cp)) {
             break;
         }

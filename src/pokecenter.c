@@ -23,7 +23,7 @@ int pokecenterInicializar(PokeCenter *cp)
 
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p)
 {
-    // insere no fim, para manter a ordem do arquivo
+    // insere no fim
     return pokelistaInserir(&cp->fugitivos, p);
 }
 

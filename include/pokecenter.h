@@ -1,7 +1,7 @@
-// tad centro de pesquisa: guarda os fugitivos, recebe os recuperados e recarrega as pokebolas dos treinadores
-
 #ifndef POKECENTER_H
 #define POKECENTER_H
+
+// centro de pesquisa: guarda os fugitivos, recebe os recuperados e recarrega as pokebolas dos treinadores
 
 #include "treinador.h"
 
@@ -13,23 +13,22 @@
 #define MIN_RECARGA 1
 #define MAX_RECARGA 20
 
-// as duas pokelista: quem ainda esta fugido e quem ja foi entregue
 typedef struct {
    Pokelista fugitivos;
    Pokelista recuperados;
    Coordenada locPokeCenter;
 } PokeCenter;
 
-// poe o centro em (0,0) e cria as duas listas vazias. devolve 0 se alguma delas nao puder ser criada
+// poe o centro em (0,0) e cria as duas listas vazias e devolve 0 se alguma delas nao puder ser criada
 int pokecenterInicializar(PokeCenter *cp);
 
-// insere uma copia do pokemon no fim da lista de fugitivos. devolve 0 se a insercao falhar
+// insere um pokemon no fim da lista de fugitivos e devolve 0 se a insercao falhar
 int pokecenterRegistrarFugitivo(PokeCenter *cp, const Pokemon *p);
 
 // remove o pokemon de identificacao id da lista de fugitivos, copiando-o para *removido se este nao for null. devolve 1 se encontrou e removeu
 int pokecenterRemoverFugitivo(PokeCenter *cp, int id, Pokemon *removido);
 
-// procura o pokemon de identificacao id entre os fugitivos. devolve 1 se encontrou, 0 se nao
+// procura o pokemon de identificacao id entre os fugitivos e devolve 1 se encontrou e 0 se nao
 int pokecenterBuscarFugitivo(const PokeCenter *cp, int id, Pokemon *encontrado);
 
 // imprime os pokemon que ainda nao foram recuperados

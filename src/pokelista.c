@@ -36,7 +36,6 @@ int pokelistaInserir(Pokelista *pl, const Pokemon *p)
     nova->pokemon = *p;
     nova->prox = NULL;
 
-    // o apontador ultimo faz isto custar o(1), sem percorrer a lista
     pl->ultimo->prox = nova;
     pl->ultimo = nova;
     pl->tamanho++;
@@ -49,7 +48,7 @@ int pokelistaRemover(Pokelista *pl, int id, Pokemon *removido)
     Pokecelula *anterior;
     Pokecelula *alvo;
 
-    // anda com um apontador para a celula anterior ao alvo: para desligar uma celula e preciso ter quem aponta para ela. comeca na cabeca
+    // anda com um apontador para a celula anterior ao alvo: para desligar uma celula e preciso ter quem aponta para ela tendo comecado na cabeca
     anterior = pl->primeiro;
     while (anterior->prox != NULL && pokemonGetId(&anterior->prox->pokemon) != id) {
         anterior = anterior->prox;
@@ -152,7 +151,7 @@ void pokelistaLiberar(Pokelista *pl)
     Pokecelula *atual;
     Pokecelula *seguinte;
 
-    // comeca na cabeca, que tambem foi alocada. o prox e guardado antes do free, senao seria lido de memoria ja devolvida
+    // comeca na cabeca, que tambem foi alocada, o prox e guardado antes do free, senao seria lido de memoria ja devolvida
     atual = pl->primeiro;
     while (atual != NULL) {
         seguinte = atual->prox;
